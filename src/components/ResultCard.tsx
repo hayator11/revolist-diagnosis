@@ -8,7 +8,7 @@ import {
   getSleepingPotentialDescription,
 } from "@/lib/calculateResult";
 import ActivitySuggestion from "./ActivitySuggestion";
-import ShareButton from "./ShareButton";
+import ShareButtons from "./ShareButtons";
 import Link from "next/link";
 
 interface Props {
@@ -357,9 +357,9 @@ export default function ResultCard({ result }: Props) {
         </div>
       </section>
 
-      {/* SNSシェア */}
+      {/* SNSシェア + 画像保存 */}
       <section className="px-6 pt-10 pb-6 border-b border-gray-100">
-        <ShareButton comboTitle={comboTitle} />
+        <ShareButtons result={result} />
       </section>
 
       {/* ⑮ CTA */}

@@ -1,39 +1,33 @@
-"use client";
-
-import { useMemo } from "react";
-import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
-import ResultCard from "@/components/ResultCard";
-import { calculateResult, decodeAnswers } from "@/lib/calculateResult";
-import { questions } from "@/data/questions";
-import Link from "next/link";
+import type { Metadata } from "next";
+import ResultContent from "./ResultContent";
 
-function ResultContent() {
-  const searchParams = useSearchParams();
-  const encoded = searchParams.get("answers");
+interface Props {
+  searchParams: Promise<{ answers?: string }>;
+}
 
-  const result = useMemo(() => {
-    if (!encoded) return null;
-    const answers = decodeAnswers(encoded);
-    if (answers.length !== questions.length || answers.some(isNaN)) return null;
-    return calculateResult(answers);
-  }, [encoded]);
+export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
+  const { answers } = await searchParams;
+  const ogImageUrl = answers
+    ? `/api/og?answers=${answers}`
+    : undefined;
 
-  if (!result) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center px-6 text-center">
-        <p className="text-gray-500 mb-6 text-sm">診断データが見つかりませんでした。</p>
-        <Link
-          href="/diagnosis"
-          className="bg-black text-white px-6 py-3 rounded-full text-sm hover:bg-gray-800 transition-colors"
-        >
-          診断をはじめる
-        </Link>
-      </div>
-    );
-  }
-
-  return <ResultCard result={result} />;
+  return {
+    title: "あなたの診断結果 | レボリスト診断",
+    description:
+      "あなたの役割は、まだ完成していません。出会いと環境によって、役割は育っていく。",
+    openGraph: {
+      title: "あなたの診断結果 | レボリスト診断",
+      description: "役割が違うから、人は支え合える。",
+      ...(ogImageUrl ? { images: [{ url: ogImageUrl, width: 1200, height: 630 }] } : {}),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "あなたの診断結果 | レボリスト診断",
+      description: "役割が違うから、人は支え合える。",
+      ...(ogImageUrl ? { images: [ogImageUrl] } : {}),
+    },
+  };
 }
 
 export default function ResultPage() {
