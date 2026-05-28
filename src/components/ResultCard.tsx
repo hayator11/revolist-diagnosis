@@ -248,10 +248,39 @@ export default function ResultCard({ result }: Props) {
           活動は、能力を試す場所ではありません。<br />
           あなたの役割が育ち、誰かの役割と循環する場所です。
         </p>
-        <ActivitySuggestion
-          activities={result.suggestedActivities}
-          topTypes={[result.main.key, result.sub.key, result.auxiliary.key]}
-        />
+
+        {/* 一般的な向いている活動 */}
+        <p className="text-xs font-medium text-gray-500 tracking-wide mb-4">
+          一般的に、こんな活動で力を発揮しやすいタイプです
+        </p>
+        <ul className="space-y-3 mb-10">
+          {mainType.generalActivities.map((a) => (
+            <li key={a} className="flex items-start gap-3 text-sm text-gray-700">
+              <span className="w-5 h-5 rounded-full bg-black text-white text-xs flex items-center justify-center shrink-0 mt-0.5">✓</span>
+              {a}
+            </li>
+          ))}
+        </ul>
+
+        {/* REVO活動の紹介 */}
+        {result.suggestedActivities.length > 0 && (
+          <>
+            <div className="flex items-center gap-3 mb-5">
+              <span className="flex-1 h-px bg-gray-100" />
+              <p className="text-xs text-gray-400 whitespace-nowrap">REVOではこんな活動も</p>
+              <span className="flex-1 h-px bg-gray-100" />
+            </div>
+            <p className="text-xs text-gray-400 leading-relaxed mb-5">
+              あなたの役割が活きそうな活動を、REVOの中からご紹介します。
+              参加するもよし、眺めるだけでもよし。
+              気になる活動があったら、のぞいてみてください。
+            </p>
+            <ActivitySuggestion
+              activities={result.suggestedActivities}
+              topTypes={[result.main.key, result.sub.key, result.auxiliary.key]}
+            />
+          </>
+        )}
       </section>
 
       {/* ⑫ 成長クエスト */}
