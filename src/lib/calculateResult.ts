@@ -17,7 +17,6 @@ export interface DiagnosisResult {
 }
 
 export function calculateResult(answers: number[]): DiagnosisResult {
-  // answers[i] は questions[i] に対する回答値 (1〜5)
   const raw: Record<RevoTypeKey, number> = {
     revolist: 0,
     maxdesigner: 0,
@@ -50,7 +49,6 @@ export function calculateResult(answers: number[]): DiagnosisResult {
 
   const [main, sub, auxiliary] = allScores;
 
-  // 上位3タイプに関連する活動を抽出
   const topKeys = [main.key, sub.key, auxiliary.key];
   const suggestedActivities = activities
     .filter((a) => a.suitableTypes.some((t) => topKeys.includes(t)))
@@ -69,16 +67,36 @@ export function decodeAnswers(encoded: string): number[] {
 
 export function getComboDescription(
   mainKey: RevoTypeKey,
-  subKey: RevoTypeKey
+  subKey: RevoTypeKey,
+  auxKey: RevoTypeKey
 ): string {
   const main = revoTypes[mainKey];
   const sub = revoTypes[subKey];
+  const aux = revoTypes[auxKey];
 
-  // タイプ組み合わせの説明文を動的生成
-  return `あなたは、${main.catchcopy}ながら、${sub.gives[0]}をも自然に渡せる人です。${main.name}としての力と、${sub.name}としての視点が重なることで、あなただけの独自の可能性が生まれています。`;
+  return `あなたは、${main.gives[0]}を自然に届けながら、${sub.gives[0]}も持ち合わせている人です。そこに${aux.name}の視点が加わることで、「${main.name}でありながら、${sub.name}の魅力も持つ」という唯一無二の組み合わせが生まれています。`;
 }
 
-// 将来拡張: 111問フル診断への対応
+export function getAwakeningDescription(
+  mainKey: RevoTypeKey,
+  subKey: RevoTypeKey,
+  auxKey: RevoTypeKey
+): string {
+  const main = revoTypes[mainKey];
+  const sub = revoTypes[subKey];
+  const aux = revoTypes[auxKey];
+
+  return `あなた（${main.name}）と${sub.name}が向き合うとき、最初はテンポの違いを感じることがあるかもしれません。でも、そこに${aux.name}が加わることで、互いの魅力が引き出され、役割の循環が生まれ始めます。3つの視点が重なる場所に、あなただけの可能性が宿っています。`;
+}
+
+export function getSleepingPotentialDescription(
+  auxKey: RevoTypeKey
+): string {
+  const aux = revoTypes[auxKey];
+  return `あなたの中には、まだ眠っている「${aux.name}」の力があります。${aux.description} 活動や出会いを重ねることで、この力が少しずつ育っていくかもしれません。`;
+}
+
+// 将来拡張: 111問フル診断
 // export function calculateFullResult(answers: number[]): DiagnosisResult { ... }
 
 // 将来拡張: チーム診断
@@ -86,3 +104,6 @@ export function getComboDescription(
 
 // 将来拡張: 活動履歴によるタイプ変化
 // export function applyActivityHistory(result: DiagnosisResult, history: ActivityHistory[]): DiagnosisResult { ... }
+
+// 将来拡張: 相性診断
+// export function calculateCompatibility(a: DiagnosisResult, b: DiagnosisResult): CompatibilityResult { ... }
