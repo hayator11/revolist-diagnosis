@@ -71,7 +71,7 @@ export default function ResultCard({ result }: Props) {
         {/* サブタイプ */}
         <div className="border border-gray-200 rounded-3xl p-6 mb-4">
           <p className="text-xs tracking-widest text-gray-400 uppercase mb-1">サブタイプ</p>
-          <p className="text-xs text-gray-400 mb-4">あなたの魅力を支えている力</p>
+          <p className="text-xs text-gray-400 mb-4">あなたの魅力を支えている役割</p>
           <p className="text-2xl font-bold text-black mb-1">{subType.name}</p>
           <p className="text-sm text-gray-500">{subType.catchcopy}</p>
           <div className="mt-4 h-1 bg-gray-100 rounded-full overflow-hidden">
@@ -105,7 +105,11 @@ export default function ResultCard({ result }: Props) {
       {/* ④ あなたが自然に渡しているもの */}
       <section className="px-6 py-16 border-b border-gray-100">
         <p className="text-xs tracking-widest text-gray-400 uppercase mb-6">What You Give</p>
-        <h2 className="text-lg font-bold text-black mb-6">あなたが自然に渡しているもの</h2>
+        <h2 className="text-lg font-bold text-black mb-3">あなたが自然に渡しているもの</h2>
+        <p className="text-sm text-gray-500 leading-relaxed mb-6">
+          人は、自分が誰かに渡している価値に気づきにくいものです。<br />
+          あなたは日常の中で、すでに誰かの力になっている可能性があります。
+        </p>
         <div className="flex flex-wrap gap-2 mb-6">
           {mainType.gives.map((g) => (
             <span key={g} className="bg-black text-white text-xs px-4 py-2 rounded-full font-medium">
@@ -119,7 +123,11 @@ export default function ResultCard({ result }: Props) {
       {/* ⑤ 受け取ると潤うもの */}
       <section className="px-6 py-16 bg-gray-50 border-b border-gray-100">
         <p className="text-xs tracking-widest text-gray-400 uppercase mb-6">What You Receive</p>
-        <h2 className="text-lg font-bold text-black mb-6">あなたが受け取ると潤うもの</h2>
+        <h2 className="text-lg font-bold text-black mb-3">あなたが受け取ると潤うもの</h2>
+        <p className="text-sm text-gray-500 leading-relaxed mb-6">
+          人は、与えるだけでは続きません。<br />
+          受け取ることで、自分の力をさらに自然に使えるようになります。
+        </p>
         <div className="flex flex-wrap gap-2 mb-6">
           {mainType.receives.map((r) => (
             <span key={r} className="bg-white border border-gray-200 text-gray-700 text-xs px-4 py-2 rounded-full">
@@ -152,17 +160,36 @@ export default function ResultCard({ result }: Props) {
         </p>
       </section>
 
-      {/* ⑦ 第三者で覚醒する組み合わせ */}
+      {/* ⑦ 組み合わせで広がる可能性（第三者効果） */}
       <section className="px-6 py-16 bg-black border-b border-gray-800">
-        <p className="text-xs tracking-widest text-gray-500 uppercase mb-6">Trio Awakening</p>
-        <h2 className="text-lg font-bold text-white mb-6">3人が揃うと、循環が生まれる</h2>
-        <p className="text-sm text-gray-300 leading-[1.9]">{awakeningDesc}</p>
+        <p className="text-xs tracking-widest text-gray-500 uppercase mb-6">Trio Potential</p>
+        <h2 className="text-lg font-bold text-white mb-8">組み合わせで広がる可能性</h2>
+        <div className="text-sm text-gray-300 leading-[1.9] space-y-4 mb-8">
+          <p>人と人は、1対1で向き合うと、時に視点の違いがぶつかることがあります。</p>
+          <p>でも、そこに第三者の役割が加わることで、関係性は大きく変わります。</p>
+          <div className="py-3 pl-4 border-l border-gray-700 space-y-1 text-gray-400 italic">
+            <p>整える人。</p>
+            <p>受け止める人。</p>
+            <p>翻訳する人。</p>
+            <p>背中を押す人。</p>
+          </div>
+          <p>誰かが加わることで、止まっていた関係に流れが生まれ、役割が循環し始めます。</p>
+        </div>
+        <div className="border-t border-gray-800 pt-6">
+          <p className="text-xs text-gray-500 tracking-wide mb-3">あなたの組み合わせでは</p>
+          <p className="text-sm text-gray-300 leading-[1.9]">{awakeningDesc}</p>
+        </div>
       </section>
 
       {/* ⑧ 眠っている可能性 */}
       <section className="px-6 py-16 border-b border-gray-100">
         <p className="text-xs tracking-widest text-gray-400 uppercase mb-6">Sleeping Potential</p>
-        <h2 className="text-lg font-bold text-black mb-6">あなたの眠っている可能性</h2>
+        <h2 className="text-lg font-bold text-black mb-4">あなたの眠っている可能性</h2>
+        <p className="text-sm text-gray-500 leading-relaxed mb-6">
+          補助タイプは、今すぐ強く出ている力ではなく、これから活動や出会いによって育っていく可能性です。<br /><br />
+          あなたの中には、まだ使われていない役割があります。<br />
+          それは、誰かとの出会いや新しい経験によって、少しずつ開花していきます。
+        </p>
         <div className="border border-dashed border-gray-200 rounded-2xl p-5 mb-5">
           <p className="text-sm text-gray-600 leading-[1.9]">{sleepingDesc}</p>
         </div>
@@ -180,7 +207,7 @@ export default function ResultCard({ result }: Props) {
       <section className="px-6 py-16 bg-gray-50 border-b border-gray-100">
         <p className="text-xs tracking-widest text-gray-400 uppercase mb-6">Your Environment</p>
         <h2 className="text-lg font-bold text-black mb-6">あなたが潤いやすい環境</h2>
-        <ul className="space-y-3 mb-6">
+        <ul className="space-y-3">
           {mainType.environment.map((e) => (
             <li key={e} className="flex items-center gap-3 text-sm text-gray-700">
               <span className="w-1.5 h-1.5 rounded-full bg-black shrink-0" />
@@ -190,28 +217,37 @@ export default function ResultCard({ result }: Props) {
         </ul>
       </section>
 
-      {/* ⑩ あなたが作れる環境 */}
+      {/* ⑩ あなたが自然に作っている環境 */}
       <section className="px-6 py-16 border-b border-gray-100">
         <p className="text-xs tracking-widest text-gray-400 uppercase mb-6">What You Create</p>
         <h2 className="text-lg font-bold text-black mb-4">あなたが自然に作っている環境</h2>
-        <p className="text-sm text-gray-500 mb-6">あなたがいる場所では、</p>
-        <ul className="space-y-3">
+        <div className="text-sm text-gray-500 leading-relaxed mb-6 space-y-2">
+          <p>あなたは、環境に影響されるだけの存在ではありません。</p>
+          <p>あなた自身も、誰かにとっての環境です。</p>
+        </div>
+        <ul className="space-y-3 mb-6">
           {mainType.creates.map((c) => (
             <li key={c} className="flex items-center gap-3 text-sm text-gray-700">
-              <span className="text-red-500 shrink-0">→</span>
+              <span className="text-red-500 shrink-0 font-bold">→</span>
               {c}
             </li>
           ))}
         </ul>
-        <p className="text-sm text-gray-500 mt-6 leading-relaxed">
-          あなた自身が、環境を変える側の存在かもしれません。
-        </p>
+        <div className="text-sm text-gray-400 leading-[1.9] space-y-0.5">
+          <p>あなたがいることで、挑戦しやすくなる人がいるかもしれません。</p>
+          <p>安心して話せる人がいるかもしれません。</p>
+          <p>新しい一歩を踏み出せる人がいるかもしれません。</p>
+        </div>
       </section>
 
       {/* ⑪ 向いている活動 */}
       <section className="px-6 py-16 border-b border-gray-100">
         <p className="text-xs tracking-widest text-gray-400 uppercase mb-6">Your Activities</p>
-        <h2 className="text-lg font-bold text-black mb-8">あなたに合う活動</h2>
+        <h2 className="text-lg font-bold text-black mb-3">あなたの役割が活きる活動</h2>
+        <p className="text-sm text-gray-500 leading-relaxed mb-8">
+          活動は、能力を試す場所ではありません。<br />
+          あなたの役割が育ち、誰かの役割と循環する場所です。
+        </p>
         <ActivitySuggestion
           activities={result.suggestedActivities}
           topTypes={[result.main.key, result.sub.key, result.auxiliary.key]}
@@ -221,7 +257,7 @@ export default function ResultCard({ result }: Props) {
       {/* ⑫ 成長クエスト */}
       <section className="px-6 py-16 bg-gray-50 border-b border-gray-100">
         <p className="text-xs tracking-widest text-gray-400 uppercase mb-6">Growth Quest</p>
-        <h2 className="text-lg font-bold text-black mb-4">次に育てると良い力</h2>
+        <h2 className="text-lg font-bold text-black mb-4">次に育てると良い小さな一歩</h2>
         <div className="border border-gray-200 bg-white rounded-2xl p-5 mb-5">
           <p className="text-xs text-gray-400 mb-2">育てたい役割</p>
           <p className="text-base font-bold text-black mb-3">
@@ -256,35 +292,43 @@ export default function ResultCard({ result }: Props) {
         </ul>
       </section>
 
-      {/* ⑭ 最後の締め */}
-      <section className="px-6 py-16 border-b border-gray-100 text-center">
-        <p className="text-sm text-gray-600 leading-[2] max-w-xs mx-auto">
-          あなたに足りないものは、
-          <br />
-          誰かの才能かもしれません。
-          <br />
-          <br />
-          そして、
-          <br />
-          あなたが自然に持っている力も、
-          <br />
-          誰かの未来を支える力になっています。
-          <br />
-          <br />
-          役割が違うから、
-          <br />
-          人は支え合える。
-          <br />
-          <br />
-          あなたの役割は、
-          <br />
-          これからの活動や出会いによって、
-          <br />
-          さらに育っていきます。
-        </p>
+      {/* ⑭ 無限の可能性を感じる締め */}
+      <section className="px-6 py-16 border-b border-gray-100">
+        <p className="text-xs tracking-widest text-gray-400 uppercase mb-8">Your Potential</p>
+        <h2 className="text-2xl font-bold text-black mb-10 leading-snug text-center">
+          あなたの役割は、<br />まだ完成していません。
+        </h2>
+        <div className="text-sm text-gray-600 leading-[2.2] space-y-5 text-center max-w-xs mx-auto">
+          <p>人は、ひとつのタイプに固定されるものではありません。</p>
+          <div className="text-gray-400 space-y-1 py-3">
+            <p>誰と出会うか。</p>
+            <p>どんな環境に身を置くか。</p>
+            <p>どんな活動に参加するか。</p>
+            <p>どんな役割を持ち寄るか。</p>
+          </div>
+          <p>
+            その組み合わせによって、<br />
+            あなたの可能性は何通りにも広がっていきます。
+          </p>
+          <div className="border-t border-gray-100 pt-5 space-y-3">
+            <p>
+              あなたに足りないものは、<br />
+              誰かの才能かもしれません。
+            </p>
+            <p>
+              そして、<br />
+              あなたが自然に持っている力も、<br />
+              誰かの未来を支える力になっています。
+            </p>
+          </div>
+          <div className="border-t border-gray-100 pt-5 space-y-1">
+            <p className="font-semibold text-black">役割が違うから、人は支え合える。</p>
+            <p className="font-semibold text-black">違いがあるから、未来は動き出します。</p>
+          </div>
+        </div>
       </section>
 
-      {/* ⑮ SNSシェア */}
+      {/* SNSシェア */}
       <section className="px-6 pt-10 pb-6 border-b border-gray-100">
         <ShareButton comboTitle={comboTitle} />
       </section>
@@ -294,8 +338,7 @@ export default function ResultCard({ result }: Props) {
         <div className="text-center mb-8">
           <p className="text-xs tracking-widest text-gray-400 uppercase mb-3">Next Stage</p>
           <h2 className="text-lg font-bold text-black mb-4 leading-snug">
-            ライト診断では、
-            <br />
+            ライト診断では、<br />
             あなたの現在地の一部が見えました。
           </h2>
           <p className="text-sm text-gray-600 leading-relaxed">
@@ -305,22 +348,31 @@ export default function ResultCard({ result }: Props) {
 
         <div className="space-y-3">
           {/* 将来拡張: 111問フル診断 */}
-          <button disabled className="w-full py-4 rounded-2xl bg-black text-white font-medium text-sm opacity-40 cursor-not-allowed">
-            111問フル診断へ進む
-            <span className="ml-2 text-xs text-gray-500">（準備中）</span>
-          </button>
+          <div className="w-full rounded-2xl bg-black p-5 opacity-40 cursor-not-allowed select-none">
+            <p className="text-white font-medium text-sm text-center">111問フル診断へ進む</p>
+            <p className="text-gray-400 text-xs text-center mt-1.5">
+              もっと深く、あなたの役割循環を知る。
+            </p>
+            <p className="text-gray-600 text-xs text-center mt-1">（準備中）</p>
+          </div>
 
           {/* 将来拡張: コミュニティ登録 */}
-          <button disabled className="w-full py-4 rounded-2xl border border-gray-200 text-gray-500 font-medium text-sm opacity-40 cursor-not-allowed">
-            Revoコミュニティへ参加する
-            <span className="ml-2 text-xs text-gray-400">（準備中）</span>
-          </button>
+          <div className="w-full rounded-2xl border border-gray-200 p-5 opacity-40 cursor-not-allowed select-none">
+            <p className="text-gray-600 font-medium text-sm text-center">Revoコミュニティへ参加する</p>
+            <p className="text-gray-400 text-xs text-center mt-1.5">
+              役割でつながる、新しい共創循環へ。
+            </p>
+            <p className="text-gray-400 text-xs text-center mt-1">（準備中）</p>
+          </div>
 
           {/* 将来拡張: 仲間を探す / レボマップ */}
-          <button disabled className="w-full py-4 rounded-2xl border border-gray-200 text-gray-500 font-medium text-sm opacity-40 cursor-not-allowed">
-            あなたを輝かせる仲間を探す
-            <span className="ml-2 text-xs text-gray-400">（準備中）</span>
-          </button>
+          <div className="w-full rounded-2xl border border-gray-200 p-5 opacity-40 cursor-not-allowed select-none">
+            <p className="text-gray-600 font-medium text-sm text-center">あなたを輝かせる仲間を探す</p>
+            <p className="text-gray-400 text-xs text-center mt-1.5 leading-relaxed">
+              まだ出会っていない存在が、<br />あなたの未来を変えるかもしれません。
+            </p>
+            <p className="text-gray-400 text-xs text-center mt-1">（準備中）</p>
+          </div>
 
           <Link
             href="/diagnosis"
