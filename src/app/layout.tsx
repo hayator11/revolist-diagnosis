@@ -26,12 +26,18 @@ export default function RootLayout({
             <a href="/" className="text-sm font-bold text-black tracking-tight">
               REVOLIST
             </a>
-            <div className="flex items-center gap-5">
+            <div className="flex items-center gap-4">
               <a
                 href="/types"
-                className="text-xs text-gray-500 hover:text-black transition-colors"
+                className="text-xs text-gray-500 hover:text-black transition-colors hidden sm:block"
               >
                 11タイプ
+              </a>
+              <a
+                href="/revo"
+                className="text-xs text-gray-500 hover:text-black transition-colors"
+              >
+                Revo
               </a>
               <a
                 href="/diagnosis"

@@ -376,25 +376,29 @@ export default function ResultCard({ result }: Props) {
         </div>
 
         <div className="space-y-3">
-          {/* 将来拡張: 111問フル診断 */}
-          <div className="w-full rounded-2xl bg-black p-5 opacity-40 cursor-not-allowed select-none">
+          {/* 111問フル診断 予告ページへ */}
+          <Link
+            href="/full-diagnosis"
+            className="block w-full rounded-2xl bg-black p-5 hover:bg-gray-800 transition-colors"
+          >
             <p className="text-white font-medium text-sm text-center">111問フル診断へ進む</p>
             <p className="text-gray-400 text-xs text-center mt-1.5">
               もっと深く、あなたの役割循環を知る。
             </p>
-            <p className="text-gray-600 text-xs text-center mt-1">（準備中）</p>
-          </div>
+          </Link>
 
-          {/* 将来拡張: コミュニティ登録 */}
-          <div className="w-full rounded-2xl border border-gray-200 p-5 opacity-40 cursor-not-allowed select-none">
-            <p className="text-gray-600 font-medium text-sm text-center">Revoコミュニティへ参加する</p>
+          {/* Revoコミュニティページへ */}
+          <Link
+            href="/revo"
+            className="block w-full rounded-2xl border border-gray-200 p-5 hover:border-black transition-colors"
+          >
+            <p className="text-gray-700 font-medium text-sm text-center">Revoコミュニティへ参加する</p>
             <p className="text-gray-400 text-xs text-center mt-1.5">
               役割でつながる、新しい共創循環へ。
             </p>
-            <p className="text-gray-400 text-xs text-center mt-1">（準備中）</p>
-          </div>
+          </Link>
 
-          {/* 将来拡張: 仲間を探す / レボマップ */}
+          {/* 将来拡張: 仲間を探す / Revoマップ */}
           <div className="w-full rounded-2xl border border-gray-200 p-5 opacity-40 cursor-not-allowed select-none">
             <p className="text-gray-600 font-medium text-sm text-center">あなたを輝かせる仲間を探す</p>
             <p className="text-gray-400 text-xs text-center mt-1.5 leading-relaxed">
