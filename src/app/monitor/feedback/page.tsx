@@ -6,6 +6,12 @@ import Link from "next/link";
 const DIAG_OPTIONS = ["Revo Role", "Revo Team", "Revo Match", "Revo Growth", "すべて"];
 const YES_NO_OPTIONS = ["はい", "どちらとも言えない", "いいえ"];
 
+// Formspree のフォーム ID（環境変数 or ハードコード）
+// 設定方法: https://formspree.io でアカウント作成 → New Form → フォームID を取得
+// Vercel の環境変数に NEXT_PUBLIC_FORMSPREE_ID=xxxxxx を追加
+const FORMSPREE_ID = process.env.NEXT_PUBLIC_FORMSPREE_ID ?? "xzzbbwvn";
+const FORMSPREE_ENDPOINT = `https://formspree.io/f/${FORMSPREE_ID}`;
+
 export default function FeedbackPage() {
   const [triedDiags, setTriedDiags] = useState<string[]>([]);
   const [mostFun, setMostFun] = useState("");
@@ -21,6 +27,8 @@ export default function FeedbackPage() {
   const [name, setName] = useState("");
   const [contact, setContact] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState("");
 
   const toggleTried = (val: string) => {
     setTriedDiags((prev) =>
@@ -28,16 +36,45 @@ export default function FeedbackPage() {
     );
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Future: Supabase / Vercel Server Action / Formspree でデータ保存
-    // 現在はGoogleフォームへのリダイレクトまたはローカル保存
-    console.log({
-      triedDiags, mostFun, mostAccurate, mostFuture, mostShareable,
-      usefulForFunding, usefulForMatching, memorableWords, unclear,
-      wantToAdd, want111, name, contact,
-    });
-    setSubmitted(true);
+    setSending(true);
+    setError("");
+
+    const payload = {
+      試した診断: triedDiags.join("、") || "未回答",
+      一番面白かった診断: mostFun || "未回答",
+      一番当たっていた診断: mostAccurate || "未回答",
+      一番未来を感じた診断: mostFuture || "未回答",
+      一番人に見せたい診断: mostShareable || "未回答",
+      Revo_Fundingで使えそうな診断: usefulForFunding || "未回答",
+      仲間探しで使えそうな診断: usefulForMatching || "未回答",
+      心に残った言葉: memorableWords || "なし",
+      わかりにくかった部分: unclear || "なし",
+      追加してほしい項目: wantToAdd || "なし",
+      "111問版を試したいか": want111 || "未回答",
+      名前またはSNS: name || "匿名",
+      連絡先: contact || "なし",
+    };
+
+    try {
+      const res = await fetch(FORMSPREE_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (res.ok) {
+        setSubmitted(true);
+      } else {
+        const data = await res.json().catch(() => ({}));
+        setError(data?.error ?? "送信に失敗しました。もう一度お試しください。");
+      }
+    } catch {
+      setError("ネットワークエラーが発生しました。もう一度お試しください。");
+    } finally {
+      setSending(false);
+    }
   };
 
   if (submitted) {
@@ -205,13 +242,28 @@ export default function FeedbackPage() {
             </div>
           </div>
 
+          {/* エラーメッセージ */}
+          {error && (
+            <div className="bg-red-50 border border-red-200 rounded-2xl px-4 py-3">
+              <p className="text-sm text-red-600">{error}</p>
+            </div>
+          )}
+
           {/* 送信 */}
           <div className="pt-4">
             <button
               type="submit"
-              className="w-full py-4 rounded-full bg-black text-white text-sm font-medium hover:bg-gray-800 transition-colors"
+              disabled={sending}
+              className="w-full py-4 rounded-full bg-black text-white text-sm font-medium hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
-              感想を送る
+              {sending ? (
+                <>
+                  <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  送信中…
+                </>
+              ) : (
+                "感想を送る"
+              )}
             </button>
             <p className="text-xs text-gray-400 text-center mt-3">
               送信内容は111問フル診断の開発にのみ使用されます。
