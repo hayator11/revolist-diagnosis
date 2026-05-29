@@ -2,10 +2,31 @@ import { Suspense } from "react";
 import type { Metadata } from "next";
 import ResultClient from "../../_components/ResultClient";
 
-export const metadata: Metadata = {
-  title: "Revo Growth 結果 | Revo OS β",
-  description: "あなたの次の成長ルートと眠っている力が明らかになりました。",
-};
+interface Props {
+  searchParams: Promise<{ answers?: string }>;
+}
+
+export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
+  const { answers } = await searchParams;
+  const ogUrl = answers
+    ? `/api/og/monitor?type=growth&answers=${answers}`
+    : `/api/og/monitor?type=growth`;
+  return {
+    title: "Revo Growth 結果 | Revo OS β",
+    description: "次の成長ルートと眠っている力が明らかになりました。",
+    openGraph: {
+      title: "Revo Growth 結果 | Revo OS β",
+      description: "役割でチームを作るための、新しい共創OSの実験。",
+      images: [{ url: ogUrl, width: 1200, height: 630 }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "Revo Growth 結果 | Revo OS β",
+      description: "役割でチームを作るための、新しい共創OSの実験。",
+      images: [ogUrl],
+    },
+  };
+}
 
 export default function GrowthResultPage() {
   return (

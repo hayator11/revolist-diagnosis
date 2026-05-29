@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { revoTypes } from "@/data/revotypes";
 import { monitorDiagnosisMeta } from "@/data/monitorResults";
@@ -239,6 +240,98 @@ function GrowthResultBody({ result, accent }: { result: MonitorGrowthResult; acc
   );
 }
 
+// ── シェアテキスト生成 ──────────────────────────────────────────────
+function buildMonitorShareText(result: MonitorResult): string {
+  const meta = monitorDiagnosisMeta[result.type];
+  const mainType = revoTypes[result.main.key];
+
+  if (result.type === "role") {
+    return `【${meta.title}】\n今、強く使っている役割は「${mainType.name}」でした。\n${mainType.catchcopy}\n\n#レボリスト診断 #RevoOS`;
+  }
+  if (result.type === "team") {
+    return `【${meta.title}】\nチームでの立ち位置は「${result.teamLabel}」でした。\n${mainType.name}として力を発揮できそうです。\n\n#レボリスト診断 #RevoOS`;
+  }
+  if (result.type === "match") {
+    const t1 = revoTypes[result.openedByType.key];
+    return `【${meta.title}】\n私を開花させる存在は「${t1.name}」でした。\n出会いが役割の可能性を育てる。\n\n#レボリスト診断 #RevoOS`;
+  }
+  if (result.type === "growth") {
+    const t1 = revoTypes[result.nextRole.key];
+    return `【${meta.title}】\n次に育てると良い役割は「${t1.name}」でした。\nまだ使っていない力が眠っている。\n\n#レボリスト診断 #RevoOS`;
+  }
+  return `${meta.title}を試しました。\n#レボリスト診断 #RevoOS`;
+}
+
+// ── シェアボタン ────────────────────────────────────────────────────
+function ShareSection({ result }: { result: MonitorResult }) {
+  const [copied, setCopied] = useState(false);
+  const shareText = buildMonitorShareText(result);
+  const currentUrl = typeof window !== "undefined" ? window.location.href : "";
+
+  const xUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(currentUrl)}`;
+  const lineUrl = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(currentUrl)}&text=${encodeURIComponent(shareText)}`;
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(`${shareText}\n${currentUrl}`);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch { /* fallback */ }
+  };
+
+  return (
+    <div className="mt-10 border-t border-gray-100 pt-10">
+      <p className="text-xs tracking-widest text-gray-400 uppercase mb-4 text-center">
+        結果をシェアする
+      </p>
+      <div className="space-y-2">
+        <a
+          href={xUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl border border-gray-200 text-gray-700 text-sm font-medium hover:bg-gray-50 transition-colors"
+        >
+          <svg viewBox="0 0 24 24" className="w-4 h-4 fill-current" aria-hidden>
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.262 5.636 5.901-5.636zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+          </svg>
+          X でシェア
+        </a>
+        <a
+          href={lineUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl border border-gray-200 text-gray-700 text-sm font-medium hover:bg-gray-50 transition-colors"
+        >
+          <svg viewBox="0 0 24 24" className="w-4 h-4 fill-current text-green-500" aria-hidden>
+            <path d="M12 2C6.48 2 2 6.28 2 11.47c0 3.75 2.37 7.02 5.9 8.89.26.13.43.41.38.7l-.3 1.7c-.08.47.43.84.85.62L11.5 21.8c.16-.08.34-.1.5-.07.66.1 1.33.15 2 .15 5.52 0 10-4.28 10-9.41C24 6.28 19.52 2 12 2z" />
+          </svg>
+          LINE でシェア
+        </a>
+        <button
+          onClick={handleCopy}
+          className="w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl border border-gray-200 text-gray-700 text-sm font-medium hover:bg-gray-50 transition-colors"
+        >
+          {copied ? (
+            <>
+              <svg viewBox="0 0 24 24" className="w-4 h-4 fill-current text-green-500" aria-hidden>
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+              </svg>
+              コピーしました
+            </>
+          ) : (
+            <>
+              <svg viewBox="0 0 24 24" className="w-4 h-4 fill-current" aria-hidden>
+                <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z" />
+              </svg>
+              リンクをコピー
+            </>
+          )}
+        </button>
+      </div>
+    </div>
+  );
+}
+
 // ── メインコンポーネント ────────────────────────────────────────────
 export default function MonitorResultCard({ result }: Props) {
   const meta = monitorDiagnosisMeta[result.type];
@@ -289,6 +382,9 @@ export default function MonitorResultCard({ result }: Props) {
           </Link>
         </div>
       )}
+
+      {/* ── シェア ── */}
+      <ShareSection result={result} />
 
       {/* ── フィードバック ── */}
       <div className="mt-10 rounded-2xl bg-gray-50 p-6 text-center">

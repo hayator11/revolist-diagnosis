@@ -2,10 +2,31 @@ import { Suspense } from "react";
 import type { Metadata } from "next";
 import ResultClient from "../../_components/ResultClient";
 
-export const metadata: Metadata = {
-  title: "Revo Team 結果 | Revo OS β",
-  description: "あなたのチームでの立ち位置が明らかになりました。",
-};
+interface Props {
+  searchParams: Promise<{ answers?: string }>;
+}
+
+export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
+  const { answers } = await searchParams;
+  const ogUrl = answers
+    ? `/api/og/monitor?type=team&answers=${answers}`
+    : `/api/og/monitor?type=team`;
+  return {
+    title: "Revo Team 結果 | Revo OS β",
+    description: "チームでの立ち位置が明らかになりました。",
+    openGraph: {
+      title: "Revo Team 結果 | Revo OS β",
+      description: "役割でチームを作るための、新しい共創OSの実験。",
+      images: [{ url: ogUrl, width: 1200, height: 630 }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "Revo Team 結果 | Revo OS β",
+      description: "役割でチームを作るための、新しい共創OSの実験。",
+      images: [ogUrl],
+    },
+  };
+}
 
 export default function TeamResultPage() {
   return (
