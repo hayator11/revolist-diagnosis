@@ -262,24 +262,29 @@ export default function ResultCard({ result }: Props) {
           ))}
         </ul>
 
-        {/* REVO活動の紹介 */}
+        {/* REVO活動の紹介（軽く名前だけ） */}
         {result.suggestedActivities.length > 0 && (
-          <>
+          <div className="mt-2">
             <div className="flex items-center gap-3 mb-5">
               <span className="flex-1 h-px bg-gray-100" />
               <p className="text-xs text-gray-400 whitespace-nowrap">REVOではこんな活動も</p>
               <span className="flex-1 h-px bg-gray-100" />
             </div>
             <p className="text-xs text-gray-400 leading-relaxed mb-5">
-              あなたの役割が活きそうな活動を、REVOの中からご紹介します。
-              参加するもよし、眺めるだけでもよし。
-              気になる活動があったら、のぞいてみてください。
+              あなたの役割が活きそうな活動はいかがでしたか？<br />
+              REVOではこんな活動があります。
             </p>
-            <ActivitySuggestion
-              activities={result.suggestedActivities}
-              topTypes={[result.main.key, result.sub.key, result.auxiliary.key]}
-            />
-          </>
+            <div className="flex flex-wrap gap-2">
+              {result.suggestedActivities.map((activity) => (
+                <span
+                  key={activity.id}
+                  className="text-xs text-gray-500 border border-gray-200 px-4 py-2 rounded-full"
+                >
+                  {activity.name}
+                </span>
+              ))}
+            </div>
+          </div>
         )}
       </section>
 
