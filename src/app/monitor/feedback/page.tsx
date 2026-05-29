@@ -9,7 +9,7 @@ const YES_NO_OPTIONS = ["はい", "どちらとも言えない", "いいえ"];
 // Formspree のフォーム ID（環境変数 or ハードコード）
 // 設定方法: https://formspree.io でアカウント作成 → New Form → フォームID を取得
 // Vercel の環境変数に NEXT_PUBLIC_FORMSPREE_ID=xxxxxx を追加
-const FORMSPREE_ID = process.env.NEXT_PUBLIC_FORMSPREE_ID ?? "xzzbbwvn";
+const FORMSPREE_ID = process.env.NEXT_PUBLIC_FORMSPREE_ID ?? "meeddgby";
 const FORMSPREE_ENDPOINT = `https://formspree.io/f/${FORMSPREE_ID}`;
 
 export default function FeedbackPage() {
