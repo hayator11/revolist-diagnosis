@@ -34,6 +34,12 @@ export default function RootLayout({
                 11タイプ
               </a>
               <a
+                href="/team"
+                className="text-xs text-gray-500 hover:text-black transition-colors hidden sm:block"
+              >
+                チーム設計
+              </a>
+              <a
                 href="/revo"
                 className="text-xs text-gray-500 hover:text-black transition-colors"
               >
