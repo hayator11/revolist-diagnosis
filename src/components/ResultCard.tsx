@@ -7,7 +7,6 @@ import {
   getAwakeningDescription,
   getSleepingPotentialDescription,
 } from "@/lib/calculateResult";
-import ActivitySuggestion from "./ActivitySuggestion";
 import ShareButtons from "./ShareButtons";
 import Link from "next/link";
 
@@ -24,6 +23,10 @@ export default function ResultCard({ result }: Props) {
   const comboDesc = getComboDescription(result.main.key, result.sub.key, result.auxiliary.key);
   const awakeningDesc = getAwakeningDescription(result.main.key, result.sub.key, result.auxiliary.key);
   const sleepingDesc = getSleepingPotentialDescription(result.auxiliary.key);
+
+  // チーム設計データ
+  const bestPairType = revoTypes[mainType.teamDesign.bestPair];
+  const thirdPersonType = revoTypes[mainType.teamDesign.thirdPerson];
 
   return (
     <div className="max-w-lg mx-auto pb-20">
@@ -102,6 +105,26 @@ export default function ResultCard({ result }: Props) {
         <p className="text-sm text-gray-600 leading-[1.9]">{comboDesc}</p>
       </section>
 
+      {/* ── STEP 2: このタイプの動き方 ── */}
+      <section className="px-6 py-16 bg-gray-50 border-b border-gray-100">
+        <p className="text-xs tracking-widest text-gray-400 uppercase mb-3">How You Move</p>
+        <h2 className="text-lg font-bold text-black mb-2">このタイプの動き方</h2>
+        <p className="text-xs text-gray-400 mb-8 leading-relaxed">
+          特性を知るだけでは変わりません。<br />
+          どう動くかを知ることで、自分の役割が力に変わります。
+        </p>
+        <div className="space-y-4">
+          {mainType.actionPrinciples.map((principle, i) => (
+            <div key={principle} className="flex items-start gap-4">
+              <span className="w-6 h-6 rounded-full bg-black text-white text-xs flex items-center justify-center shrink-0 mt-0.5 font-medium">
+                {i + 1}
+              </span>
+              <p className="text-sm text-gray-700 leading-relaxed font-medium">{principle}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* ④ あなたが自然に渡しているもの */}
       <section className="px-6 py-16 border-b border-gray-100">
         <p className="text-xs tracking-widest text-gray-400 uppercase mb-6">What You Give</p>
@@ -138,46 +161,131 @@ export default function ResultCard({ result }: Props) {
         <p className="text-sm text-gray-600 leading-[1.9]">{mainType.receivesDetail}</p>
       </section>
 
-      {/* ⑥ あなたをさらに輝かせる存在 */}
+      {/* ── STEP 3: 相性のいいタイプ（1人目） ── */}
       <section className="px-6 py-16 border-b border-gray-100">
-        <p className="text-xs tracking-widest text-gray-400 uppercase mb-6">Who Makes You Shine</p>
-        <h2 className="text-lg font-bold text-black mb-8">あなたをさらに輝かせる存在</h2>
-        <div className="space-y-5">
-          {mainType.goodWith.map((key) => {
-            const t = revoTypes[key as RevoTypeKey];
-            const detail = mainType.goodWithDetail[key] ?? t.description;
-            return (
-              <div key={key} className="border border-gray-200 rounded-2xl p-5">
-                <p className="text-xs text-gray-400 tracking-widest uppercase mb-1">{t.name}</p>
-                <p className="text-sm font-bold text-black mb-3">{t.catchcopy}</p>
-                <p className="text-sm text-gray-600 leading-[1.9]">{detail}</p>
-              </div>
-            );
-          })}
+        <p className="text-xs tracking-widest text-gray-400 uppercase mb-3">Best Partner</p>
+        <h2 className="text-lg font-bold text-black mb-2">一緒に動くと力が出る存在</h2>
+        <p className="text-sm text-gray-500 leading-relaxed mb-8">
+          2人で始めるなら、この役割との相性が出やすいです。<br />
+          違いがあるから、補い合えます。
+        </p>
+
+        {/* 1対1ベストパートナー（大きく表示） */}
+        <div className="bg-black text-white rounded-3xl p-7 mb-6">
+          <p className="text-xs tracking-widest text-gray-500 uppercase mb-1">1対1のベストパートナー</p>
+          <p className="text-2xl font-bold mb-1">{bestPairType.name}</p>
+          <p className="text-sm text-gray-400 mb-5">{bestPairType.catchcopy}</p>
+          <div className="h-px bg-gray-800 mb-5" />
+          <p className="text-sm text-gray-300 leading-[1.9]">
+            {mainType.goodWithDetail[mainType.teamDesign.bestPair] ?? bestPairType.description}
+          </p>
+        </div>
+
+        {/* その他の相性 */}
+        <div className="space-y-4">
+          {mainType.goodWith
+            .filter((key) => key !== mainType.teamDesign.bestPair)
+            .map((key) => {
+              const t = revoTypes[key as RevoTypeKey];
+              const detail = mainType.goodWithDetail[key] ?? t.description;
+              return (
+                <div key={key} className="border border-gray-200 rounded-2xl p-5">
+                  <p className="text-sm font-bold text-black mb-1">{t.name}</p>
+                  <p className="text-xs text-gray-400 mb-3">{t.catchcopy}</p>
+                  <p className="text-sm text-gray-600 leading-[1.9]">{detail}</p>
+                </div>
+              );
+            })}
         </div>
         <p className="text-xs text-gray-400 mt-6 leading-relaxed">
-          これらは「相性が良い」ではなく、あなたの力をさらに引き出してくれる存在です。違いは欠点ではなく、組み合わせるためにある。
+          これらは優劣ではなく、あなたの力をさらに引き出してくれる存在です。違いは欠点ではなく、組み合わせるためにある。
         </p>
       </section>
 
-      {/* ⑦ 組み合わせで広がる可能性（第三者効果） */}
+      {/* ── STEP 4: チームに足すといいタイプ（3人目候補） ── */}
       <section className="px-6 py-16 bg-black border-b border-gray-800">
-        <p className="text-xs tracking-widest text-gray-500 uppercase mb-6">Trio Potential</p>
-        <h2 className="text-lg font-bold text-white mb-8">組み合わせで広がる可能性</h2>
-        <div className="text-sm text-gray-300 leading-[1.9] space-y-4 mb-8">
-          <p>人と人は、1対1で向き合うと、時に視点の違いがぶつかることがあります。</p>
-          <p>でも、そこに第三者の役割が加わることで、関係性は大きく変わります。</p>
-          <div className="py-3 pl-4 border-l border-gray-700 space-y-1 text-gray-400 italic">
-            <p>整える人。</p>
-            <p>受け止める人。</p>
-            <p>翻訳する人。</p>
-            <p>背中を押す人。</p>
-          </div>
-          <p>誰かが加わることで、止まっていた関係に流れが生まれ、役割が循環し始めます。</p>
+        <p className="text-xs tracking-widest text-gray-500 uppercase mb-3">Third Person</p>
+        <h2 className="text-lg font-bold text-white mb-2">チームに足すと動き出す存在</h2>
+        <p className="text-sm text-gray-400 leading-relaxed mb-8">
+          2人で詰まったとき、3人目の役割が加わることで<br />
+          チームに流れが生まれます。
+        </p>
+
+        {/* 3人目タイプ */}
+        <div className="border border-gray-800 rounded-3xl p-6 mb-6">
+          <p className="text-xs tracking-widest text-gray-500 uppercase mb-1">3人目に足すといい役割</p>
+          <p className="text-2xl font-bold text-white mb-1">{thirdPersonType.name}</p>
+          <p className="text-sm text-gray-500 mb-5">{thirdPersonType.catchcopy}</p>
+          <div className="h-px bg-gray-800 mb-5" />
+          <p className="text-sm text-gray-300 leading-[1.9]">{mainType.teamDesign.teamNote}</p>
         </div>
+
+        {/* チーム人数の考え方 */}
+        <div className="space-y-4 mb-6">
+          <p className="text-xs tracking-widest text-gray-500 uppercase">人数別チームの考え方</p>
+          {[
+            { n: "2人", desc: "相性が良ければ力強い。詰まりやすいときは3人目を探す。" },
+            { n: "3人", desc: "奇数でまとまりやすい。役割が分散して動きやすくなる。（推奨）" },
+            { n: "4人", desc: "対立しやすい構造になりやすい。3＋1の関係性で動きやすくなる。" },
+            { n: "5人", desc: "役割が十分に分散し、チームとして機能し始める。" },
+          ].map((item) => (
+            <div key={item.n} className="flex gap-4 items-start">
+              <span className="text-xs font-bold text-white bg-gray-800 px-3 py-1 rounded-full shrink-0 mt-0.5">
+                {item.n}
+              </span>
+              <p className="text-sm text-gray-400 leading-relaxed">{item.desc}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* 哲学的なテキスト */}
         <div className="border-t border-gray-800 pt-6">
           <p className="text-xs text-gray-500 tracking-wide mb-3">あなたの組み合わせでは</p>
           <p className="text-sm text-gray-300 leading-[1.9]">{awakeningDesc}</p>
+        </div>
+      </section>
+
+      {/* ── STEP 5: 今いる環境で試してみよう ── */}
+      <section className="px-6 py-16 border-b border-gray-100">
+        <p className="text-xs tracking-widest text-gray-400 uppercase mb-3">Try Now</p>
+        <h2 className="text-lg font-bold text-black mb-2">まず今いる環境で試してみよう</h2>
+        <p className="text-sm text-gray-500 leading-relaxed mb-8">
+          特性は、特別な場所でしか使えないものではありません。<br />
+          職場・学校・家族・友人グループ。今ある環境が、最初の練習台です。
+        </p>
+        <div className="space-y-4 mb-8">
+          {mainType.currentEnvTips.map((tip, i) => (
+            <div key={tip} className="flex items-start gap-4 bg-gray-50 rounded-2xl p-4">
+              <span className="w-7 h-7 rounded-full bg-black text-white text-xs flex items-center justify-center shrink-0 font-medium">
+                {i + 1}
+              </span>
+              <p className="text-sm text-gray-700 leading-relaxed">{tip}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* 心地よい環境 */}
+        <p className="text-xs tracking-widest text-gray-400 uppercase mb-4">あなたが潤いやすい環境</p>
+        <ul className="space-y-2 mb-6">
+          {mainType.environment.map((e) => (
+            <li key={e} className="flex items-center gap-3 text-sm text-gray-700">
+              <span className="w-1.5 h-1.5 rounded-full bg-black shrink-0" />
+              {e}
+            </li>
+          ))}
+        </ul>
+
+        {/* あなたが自然に作っている環境 */}
+        <div className="border border-gray-100 rounded-2xl p-5">
+          <p className="text-xs text-gray-400 mb-3">あなたがいることで自然に生まれること</p>
+          <ul className="space-y-2">
+            {mainType.creates.map((c) => (
+              <li key={c} className="flex items-center gap-3 text-sm text-gray-700">
+                <span className="text-black shrink-0 font-bold">→</span>
+                {c}
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 
@@ -201,91 +309,6 @@ export default function ResultCard({ result }: Props) {
             </div>
           ))}
         </div>
-      </section>
-
-      {/* ⑨ 心地よい環境 */}
-      <section className="px-6 py-16 bg-gray-50 border-b border-gray-100">
-        <p className="text-xs tracking-widest text-gray-400 uppercase mb-6">Your Environment</p>
-        <h2 className="text-lg font-bold text-black mb-6">あなたが潤いやすい環境</h2>
-        <ul className="space-y-3">
-          {mainType.environment.map((e) => (
-            <li key={e} className="flex items-center gap-3 text-sm text-gray-700">
-              <span className="w-1.5 h-1.5 rounded-full bg-black shrink-0" />
-              {e}
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      {/* ⑩ あなたが自然に作っている環境 */}
-      <section className="px-6 py-16 border-b border-gray-100">
-        <p className="text-xs tracking-widest text-gray-400 uppercase mb-6">What You Create</p>
-        <h2 className="text-lg font-bold text-black mb-4">あなたが自然に作っている環境</h2>
-        <div className="text-sm text-gray-500 leading-relaxed mb-6 space-y-2">
-          <p>あなたは、環境に影響されるだけの存在ではありません。</p>
-          <p>あなた自身も、誰かにとっての環境です。</p>
-        </div>
-        <ul className="space-y-3 mb-6">
-          {mainType.creates.map((c) => (
-            <li key={c} className="flex items-center gap-3 text-sm text-gray-700">
-              <span className="text-red-500 shrink-0 font-bold">→</span>
-              {c}
-            </li>
-          ))}
-        </ul>
-        <div className="text-sm text-gray-400 leading-[1.9] space-y-0.5">
-          <p>あなたがいることで、挑戦しやすくなる人がいるかもしれません。</p>
-          <p>安心して話せる人がいるかもしれません。</p>
-          <p>新しい一歩を踏み出せる人がいるかもしれません。</p>
-        </div>
-      </section>
-
-      {/* ⑪ 向いている活動 */}
-      <section className="px-6 py-16 border-b border-gray-100">
-        <p className="text-xs tracking-widest text-gray-400 uppercase mb-6">Your Activities</p>
-        <h2 className="text-lg font-bold text-black mb-3">あなたの役割が活きる活動</h2>
-        <p className="text-sm text-gray-500 leading-relaxed mb-8">
-          活動は、能力を試す場所ではありません。<br />
-          あなたの役割が育ち、誰かの役割と循環する場所です。
-        </p>
-
-        {/* 一般的な向いている活動 */}
-        <p className="text-xs font-medium text-gray-500 tracking-wide mb-4">
-          一般的に、こんな活動で力を発揮しやすいタイプです
-        </p>
-        <ul className="space-y-3 mb-10">
-          {mainType.generalActivities.map((a) => (
-            <li key={a} className="flex items-start gap-3 text-sm text-gray-700">
-              <span className="w-5 h-5 rounded-full bg-black text-white text-xs flex items-center justify-center shrink-0 mt-0.5">✓</span>
-              {a}
-            </li>
-          ))}
-        </ul>
-
-        {/* REVO活動の紹介（軽く名前だけ） */}
-        {result.suggestedActivities.length > 0 && (
-          <div className="mt-2">
-            <div className="flex items-center gap-3 mb-5">
-              <span className="flex-1 h-px bg-gray-100" />
-              <p className="text-xs text-gray-400 whitespace-nowrap">REVOではこんな活動も</p>
-              <span className="flex-1 h-px bg-gray-100" />
-            </div>
-            <p className="text-xs text-gray-400 leading-relaxed mb-5">
-              あなたの役割が活きそうな活動はいかがでしたか？<br />
-              REVOではこんな活動があります。
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {result.suggestedActivities.map((activity) => (
-                <span
-                  key={activity.id}
-                  className="text-xs text-gray-500 border border-gray-200 px-4 py-2 rounded-full"
-                >
-                  {activity.name}
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
       </section>
 
       {/* ⑫ 成長クエスト */}
@@ -324,6 +347,54 @@ export default function ResultCard({ result }: Props) {
             </li>
           ))}
         </ul>
+      </section>
+
+      {/* ── STEP 6: 試せる環境を探している人へ（Revoは出口） ── */}
+      <section className="px-6 py-16 border-b border-gray-100">
+        <p className="text-xs tracking-widest text-gray-400 uppercase mb-3">Find Your Stage</p>
+        <h2 className="text-lg font-bold text-black mb-2">
+          試せる環境を探している人へ
+        </h2>
+        <p className="text-sm text-gray-500 leading-relaxed mb-8">
+          今ある環境で特性を活かしてみて、<br />
+          「もっと大きな場所で試したい」と感じたなら——
+        </p>
+
+        {/* 一般的な向いている活動 */}
+        <p className="text-xs font-medium text-gray-500 tracking-wide mb-4">
+          このタイプが力を発揮しやすい活動
+        </p>
+        <ul className="space-y-3 mb-10">
+          {mainType.generalActivities.map((a) => (
+            <li key={a} className="flex items-start gap-3 text-sm text-gray-700">
+              <span className="w-5 h-5 rounded-full bg-black text-white text-xs flex items-center justify-center shrink-0 mt-0.5">✓</span>
+              {a}
+            </li>
+          ))}
+        </ul>
+
+        {/* Revo紹介（出口として自然に） */}
+        {result.suggestedActivities.length > 0 && (
+          <div className="bg-gray-50 rounded-2xl p-6">
+            <p className="text-xs text-gray-400 mb-1">あなたの役割を試せる場所として</p>
+            <p className="text-sm font-bold text-black mb-4">Revoプロジェクトという選択肢</p>
+            <p className="text-xs text-gray-500 leading-relaxed mb-5">
+              Revoは、同じ場所にいる仲間ではなく、<br />
+              役割でつながるプロジェクト型のコミュニティです。<br />
+              あなたの特性が活きそうな活動があるかもしれません。
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {result.suggestedActivities.map((activity) => (
+                <span
+                  key={activity.id}
+                  className="text-xs text-gray-500 border border-gray-200 px-4 py-2 rounded-full"
+                >
+                  {activity.name}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
       </section>
 
       {/* ⑭ 無限の可能性を感じる締め */}
@@ -388,7 +459,7 @@ export default function ResultCard({ result }: Props) {
           >
             <p className="text-white font-medium text-sm text-center">111問フル診断へ進む</p>
             <p className="text-gray-400 text-xs text-center mt-1.5">
-              もっと深く、あなたの役割循環を知る。
+              もっと深く、チーム設計まで見える診断へ。
             </p>
           </Link>
 

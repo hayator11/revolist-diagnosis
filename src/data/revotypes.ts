@@ -36,6 +36,13 @@ export interface RevoType {
     description: string;
     tasks: string[];
   };
+  actionPrinciples: string[];  // このタイプの行動指針（4つ）
+  currentEnvTips: string[];    // 今いる環境での活かし方（3つ）
+  teamDesign: {
+    bestPair: RevoTypeKey;     // 2人で動くときの最良の相手
+    thirdPerson: RevoTypeKey;  // 3人目に足すといいタイプ
+    teamNote: string;          // 3人チームの説明
+  };
 }
 
 export const revoTypes: Record<RevoTypeKey, RevoType> = {
@@ -98,6 +105,22 @@ export const revoTypes: Record<RevoTypeKey, RevoType> = {
         "「整える役割」を少し育てることで、今の魅力がさらに広がる可能性があります。",
       tasks: ["裏方を体験する", "最後まで仕上げる経験をする", "誰かのサポートに徹する日を作る"],
     },
+    actionPrinciples: [
+      "まず動いて、考えは後からついてくる",
+      "理想を語ることが、人を動かす最初の一歩",
+      "失敗より、動かないことを恐れる",
+      "熱量を持って動けば、仲間は自然に集まる",
+    ],
+    currentEnvTips: [
+      "職場・学校でまず「やってみよう」と最初に声を上げる",
+      "誰も言い出せていないことを、先に言ってみる",
+      "小さなプロジェクトの「旗振り役」を志願してみる",
+    ],
+    teamDesign: {
+      bestPair: "arranger",
+      thirdPerson: "logicalmaister",
+      teamNote: "レボリストが先導し、アレンジャーが整え、ロジカルマイスターが設計する。熱量・実行・構造が揃うトリオです。",
+    },
   },
 
   maxdesigner: {
@@ -157,6 +180,22 @@ export const revoTypes: Record<RevoTypeKey, RevoType> = {
       description:
         "「仕組み化する力」を少し育てることで、アイデアが形として世界へ届きやすくなります。",
       tasks: ["企画書を1枚書いてみる", "誰かに説明して反応を見る", "ひとつを最後まで形にする"],
+    },
+    actionPrinciples: [
+      "制約を「面白い条件」として受け取る",
+      "可能性を広げてから絞り込む",
+      "既存の枠を「本当にこれで良いか？」と一度疑ってみる",
+      "アイデアは出しきってから評価する",
+    ],
+    currentEnvTips: [
+      "会議や話し合いで「他にどんな方法がある？」と問いかける",
+      "プロジェクトの発展案を出すポジションを積極的に担う",
+      "「これってもっと面白くできないか？」を日常的に問う習慣をつける",
+    ],
+    teamDesign: {
+      bestPair: "logicalmaister",
+      thirdPerson: "premiercrafter",
+      teamNote: "マックスデザイナーが発想し、ロジカルマイスターが設計し、プレミアクラフターが形にする。アイデアを確実に届けるトリオです。",
     },
   },
 
@@ -222,6 +261,22 @@ export const revoTypes: Record<RevoTypeKey, RevoType> = {
         "チームで表現に関わる経験をする",
       ],
     },
+    actionPrinciples: [
+      "言葉より空気感で伝える",
+      "美しさと意味を同時に追う",
+      "直感を信じて、後から言語化する",
+      "世界観を先に作ってから説明する",
+    ],
+    currentEnvTips: [
+      "チームの資料や発表に視覚的な工夫を加える役割を担う",
+      "場の雰囲気を整えることを自分の貢献として意識する",
+      "「こんな感じにしたい」を言葉でなく見本や参考で共有する",
+    ],
+    teamDesign: {
+      bestPair: "soulowner",
+      thirdPerson: "communicator",
+      teamNote: "イメージマイスターが世界観を作り、ソウルオーナーが感情を深め、コミュニケーターが届ける。心に響く表現を広げるトリオです。",
+    },
   },
 
   communicator: {
@@ -285,6 +340,22 @@ export const revoTypes: Record<RevoTypeKey, RevoType> = {
         "誰かを誘ってみる",
         "自分のやりたいことを一度声に出す",
       ],
+    },
+    actionPrinciples: [
+      "まず聞いてから話す",
+      "場の空気を読んで言葉を選ぶ",
+      "誰も置いていかないを意識する",
+      "橋渡し役を自ら進んで担う",
+    ],
+    currentEnvTips: [
+      "チームの中で「全員の意見をまとめる役」を担う",
+      "人と人をつなぐ紹介役を意識的にやってみる",
+      "場が止まったとき、最初に声をかける習慣をつける",
+    ],
+    teamDesign: {
+      bestPair: "soulowner",
+      thirdPerson: "revolist",
+      teamNote: "コミュニケーターが橋渡しし、ソウルオーナーが深めて、レボリストが動かす。関係性から行動を生むトリオです。",
     },
   },
 
@@ -350,6 +421,22 @@ export const revoTypes: Record<RevoTypeKey, RevoType> = {
         "誰かへ情報をアウトプットする場を作る",
       ],
     },
+    actionPrinciples: [
+      "まず調べてから動く",
+      "データと感覚の両方を根拠にする",
+      "情報を整理して、誰でも使える形にする",
+      "「なぜ？」を問い続けることが自分の力",
+    ],
+    currentEnvTips: [
+      "チームの情報収集・調査を積極的に担当する",
+      "判断に必要なデータを先回りして集めて提供する",
+      "「調べてきました」という一言で貢献する機会を作る",
+    ],
+    teamDesign: {
+      bestPair: "revolist",
+      thirdPerson: "arranger",
+      teamNote: "インフォレイダーが情報を集め、レボリストが行動に変え、アレンジャーが整える。根拠ある前進を生むトリオです。",
+    },
   },
 
   movmentor: {
@@ -413,6 +500,22 @@ export const revoTypes: Record<RevoTypeKey, RevoType> = {
         "応援する前に気持ちを確認する",
         "誰かのペースに合わせて動いてみる",
       ],
+    },
+    actionPrinciples: [
+      "仲間の小さな変化を見逃さない",
+      "応援は具体的な言葉で伝える",
+      "前に出なくていい、後ろから押すのも大きな力",
+      "人の成長を自分の喜びにする",
+    ],
+    currentEnvTips: [
+      "チームで落ち込んでいる人に最初に声をかける",
+      "誰かの挑戦を言葉で応援する習慣をつける",
+      "「一緒にやろう」と誘う役を意識して担う",
+    ],
+    teamDesign: {
+      bestPair: "revolist",
+      thirdPerson: "logicalmaister",
+      teamNote: "ムーブメンターが背中を押し、レボリストが先導し、ロジカルマイスターが道を示す。チームを前進させ続けるトリオです。",
     },
   },
 
@@ -478,6 +581,22 @@ export const revoTypes: Record<RevoTypeKey, RevoType> = {
         "「80点で出す」を一度試してみる",
       ],
     },
+    actionPrinciples: [
+      "最後の仕上げで手を抜かない",
+      "「もう少し良くなる」を信じ続ける",
+      "こだわりを言語化してチームと共有する",
+      "完成度を上げることが自分のチームへの貢献",
+    ],
+    currentEnvTips: [
+      "成果物の最終確認・品質チェックを担当する",
+      "クオリティの基準をチームに提案する",
+      "「ここをもう少し調整できる」という視点を持ち込む",
+    ],
+    teamDesign: {
+      bestPair: "revolist",
+      thirdPerson: "arranger",
+      teamNote: "プレミアクラフターが磨き上げ、レボリストが届け、アレンジャーが進行を整える。高品質な成果を確実に生むトリオです。",
+    },
   },
 
   logicalmaister: {
@@ -541,6 +660,22 @@ export const revoTypes: Record<RevoTypeKey, RevoType> = {
         "誰かの気持ちを先に聴いてみる",
         "「楽しそう」で動く経験をしてみる",
       ],
+    },
+    actionPrinciples: [
+      "なぜそうなるかを常に確認する",
+      "感情より構造で問題を解く",
+      "複雑なことをシンプルに整理する",
+      "根拠を持って発言する",
+    ],
+    currentEnvTips: [
+      "会議の議事録・整理役を担って貢献する",
+      "プロジェクトの課題を構造化して見える化する",
+      "「なぜ？」と問うことで議論の質を上げる",
+    ],
+    teamDesign: {
+      bestPair: "revolist",
+      thirdPerson: "communicator",
+      teamNote: "ロジカルマイスターが設計し、レボリストが実行し、コミュニケーターが共有する。論理・行動・対話がつながるトリオです。",
     },
   },
 
@@ -606,6 +741,22 @@ export const revoTypes: Record<RevoTypeKey, RevoType> = {
         "「やります」と先に手を挙げてみる",
       ],
     },
+    actionPrinciples: [
+      "全体の流れが見えたら、自然に動けば良い",
+      "誰が何をすべきかを先読みして準備する",
+      "調整は早いほどチームへのコストが下がる",
+      "裏方こそがチームの土台を作る",
+    ],
+    currentEnvTips: [
+      "役割分担を最初に整理する係を担う",
+      "チームの進捗が見える状態を自ら作る",
+      "誰かが困っていたら仕事を引き取る習慣をつける",
+    ],
+    teamDesign: {
+      bestPair: "revolist",
+      thirdPerson: "soulowner",
+      teamNote: "アレンジャーが流れを作り、レボリストが動かし、ソウルオーナーが関係性を守る。仕組みと人が両立するトリオです。",
+    },
   },
 
   soulowner: {
@@ -670,6 +821,22 @@ export const revoTypes: Record<RevoTypeKey, RevoType> = {
         "自分が心地よい場所を自分で作ってみる",
       ],
     },
+    actionPrinciples: [
+      "深さで勝負する",
+      "感情を否定せずに受け取る",
+      "じっくり向き合うことが力になる",
+      "自分の感覚を信頼する",
+    ],
+    currentEnvTips: [
+      "チームの心理的安全性を作る存在を意識して担う",
+      "「どう感じた？」と問いかけて場を深める",
+      "誰かが話しづらそうなときに最初に声をかける",
+    ],
+    teamDesign: {
+      bestPair: "communicator",
+      thirdPerson: "revolist",
+      teamNote: "ソウルオーナーが深めて、コミュニケーターが広げて、レボリストが動かす。共感から行動を生むトリオです。",
+    },
   },
 
   crazist: {
@@ -733,6 +900,22 @@ export const revoTypes: Record<RevoTypeKey, RevoType> = {
         "誰かに説明して理解してもらう経験をする",
         "小さく実験して結果を確認してみる",
       ],
+    },
+    actionPrinciples: [
+      "「それは無理」を疑うところから始める",
+      "常識の外側に答えがあると信じる",
+      "失敗は実験の一部であり、学びの入口",
+      "他と同じにしなくていい",
+    ],
+    currentEnvTips: [
+      "「こんなの無理かも」と思ったアイデアを声に出してみる",
+      "チームの固定観念に「本当に？」と問いかける",
+      "新しいやり方を試す実験役を自ら志願する",
+    ],
+    teamDesign: {
+      bestPair: "logicalmaister",
+      thirdPerson: "arranger",
+      teamNote: "クレイジストが突破口を開き、ロジカルマイスターが設計し、アレンジャーが整える。革新を現実に変えるトリオです。",
     },
   },
 };
