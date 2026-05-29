@@ -59,9 +59,8 @@ export default function MonitorPage() {
               <span className="text-3xl font-medium text-gray-300">モニター募集</span>
             </h1>
             <p className="text-sm text-gray-400 leading-relaxed mb-10 max-w-sm mx-auto">
-              これは、性格診断ではありません。
-              <br />
-              役割でチームを作るための、新しい共創OSの実験です。
+              これは、性格診断ではありません。<br />
+              役割でチームを作るための、<br />新しい共創OSの実験です。
             </p>
             <a
               href="#diagnoses"
@@ -77,24 +76,27 @@ export default function MonitorPage() {
       <section className="px-6 py-16 max-w-lg mx-auto">
         <FadeInSection>
           <p className="text-xs tracking-widest text-gray-400 uppercase mb-6">About</p>
-          <div className="text-sm text-gray-700 leading-relaxed space-y-4">
+          <div className="text-sm text-gray-700 leading-relaxed space-y-5">
             <p>
-              Revo Funding、Revo Link、Revo Songなど、
-              複数のRevoプロジェクトでは、
-              これから多くの人が関わりながら活動を進めていきます。
+              「あなたは何者か」で終わる診断は、もうたくさんあります。
+            </p>
+            <p className="leading-[1.9]">
+              このβ版が問うのは、その先です。<br />
+              あなたはどう動くか。<br />
+              誰と組むと力が出るか。<br />
+              どんなチームを作れるか。
             </p>
             <p>
-              その時に大切なのは、
+              4つの視点からあなたの役割と可能性を試しながら、
               「誰が優れているか」ではなく、
-              「誰と組むと力が発揮されるか」です。
-            </p>
-            <p>
-              このβ版では、
-              4つの視点からあなたの役割や可能性を試します。
+              「誰と組むと力が発揮されるか」を一緒に探ります。
             </p>
             <p className="text-gray-500 italic">
-              率直な感想をもとに、
-              111問フル診断の実装モデルを育てていきます。
+              率直な感想をもとに、111問フル診断の実装モデルを育てていきます。
+            </p>
+            <p className="text-gray-500">
+              何かしたいことを発見したいというあなたにも、<br />
+              きっと何かが見つかる。
             </p>
           </div>
         </FadeInSection>
