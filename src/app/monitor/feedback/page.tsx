@@ -68,6 +68,11 @@ export default function FeedbackPage() {
         method: "POST",
         headers: { Accept: "application/json" },
         body: formData,
+      });// Google Spreadsheetsにも同時送信
+      fetch("https://script.google.com/macros/s/AKfycbzjdt8ERXc8aOnu1BCbJnUnuDCkOMIT5lEYmUDDBOPvQq5I7fpVxl9Ucbly79SRnFBI/exec", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
       });
 
       if (res.ok) {
