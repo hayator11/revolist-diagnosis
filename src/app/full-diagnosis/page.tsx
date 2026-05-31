@@ -82,11 +82,10 @@ export default function FullDiagnosisPage() {
           <p>眠っていた力が開花していきます。</p>
         </div>
 
-        {/* 将来拡張: 111問フル診断 実装後に <Link href="/full-diagnosis/start"> に変更 */}
-        <div className="w-full rounded-2xl bg-black p-5 opacity-40 cursor-not-allowed select-none mb-3">
-          <p className="text-white font-medium text-sm text-center">111問フル診断へ進む</p>
-          <p className="text-gray-500 text-xs text-center mt-1.5">（準備中）</p>
-        </div>
+        <Link href="/revo111" className="block w-full rounded-2xl bg-black p-5 mb-3 hover:bg-gray-800 transition-colors">
+          <p className="text-white font-medium text-sm text-center">Revo111 44問診断へ進む</p>
+          <p className="text-gray-400 text-xs text-center mt-1.5">Sprint1 β版</p>
+        </Link>
 
         <div className="flex items-center gap-2 mt-4">
           <span className="flex-1 h-px bg-gray-100" />
