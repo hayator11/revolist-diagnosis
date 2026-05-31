@@ -6,9 +6,6 @@ import Link from "next/link";
 const DIAG_OPTIONS = ["Revo Role", "Revo Team", "Revo Match", "Revo Growth", "すべて"];
 const YES_NO_OPTIONS = ["はい", "どちらとも言えない", "いいえ"];
 
-// Formspree のフォーム ID（環境変数 or ハードコード）
-// 設定方法: https://formspree.io でアカウント作成 → New Form → フォームID を取得
-// Vercel の環境変数に NEXT_PUBLIC_FORMSPREE_ID=xxxxxx を追加
 const FORMSPREE_ID = process.env.NEXT_PUBLIC_FORMSPREE_ID ?? "meeddgby";
 const FORMSPREE_ENDPOINT = `https://formspree.io/f/${FORMSPREE_ID}`;
 
@@ -58,7 +55,6 @@ export default function FeedbackPage() {
     };
 
     try {
-      // FormData を使うことでプリフライトリクエストを回避
       const formData = new FormData();
       for (const [key, value] of Object.entries(payload)) {
         formData.append(key, String(value));
@@ -68,8 +64,10 @@ export default function FeedbackPage() {
         method: "POST",
         headers: { Accept: "application/json" },
         body: formData,
-      });// Google Spreadsheetsにも同時送信
-      fetch("https://script.google.com/macros/s/AKfycbzjdt8ERXc8aOnu1BCbJnUnuDCkOMIT5lEYmUDDBOPvQq5I7fpVxl9Ucbly79SRnFBI/exec", {
+      });
+
+      // Google Spreadsheetsにも同時送信
+      fetch("/api/feedback", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -119,7 +117,6 @@ export default function FeedbackPage() {
   return (
     <main className="min-h-screen px-6 py-12">
       <div className="max-w-lg mx-auto">
-        {/* ヘッダー */}
         <div className="mb-10">
           <p className="text-xs tracking-widest text-gray-400 uppercase mb-3">Monitor Feedback</p>
           <h1 className="text-3xl font-bold text-black mb-3">感想を送る</h1>
@@ -131,8 +128,6 @@ export default function FeedbackPage() {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-10">
-
-          {/* Q1: 試した診断 */}
           <div>
             <label className="block text-sm font-medium text-black mb-3">
               1. 試した診断はどれですか？
@@ -156,7 +151,6 @@ export default function FeedbackPage() {
             </div>
           </div>
 
-          {/* Q2〜Q7: 選択問題 */}
           {[
             { q: "2. 一番面白かった診断はどれですか？", val: mostFun, set: setMostFun },
             { q: "3. 一番「当たっている」と感じた診断はどれですか？", val: mostAccurate, set: setMostAccurate },
@@ -186,7 +180,6 @@ export default function FeedbackPage() {
             </div>
           ))}
 
-          {/* Q8〜Q10: テキスト入力 */}
           {[
             { q: "8. 結果ページで心に残った言葉はありますか？", val: memorableWords, set: setMemorableWords, placeholder: "印象に残った言葉や文章があれば..." },
             { q: "9. わかりにくかった部分はありますか？", val: unclear, set: setUnclear, placeholder: "質問の意味がわからなかったなど..." },
@@ -204,7 +197,6 @@ export default function FeedbackPage() {
             </div>
           ))}
 
-          {/* Q11: 111問版 */}
           <div>
             <label className="block text-sm font-medium text-black mb-3">
               11. 111問版ができたら試してみたいですか？
@@ -227,7 +219,6 @@ export default function FeedbackPage() {
             </div>
           </div>
 
-          {/* Q12〜Q13: 任意テキスト */}
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-black mb-2">
@@ -255,14 +246,12 @@ export default function FeedbackPage() {
             </div>
           </div>
 
-          {/* エラーメッセージ */}
           {error && (
             <div className="bg-red-50 border border-red-200 rounded-2xl px-4 py-3">
               <p className="text-sm text-red-600">{error}</p>
             </div>
           )}
 
-          {/* 送信 */}
           <div className="pt-4">
             <button
               type="submit"
@@ -284,7 +273,6 @@ export default function FeedbackPage() {
           </div>
         </form>
 
-        {/* モニタートップへ */}
         <div className="mt-10 text-center">
           <Link href="/monitor" className="text-xs text-gray-400 hover:text-black transition-colors">
             ← モニタートップに戻る
