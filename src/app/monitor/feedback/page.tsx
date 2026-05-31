@@ -58,20 +58,28 @@ export default function FeedbackPage() {
     };
 
     try {
+      // FormData を使うことでプリフライトリクエストを回避
+      const formData = new FormData();
+      for (const [key, value] of Object.entries(payload)) {
+        formData.append(key, String(value));
+      }
+
       const res = await fetch(FORMSPREE_ENDPOINT, {
         method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify(payload),
+        headers: { Accept: "application/json" },
+        body: formData,
       });
 
       if (res.ok) {
         setSubmitted(true);
       } else {
         const data = await res.json().catch(() => ({}));
-        setError(data?.error ?? "送信に失敗しました。もう一度お試しください。");
+        setError(data?.error ?? `送信に失敗しました（${res.status}）。もう一度お試しください。`);
       }
-    } catch {
-      setError("ネットワークエラーが発生しました。もう一度お試しください。");
+    } catch (err) {
+      console.error("Formspree送信エラー:", err);
+      const msg = err instanceof Error ? err.message : String(err);
+      setError(`送信エラー: ${msg}`);
     } finally {
       setSending(false);
     }
