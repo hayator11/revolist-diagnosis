@@ -191,66 +191,84 @@ export default function RevoPage() {
                 <path d="M362 432 C402 454 436 462 482 468" stroke="#eab308" strokeWidth="3" markerEnd="url(#revoArrow)" />
                 <path d="M242 480 C286 500 394 500 438 480" stroke="#6b7280" strokeWidth="3" markerEnd="url(#revoArrow)" />
 
+                <a href="https://revofunding.onokun.com/" target="_blank" rel="noreferrer" aria-label="レボファンディングのページへ" className="cursor-pointer">
                 <g>
                   <rect x="210" y="80" width="260" height="68" rx="20" fill="url(#fundingGradient)" />
                   <text x="340" y="105" textAnchor="middle" fontSize="10" fontWeight="800" fill="#ede9fe">CENTER</text>
                   <text x="340" y="130" textAnchor="middle" fontSize="24" fontWeight="900" fill="#ffffff">レボファンディング</text>
                   <text x="340" y="144" textAnchor="middle" fontSize="10" fontWeight="700" fill="#ddd6fe">応援者・ファン・商品・活動レポートを循環</text>
                 </g>
+                </a>
 
+                <a href="https://revolist.earth/revolist-lab" target="_blank" rel="noreferrer" aria-label="レボリストLabのページへ" className="cursor-pointer">
                 <g>
                   <rect x="220" y="196" width="240" height="88" rx="20" fill="url(#labGradient)" />
                   <text x="340" y="226" textAnchor="middle" fontSize="10" fontWeight="800" fill="#fee2e2">LAB</text>
                   <text x="340" y="258" textAnchor="middle" fontSize="30" fontWeight="900" fill="#ffffff">レボリストLab</text>
                   <text x="340" y="276" textAnchor="middle" fontSize="10" fontWeight="700" fill="#fee2e2">すべての企画を生む実験場</text>
                 </g>
+                </a>
 
+                <a href="https://revofunding.onokun.com/revo-art.html" target="_blank" rel="noreferrer" aria-label="レボアートのページへ" className="cursor-pointer">
                 <g>
                   <rect x="218" y="344" width="244" height="70" rx="18" fill="url(#artGradient)" />
                   <text x="340" y="370" textAnchor="middle" fontSize="10" fontWeight="800" fill="#fce7f3">PROJECT</text>
                   <text x="340" y="400" textAnchor="middle" fontSize="26" fontWeight="900" fill="#ffffff">レボアート</text>
                 </g>
+                </a>
 
+                <a href="https://revosong.onokun.com/" target="_blank" rel="noreferrer" aria-label="レボソングのページへ" className="cursor-pointer">
                 <g>
                   <rect x="36" y="154" width="164" height="64" rx="18" fill="#ecfeff" stroke="#06b6d4" strokeWidth="2" />
                   <text x="118" y="180" textAnchor="middle" fontSize="10" fontWeight="800" fill="#64748b">REVO SERIES</text>
                   <text x="118" y="204" textAnchor="middle" fontSize="19" fontWeight="900" fill="#111827">レボソング</text>
                 </g>
+                </a>
 
+                <a href="https://revofunding.onokun.com/project-revolinks.html" target="_blank" rel="noreferrer" aria-label="レボリンクのページへ" className="cursor-pointer">
                 <g>
                   <rect x="480" y="154" width="164" height="64" rx="18" fill="#f0fdf4" stroke="#22c55e" strokeWidth="2" />
                   <text x="562" y="180" textAnchor="middle" fontSize="10" fontWeight="800" fill="#64748b">REVO SERIES</text>
                   <text x="562" y="204" textAnchor="middle" fontSize="19" fontWeight="900" fill="#111827">レボリンク</text>
                 </g>
+                </a>
 
+                <a href="https://revofunding.onokun.com/shop.html" target="_blank" rel="noreferrer" aria-label="レボハットのページへ" className="cursor-pointer">
                 <g>
                   <rect x="40" y="322" width="174" height="64" rx="18" fill="#eff6ff" stroke="#3b82f6" strokeWidth="2" />
                   <text x="127" y="348" textAnchor="middle" fontSize="10" fontWeight="800" fill="#64748b">REVO SERIES</text>
                   <text x="127" y="372" textAnchor="middle" fontSize="19" fontWeight="900" fill="#111827">レボハット</text>
                 </g>
+                </a>
 
+                <a href="https://revofunding.onokun.com/designers.html" target="_blank" rel="noreferrer" aria-label="認定アーティストのページへ" className="cursor-pointer">
                 <g>
                   <rect x="466" y="322" width="174" height="64" rx="18" fill="#fffbeb" stroke="#eab308" strokeWidth="2" />
                   <text x="553" y="348" textAnchor="middle" fontSize="10" fontWeight="800" fill="#64748b">SUPPORT</text>
                   <text x="553" y="372" textAnchor="middle" fontSize="18" fontWeight="900" fill="#111827">認定アーティスト</text>
                 </g>
+                </a>
 
+                <a href="https://onokun.com/" target="_blank" rel="noreferrer" aria-label="おのくんのページへ" className="cursor-pointer">
                 <g>
                   <rect x="98" y="448" width="188" height="54" rx="18" fill="#fdf2f8" stroke="#ec4899" strokeWidth="2" />
                   <text x="192" y="470" textAnchor="middle" fontSize="10" fontWeight="800" fill="#64748b">FOUNDATION</text>
                   <text x="192" y="494" textAnchor="middle" fontSize="20" fontWeight="900" fill="#111827">おのくん</text>
                 </g>
+                </a>
 
+                <a href="https://revolist.earth/bosai-bosai" target="_blank" rel="noreferrer" aria-label="防災×帽祭のページへ" className="cursor-pointer">
                 <g>
                   <rect x="394" y="448" width="188" height="54" rx="18" fill="#fffbeb" stroke="#eab308" strokeWidth="2" />
                   <text x="488" y="470" textAnchor="middle" fontSize="10" fontWeight="800" fill="#64748b">FOUNDATION</text>
                   <text x="488" y="494" textAnchor="middle" fontSize="20" fontWeight="900" fill="#111827">防災×帽祭</text>
                 </g>
+                </a>
               </svg>
             </div>
           </div>
           <p className="mt-4 text-center text-xs text-gray-400 leading-relaxed">
-            横に動かすと全体図を確認できます。
+            横に動かせます。図のボックスを押すと、各活動ページへ移動できます。
           </p>
         </FadeInSection>
 
