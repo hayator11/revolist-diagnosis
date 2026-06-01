@@ -35,16 +35,17 @@ export default function Revo111DiagnosisClient() {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center px-6 text-center">
         <p className="text-xs tracking-widest text-gray-400 uppercase mb-4">
-          Revo111 Sprint 1
+          Revo111 Monitor
         </p>
         <h1 className="text-3xl font-bold text-black mb-4 leading-snug">
-          Revo111 44問診断
+          Revo111 44問モニター診断
         </h1>
         <p className="text-sm text-gray-600 leading-relaxed mb-6 max-w-xs">
-          役割・成長・仲間・活動の循環を見つけるための診断です。
+          感想提供と改善協力を前提に、役割・成長・仲間・活動の循環を見つける診断です。
         </p>
         <ul className="text-xs text-gray-500 mb-10 space-y-1 text-left">
           <li>・ 44問・約5分の診断です</li>
+          <li>・ 結果ページで感想フォームに協力してください</li>
           <li>・ 正解も不正解もありません</li>
           <li>・ 今の自分に近い感覚で答えてください</li>
           <li>・ 役割は固定ではなく、育っていくものです</li>
@@ -56,7 +57,7 @@ export default function Revo111DiagnosisClient() {
           44問診断をはじめる
         </button>
         <Link href="/full-diagnosis" className="text-xs text-gray-400 hover:text-black transition-colors mt-6">
-          111問フル診断ページへ戻る
+          モニター募集ページへ戻る
         </Link>
       </div>
     );

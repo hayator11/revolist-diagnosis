@@ -406,7 +406,7 @@ export default function RevoPage() {
               href="/full-diagnosis"
               className="block w-full text-center py-4 rounded-2xl border border-gray-200 text-gray-600 text-sm hover:border-black hover:text-black transition-colors"
             >
-              111問フル診断について見る
+              44問版モニター募集を見る
             </Link>
 
             <Link

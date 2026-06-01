@@ -27,6 +27,20 @@ export default function ResultCard({ result }: Props) {
   // チーム設計データ
   const bestPairType = revoTypes[mainType.teamDesign.bestPair];
   const thirdPersonType = revoTypes[mainType.teamDesign.thirdPerson];
+  const sameTypeExamples = [
+    {
+      title: "仕事や活動では",
+      body: mainType.generalActivities[0],
+    },
+    {
+      title: "チームの中では",
+      body: mainType.creates[0],
+    },
+    {
+      title: "最初の一歩は",
+      body: mainType.currentEnvTips[0],
+    },
+  ];
 
   return (
     <div className="max-w-lg mx-auto pb-20">
@@ -103,6 +117,23 @@ export default function ResultCard({ result }: Props) {
           {comboTitle}
         </h2>
         <p className="text-sm text-gray-600 leading-[1.9]">{comboDesc}</p>
+      </section>
+
+      {/* 同タイプ事例 */}
+      <section className="px-6 py-16 border-b border-gray-100">
+        <p className="text-xs tracking-widest text-gray-400 uppercase mb-3">Same Type Examples</p>
+        <h2 className="text-lg font-bold text-black mb-3">同じタイプの人に起こりやすい場面</h2>
+        <p className="text-sm text-gray-500 leading-relaxed mb-8">
+          タイプは肩書きではなく、日常や活動の中で自然に出ている役割です。
+        </p>
+        <div className="space-y-3">
+          {sameTypeExamples.map((example) => (
+            <div key={example.title} className="rounded-2xl border border-gray-100 p-5">
+              <p className="text-xs text-gray-400 mb-2">{example.title}</p>
+              <p className="text-sm font-medium text-gray-800 leading-relaxed">{example.body}</p>
+            </div>
+          ))}
+        </div>
       </section>
 
       {/* ── STEP 2: このタイプの動き方 ── */}
@@ -198,7 +229,7 @@ export default function ResultCard({ result }: Props) {
             })}
         </div>
         <p className="text-xs text-gray-400 mt-6 leading-relaxed">
-          これらは優劣ではなく、あなたの力をさらに引き出してくれる存在です。違いは欠点ではなく、組み合わせるためにある。
+          これらは優劣ではなく、あなたの力をさらに引き出してくれる存在です。違いは、組み合わせるためにあります。
         </p>
       </section>
 
@@ -452,36 +483,36 @@ export default function ResultCard({ result }: Props) {
         </div>
 
         <div className="space-y-3">
-          {/* 111問フル診断 予告ページへ */}
-          <Link
-            href="/full-diagnosis"
-            className="block w-full rounded-2xl bg-black p-5 hover:bg-gray-800 transition-colors"
-          >
-            <p className="text-white font-medium text-sm text-center">111問フル診断へ進む</p>
-            <p className="text-gray-400 text-xs text-center mt-1.5">
-              もっと深く、チーム設計まで見える診断へ。
-            </p>
-          </Link>
-
           {/* Revoコミュニティページへ */}
           <Link
             href="/revo"
-            className="block w-full rounded-2xl border border-gray-200 p-5 hover:border-black transition-colors"
+            className="block w-full rounded-2xl bg-black p-5 hover:bg-gray-800 transition-colors"
           >
-            <p className="text-gray-700 font-medium text-sm text-center">Revoコミュニティへ参加する</p>
+            <p className="text-white font-medium text-sm text-center">Revoコミュニティへ参加する</p>
             <p className="text-gray-400 text-xs text-center mt-1.5">
-              役割でつながる、新しい共創循環へ。
+              役割を試せる活動と、仲間に出会う入口へ。
             </p>
           </Link>
 
-          {/* 将来拡張: 仲間を探す / Revoマップ */}
-          <div className="w-full rounded-2xl border border-gray-200 p-5 opacity-40 cursor-not-allowed select-none">
-            <p className="text-gray-600 font-medium text-sm text-center">あなたを輝かせる仲間を探す</p>
-            <p className="text-gray-400 text-xs text-center mt-1.5 leading-relaxed">
-              まだ出会っていない存在が、<br />あなたの未来を変えるかもしれません。
+          <Link
+            href="/team"
+            className="block w-full rounded-2xl border border-gray-200 p-5 hover:border-black transition-colors"
+          >
+            <p className="text-gray-700 font-medium text-sm text-center">仲間との組み方を見る</p>
+            <p className="text-gray-400 text-xs text-center mt-1.5">
+              2人・3人で力が伸びる組み合わせを知る。
             </p>
-            <p className="text-gray-400 text-xs text-center mt-1">（準備中）</p>
-          </div>
+          </Link>
+
+          <Link
+            href="/full-diagnosis"
+            className="block w-full rounded-2xl border border-gray-200 p-5 hover:border-black transition-colors"
+          >
+            <p className="text-gray-700 font-medium text-sm text-center">44問版モニター募集を見る</p>
+            <p className="text-gray-400 text-xs text-center mt-1.5 leading-relaxed">
+              感想提供・改善協力に参加できる方へ、別導線で案内します。
+            </p>
+          </Link>
 
           <Link
             href="/diagnosis"

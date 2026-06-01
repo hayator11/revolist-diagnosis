@@ -3,12 +3,12 @@ import type { Metadata } from "next";
 import FadeInSection from "@/components/FadeInSection";
 
 export const metadata: Metadata = {
-  title: "111問フル診断 | レボリスト診断",
+  title: "44問版モニター募集 | レボリスト診断",
   description:
-    "111の問いの先に、まだ見えていない役割がある。あなたの可能性と役割循環を、より深く探っていきます。",
+    "Revo111 44問版を、111問版改善のために一緒に育てるモニター募集ページです。",
   openGraph: {
-    title: "111問フル診断 | レボリスト診断",
-    description: "111の問いの先に、まだ見えていない役割がある。",
+    title: "44問版モニター募集 | レボリスト診断",
+    description: "感想提供と改善協力を前提に、Revo111 44問版を一緒に育てるモニター募集です。",
   },
 };
 
@@ -64,32 +64,35 @@ export default function FullDiagnosisPage() {
 
       {/* ── ファーストビュー ── */}
       <section className="min-h-[92vh] flex flex-col justify-center px-6 py-20 border-b border-gray-100">
-        <p className="text-xs tracking-widest text-gray-400 uppercase mb-10">Full Diagnosis</p>
+        <p className="text-xs tracking-widest text-gray-400 uppercase mb-10">Monitor Entry</p>
         <h1 className="text-3xl font-bold text-black leading-[1.5] mb-12">
-          111の問いの先に、<br />
-          まだ見えていない<br />
-          役割がある。
+          Revo111 44問版は、<br />
+          モニター専用の<br />
+          診断です。
         </h1>
         <div className="text-sm text-gray-500 leading-[2.4] mb-14 space-y-px">
-          <p>人は、ひとつのタイプでは終わりません。</p>
+          <p>44問版は、公開用の通常診断ではありません。</p>
           <p className="py-1" />
-          <p>誰と出会うか。</p>
-          <p>どんな環境に身を置くか。</p>
-          <p>どんな活動に参加するか。</p>
+          <p>感想を提供してくれる方。</p>
+          <p>質問や結果文の改善に協力してくれる方。</p>
+          <p>Revo111を一緒に育てたい方。</p>
           <p className="py-1" />
-          <p>その組み合わせによって、</p>
-          <p>役割は変化し、</p>
-          <p>眠っていた力が開花していきます。</p>
+          <p>その方へ、モニター導線として案内します。</p>
         </div>
 
-        <Link href="/revo111" className="block w-full rounded-2xl bg-black p-5 mb-3 hover:bg-gray-800 transition-colors">
-          <p className="text-white font-medium text-sm text-center">Revo111 44問診断へ進む</p>
-          <p className="text-gray-400 text-xs text-center mt-1.5">Sprint1 β版</p>
+        <Link href="/monitor" className="block w-full rounded-2xl bg-black p-5 mb-3 hover:bg-gray-800 transition-colors">
+          <p className="text-white font-medium text-sm text-center">モニター募集を見る</p>
+          <p className="text-gray-400 text-xs text-center mt-1.5">感想提供・改善協力が参加条件です</p>
+        </Link>
+
+        <Link href="/revo" className="block w-full rounded-2xl border border-gray-200 p-5 hover:border-black transition-colors">
+          <p className="text-gray-700 font-medium text-sm text-center">先にコミュニティを見る</p>
+          <p className="text-gray-400 text-xs text-center mt-1.5">44問版は参加後の案内として扱います</p>
         </Link>
 
         <div className="flex items-center gap-2 mt-4">
           <span className="flex-1 h-px bg-gray-100" />
-          <p className="text-xs text-gray-400 whitespace-nowrap">もっと詳しく</p>
+          <p className="text-xs text-gray-400 whitespace-nowrap">募集内容</p>
           <span className="flex-1 h-px bg-gray-100" />
         </div>
       </section>
@@ -97,36 +100,62 @@ export default function FullDiagnosisPage() {
       {/* ── Section 1: なぜ111問なのか ── */}
       <section className="px-6 py-20 border-b border-gray-100">
         <FadeInSection>
-          <p className="text-xs tracking-widest text-gray-400 uppercase mb-8">Why 111</p>
+          <p className="text-xs tracking-widest text-gray-400 uppercase mb-8">Why Monitor</p>
           <h2 className="text-2xl font-bold text-black mb-10 leading-snug">
-            人は、21問では<br />測りきれない。
+            44問版は、<br />改善のために使います。
           </h2>
           <div className="text-sm text-gray-600 leading-[2.2] space-y-4">
             <p>
               ライト診断では、<br />今、強く出ている役割の一部が見えました。
             </p>
             <p>
-              でも人は、<br />単純な性格だけでは動いていません。
+              44問版では、<br />役割・仲間・活動・成長の流れをもう少し深く見ていきます。
             </p>
             <div className="pl-5 border-l-2 border-gray-100 py-3 space-y-1 text-gray-400">
-              <p>感情。</p>
-              <p>環境。</p>
-              <p>仲間。</p>
-              <p>挑戦。</p>
-              <p>支え合い。</p>
-              <p>過去の経験。</p>
+              <p>診断結果はしっくりきたか。</p>
+              <p>仕事や活動に活かせそうか。</p>
+              <p>仲間との関わり方が見えたか。</p>
+              <p>次の一歩につながったか。</p>
             </div>
             <p>
-              それらが重なり合って、<br />今のあなたが存在しています。
+              いただいた声をもとに、<br />111問版の質問と結果文を育てていきます。
             </p>
             <p>
-              111問フル診断では、<br />
-              「あなたは何者か」ではなく、
+              そのため、44問版は<br />
+              「すぐ受ける診断」ではなく、
             </p>
             <div className="rounded-2xl border border-gray-100 bg-gray-50 p-6 leading-relaxed text-black font-medium">
-              「どんな循環の中で、<br />あなたの力が開花するのか」
+              「感想提供・改善協力を前提にした、<br />モニター用診断」
             </div>
-            <p>を見つけていきます。</p>
+            <p>として案内します。</p>
+          </div>
+        </FadeInSection>
+      </section>
+
+      <section className="px-6 py-20 border-b border-gray-100">
+        <FadeInSection>
+          <p className="text-xs tracking-widest text-gray-400 uppercase mb-6">Entry Conditions</p>
+          <h2 className="text-lg font-bold text-black mb-10">参加条件</h2>
+          <div className="space-y-3">
+            {[
+              {
+                title: "感想提供",
+                body: "診断結果のしっくり度、印象に残った言葉、活動に使えそうかを共有してください。",
+              },
+              {
+                title: "改善協力",
+                body: "質問文や結果文に対する気づきを、111問版改善のために届けてください。",
+              },
+              {
+                title: "案内後の参加",
+                body: "44問診断は、コミュニティ参加後またはモニター応募後に案内します。",
+              },
+            ].map((item) => (
+              <div key={item.title} className="rounded-2xl border border-gray-100 p-5">
+                <p className="text-sm font-bold text-black mb-2">{item.title}</p>
+                <p className="text-xs text-gray-500 leading-relaxed">{item.body}</p>
+              </div>
+            ))}
           </div>
         </FadeInSection>
       </section>
@@ -252,6 +281,12 @@ export default function FullDiagnosisPage() {
               Revoコミュニティへ進む
             </Link>
             <Link
+              href="/monitor"
+              className="block w-full text-center py-4 rounded-2xl border border-gray-200 text-gray-600 text-sm hover:border-black hover:text-black transition-colors"
+            >
+              モニター募集を見る
+            </Link>
+            <Link
               href="/diagnosis"
               className="block w-full text-center py-4 rounded-2xl border border-gray-200 text-gray-600 text-sm hover:border-black hover:text-black transition-colors"
             >
@@ -262,7 +297,7 @@ export default function FullDiagnosisPage() {
 
         {/*
           将来拡張:
-          - 111問フル診断 実装後にボタン有効化
+          - 111問版 実装後にボタン有効化
           - ログイン・成長履歴・活動履歴
           - チーム診断（複数人のタイプ分布を可視化）
           - Revoマップ（全国の役割分布図）
