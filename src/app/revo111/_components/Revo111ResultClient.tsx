@@ -9,6 +9,7 @@ import {
   getRevo111ResultDetails,
   isValidRevo111Answers,
 } from "@/lib/calculateRevo111Result";
+import { activityScoreLabels } from "@/data/revo111Navigation";
 
 const FORMSPREE_ID = process.env.NEXT_PUBLIC_FORMSPREE_ID ?? "meeddgby";
 const FORMSPREE_ENDPOINT = `https://formspree.io/f/${FORMSPREE_ID}`;
@@ -119,6 +120,30 @@ function OptionalInput({
         placeholder={placeholder}
         className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-black placeholder-gray-300 focus:border-gray-400 focus:outline-none"
       />
+    </div>
+  );
+}
+
+function ActivityScoreList({ scores }: { scores: Record<string, number> }) {
+  return (
+    <div className="space-y-3">
+      {activityScoreLabels.map((label) => {
+        const score = scores[label];
+        return (
+          <div key={label}>
+            <div className="mb-1.5 flex items-center justify-between">
+              <p className="text-sm font-medium text-gray-700">{label}</p>
+              <p className="text-xs text-gray-400">{score} / 5</p>
+            </div>
+            <div className="h-2 overflow-hidden rounded-full bg-gray-100">
+              <div
+                className="h-full rounded-full bg-black transition-all"
+                style={{ width: `${score * 20}%` }}
+              />
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -292,49 +317,64 @@ export default function Revo111ResultClient({ resultId }: Props) {
           Revo111 Result
         </p>
         <h1 className="text-3xl font-bold text-black leading-snug mb-4">
-          あなたの今の中心役割は、<br />
-          {details.mainRole.name}
+          あなたは、<br />
+          {details.mainNavigation.publicLabel}
         </h1>
         <p className="text-sm text-gray-500 leading-relaxed mb-8">
-          Revo111は人を固定するものではなく、今の役割・成長・仲間・活動の循環を見える形にする成長OSです。
+          {details.mainNavigation.publicSummary}
         </p>
 
         <div className="rounded-2xl bg-black p-6 text-white">
-          <p className="text-sm text-gray-400 mb-2">役割コピー</p>
-          <p className="text-xl font-bold leading-relaxed">{details.roleCopy}</p>
+          <p className="text-sm text-gray-400 mb-2">Revo111での呼び名</p>
+          <p className="text-2xl font-bold leading-relaxed">{details.mainRole.name}</p>
+          <p className="mt-4 text-sm leading-relaxed text-gray-300">
+            Revo111では、この役割を「{details.mainRole.name}」と呼びます。
+            役割は固定ではなく、仕事・仲間・活動の中で育っていくものです。
+          </p>
         </div>
       </section>
 
-      <ResultSection title="Role Balance">
+      <ResultSection title="Role Mix">
+        <h2 className="text-lg font-bold text-black mb-3">あなたを動かす3つの力</h2>
+        <p className="text-sm text-gray-600 leading-relaxed mb-5">{details.roleCopy}</p>
         <div className="space-y-3">
           {[
-            ["メイン役割", details.mainRole.name, result.main.percentage],
-            ["サブ役割", details.subRole.name, result.sub.percentage],
-            ["補助役割", details.supportRole.name, result.support.percentage],
-          ].map(([label, name, percentage]) => (
+            ["中心", details.mainNavigation.publicLabel, details.mainRole.name, result.main.percentage],
+            ["支え", details.subNavigation.publicLabel, details.subRole.name, result.sub.percentage],
+            ["育つ可能性", details.supportNavigation.publicLabel, details.supportRole.name, result.support.percentage],
+          ].map(([label, publicName, roleName, percentage]) => (
             <div key={label} className="rounded-2xl border border-gray-100 p-4">
               <div className="flex items-center justify-between mb-2">
                 <p className="text-xs text-gray-400">{label}</p>
-                <p className="text-xs text-gray-400">{percentage}%</p>
+                <p className="text-xs text-gray-400">{String(percentage)}%</p>
               </div>
-              <p className="text-lg font-bold text-black">{name}</p>
+              <p className="text-lg font-bold text-black">{publicName}</p>
+              <p className="mt-1 text-xs text-gray-400">Revo111名: {roleName}</p>
             </div>
           ))}
         </div>
       </ResultSection>
 
-      <ResultSection title="Current Point">
+      <ResultSection title="Work">
+        <h2 className="text-lg font-bold text-black mb-3">仕事で活かすなら</h2>
+        <p className="text-sm text-gray-600 leading-relaxed mb-5">
+          役職名ではなく、あなたの力が自然に出やすい仕事の入口です。
+        </p>
+        <PillList items={details.workExamples} />
+      </ResultSection>
+
+      <ResultSection title="Life Navigation">
         <div className="space-y-5">
           <div>
-            <h2 className="text-lg font-bold text-black mb-3">あなたの現在地</h2>
+            <h2 className="text-lg font-bold text-black mb-3">あなたはどんな人？</h2>
             <p className="text-sm text-gray-600 leading-relaxed">{details.currentText}</p>
           </div>
           <div>
-            <h2 className="text-lg font-bold text-black mb-3">サブ役割</h2>
+            <h2 className="text-lg font-bold text-black mb-3">支えになっている力</h2>
             <p className="text-sm text-gray-600 leading-relaxed">{details.subText}</p>
           </div>
           <div>
-            <h2 className="text-lg font-bold text-black mb-3">補助役割</h2>
+            <h2 className="text-lg font-bold text-black mb-3">これから育つ可能性</h2>
             <p className="text-sm text-gray-600 leading-relaxed">{details.supportText}</p>
           </div>
         </div>
@@ -351,17 +391,23 @@ export default function Revo111ResultClient({ resultId }: Props) {
         <p className="text-sm text-gray-600 leading-relaxed mt-4">{details.comfortableEnvironment}</p>
       </ResultSection>
 
+      <ResultSection title="Activities">
+        <h2 className="text-lg font-bold text-black mb-3">活動で活かすなら</h2>
+        <p className="text-sm text-gray-600 leading-relaxed mb-6">
+          今すぐ全部を選ぶ必要はありません。動きやすい入口を見つけるための目安です。
+        </p>
+        <ActivityScoreList scores={details.activityScores} />
+      </ResultSection>
+
       <ResultSection title="Growth Route">
         <h2 className="text-lg font-bold text-black mb-3">成長ルート</h2>
-        <div className="flex flex-wrap items-center gap-2 mb-4">
-          {details.growthRoute.roles.map((role, index) => (
-            <div key={role.key} className="flex items-center gap-2">
-              <span className="rounded-full bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-700">
-                {role.name}
-              </span>
-              {index < details.growthRoute.roles.length - 1 && (
-                <span className="text-xs text-gray-300">→</span>
-              )}
+        <div className="space-y-3 mb-5">
+          {details.growthRoute.meanings.map((meaning, index) => (
+            <div key={meaning} className="rounded-2xl bg-gray-50 p-4">
+              <p className="text-sm font-bold text-black">{meaning}</p>
+              <p className="mt-1 text-xs text-gray-400">
+                Revo111名: {details.growthRoute.roles[index]?.name}
+              </p>
             </div>
           ))}
         </div>
@@ -369,14 +415,21 @@ export default function Revo111ResultClient({ resultId }: Props) {
       </ResultSection>
 
       <ResultSection title="Future Partner">
-        <h2 className="text-lg font-bold text-black mb-3">未来を広げる存在</h2>
+        <h2 className="text-lg font-bold text-black mb-3">仲間との関わり方</h2>
         <p className="text-sm text-gray-600 leading-relaxed mb-4">
-          これは何かを埋めるという意味ではありません。違う役割と出会うことで、あなたの可能性が広がるということです。
+          あなたは、こんな人たちと組むと力が伸びやすくなります。
+        </p>
+        <PillList items={details.partnerLabels} />
+        <p className="text-sm text-gray-600 leading-relaxed my-5">
+          Revo111で見ると、未来を広げる存在は次の役割です。
         </p>
         <div className="space-y-3">
           {details.futurePartners.map((partner) => (
             <div key={partner.role.key} className="rounded-2xl bg-gray-50 p-4">
-              <p className="text-sm font-bold text-black mb-1">{partner.role.name}</p>
+              <p className="text-sm font-bold text-black mb-1">
+                {partner.navigation.publicLabel}
+              </p>
+              <p className="mb-2 text-xs text-gray-400">Revo111名: {partner.role.name}</p>
               <p className="text-xs text-gray-500 leading-relaxed">
                 {partner.creates.join(" → ")}。{partner.description}
               </p>
@@ -399,17 +452,6 @@ export default function Revo111ResultClient({ resultId }: Props) {
         </div>
       </ResultSection>
 
-      <ResultSection title="Activities">
-        <h2 className="text-lg font-bold text-black mb-3">向いている活動</h2>
-        <div className="space-y-2">
-          {details.activities.map((activity) => (
-            <p key={activity} className="rounded-2xl bg-gray-50 px-4 py-3 text-sm text-gray-700">
-              {activity}
-            </p>
-          ))}
-        </div>
-      </ResultSection>
-
       <ResultSection title="Funding Role">
         <h2 className="text-lg font-bold text-black mb-3">Fundingでの役割</h2>
         <p className="text-sm font-bold text-black mb-3">{details.fundingRole.title}</p>
@@ -425,11 +467,14 @@ export default function Revo111ResultClient({ resultId }: Props) {
         </div>
       </ResultSection>
 
-      <ResultSection title="Weekly Quest">
-        <h2 className="text-lg font-bold text-black mb-3">今週のクエスト</h2>
+      <ResultSection title="Today">
+        <h2 className="text-lg font-bold text-black mb-3">今日の一歩</h2>
+        <p className="text-sm text-gray-600 leading-relaxed mb-5">
+          今日3分でできる、小さなミッションです。
+        </p>
         <div className="space-y-3">
           <p className="rounded-2xl bg-black px-5 py-4 text-sm font-medium leading-relaxed text-white">
-            {details.quest.beginner}
+            {details.todayMission}
           </p>
           <p className="text-xs text-gray-500 leading-relaxed">
             余裕があれば、次に「{details.quest.intermediate}」へ進んでみてください。
@@ -559,6 +604,21 @@ export default function Revo111ResultClient({ resultId }: Props) {
             </button>
           </form>
         )}
+      </ResultSection>
+
+      <ResultSection title="Next Navigation">
+        <h2 className="text-lg font-bold text-black mb-3">次の診断へ</h2>
+        <p className="text-sm text-gray-600 leading-relaxed mb-5">
+          あなたの未来を広げる存在は、
+          {details.futurePartners[0]?.navigation.publicLabel ?? "仲間の力を引き出す人"}
+          でした。次は仲間診断で、あなたの周りにどんな役割がいるか見てみませんか？
+        </p>
+        <Link
+          href="/monitor/team"
+          className="block w-full rounded-2xl bg-black px-5 py-4 text-center text-sm font-medium text-white hover:bg-gray-800 transition-colors"
+        >
+          仲間診断（Monitor B）へ
+        </Link>
       </ResultSection>
 
       <section className="px-6 py-8 space-y-3">

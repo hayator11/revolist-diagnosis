@@ -9,6 +9,7 @@ import {
   REVO111_TOTAL_QUESTIONS,
   revo111Questions,
 } from "@/data/revo111Questions";
+import { revo111Navigation } from "@/data/revo111Navigation";
 
 export interface Revo111TypeScore {
   key: RevoTypeKey;
@@ -92,17 +93,20 @@ function findThirdPersonEffect(mainKey: RevoTypeKey, subKey: RevoTypeKey) {
 }
 
 function createRoleCopy(mainKey: RevoTypeKey, subKey: RevoTypeKey, supportKey: RevoTypeKey) {
-  const main = revo111Roles[mainKey];
-  const sub = revo111Roles[subKey];
-  const support = revo111Roles[supportKey];
+  const main = revo111Navigation[mainKey];
+  const sub = revo111Navigation[subKey];
+  const support = revo111Navigation[supportKey];
 
-  return `${main.catchCopy} ${sub.name}の力がその動きを支え、${support.name}の育つ可能性が未来をさらに広げます。`;
+  return `${main.publicLabel}として動きながら、${sub.publicLabel}の力が支えになり、${support.publicLabel}の可能性も育っています。`;
 }
 
 export function getRevo111ResultDetails(result: Revo111Result) {
   const mainRole = revo111Roles[result.main.key];
   const subRole = revo111Roles[result.sub.key];
   const supportRole = revo111Roles[result.support.key];
+  const mainNavigation = revo111Navigation[result.main.key];
+  const subNavigation = revo111Navigation[result.sub.key];
+  const supportNavigation = revo111Navigation[result.support.key];
   const growthRoute = growthRoutes[result.main.key];
   const futurePartners = matchRules[result.main.key];
   const thirdPerson = findThirdPersonEffect(result.main.key, result.sub.key);
@@ -111,20 +115,25 @@ export function getRevo111ResultDetails(result: Revo111Result) {
     mainRole,
     subRole,
     supportRole,
+    mainNavigation,
+    subNavigation,
+    supportNavigation,
     roleCopy: createRoleCopy(result.main.key, result.sub.key, result.support.key),
-    currentText: `あなたは現在、${mainRole.name}の役割が強く出ています。${mainRole.mission}`,
-    subText: `サブ役割として${subRole.name}が出ています。これは、${mainRole.name}の動きを支え、活動をより豊かにする力です。`,
-    supportText: `補助役割として${supportRole.name}が出ています。これは、活動や出会いを通してさらに育つ可能性を示しています。`,
+    currentText: mainNavigation.publicSummary,
+    subText: `${subNavigation.publicLabel}の力が、あなたの動きを支えています。`,
+    supportText: `${supportNavigation.publicLabel}の力も、活動や出会いを通して育つ可能性があります。`,
     gives: mainRole.gives,
     receives: mainRole.receives,
     comfortableEnvironment: mainRole.comfortableEnvironment,
     growthRoute: {
       roles: growthRoute.route.map((key) => revo111Roles[key]),
       theme: growthRoute.theme,
+      meanings: mainNavigation.growthMeanings,
       description: growthRoute.description,
     },
     futurePartners: futurePartners.map((rule) => ({
       role: revo111Roles[rule.partner],
+      navigation: revo111Navigation[rule.partner],
       creates: rule.creates,
       description: rule.description,
     })),
@@ -135,12 +144,16 @@ export function getRevo111ResultDetails(result: Revo111Result) {
       result: thirdPerson.result,
     },
     activities: mainRole.recommendedActivities,
+    workExamples: mainNavigation.workExamples,
+    activityScores: mainNavigation.activityScores,
+    partnerLabels: mainNavigation.partnerLabels,
     fundingRole: {
       title: mainRole.fundingRole,
       strengths: mainRole.fundingStrengths,
       ways: mainRole.fundingWays,
     },
     quest: mainRole.quest,
+    todayMission: mainNavigation.todayMission,
     linkRole: mainRole.linkRole,
     songRole: mainRole.songRole,
   };
