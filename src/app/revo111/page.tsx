@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import Revo111DiagnosisClient from "./_components/Revo111DiagnosisClient";
 
 export const metadata: Metadata = {
@@ -8,5 +9,15 @@ export const metadata: Metadata = {
 };
 
 export default function Revo111Page() {
-  return <Revo111DiagnosisClient />;
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center px-6">
+          <p className="text-sm text-gray-500">診断を読み込んでいます...</p>
+        </div>
+      }
+    >
+      <Revo111DiagnosisClient />
+    </Suspense>
+  );
 }

@@ -10,10 +10,15 @@ const REVO111_GOOGLE_SCRIPT_URL =
 const REVO111_TYPES = new Set([
   "revo111_result_log",
   "revo111_monitor_feedback",
+  "light_diagnosis",
+  "monitor_44",
+  "community_survey",
 ]);
 
-function getGoogleScriptUrl(type: unknown) {
-  return typeof type === "string" && REVO111_TYPES.has(type)
+function getGoogleScriptUrl(type: unknown, formType: unknown) {
+  const key = typeof type === "string" ? type : formType;
+
+  return typeof key === "string" && REVO111_TYPES.has(key)
     ? REVO111_GOOGLE_SCRIPT_URL
     : DEFAULT_GOOGLE_SCRIPT_URL;
 }
@@ -21,7 +26,7 @@ function getGoogleScriptUrl(type: unknown) {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const googleScriptUrl = getGoogleScriptUrl(body?.type);
+    const googleScriptUrl = getGoogleScriptUrl(body?.type, body?.formType);
 
     const response = await fetch(googleScriptUrl, {
       method: "POST",

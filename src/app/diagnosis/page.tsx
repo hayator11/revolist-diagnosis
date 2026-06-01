@@ -1,16 +1,25 @@
 "use client";
 
+import { Suspense } from "react";
 import { useState, useCallback } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import DiagnosisQuestion from "@/components/DiagnosisQuestion";
 import { questions } from "@/data/questions";
 import { encodeAnswers } from "@/lib/calculateResult";
+import {
+  discoveryChannelOptions,
+  getTrackingParams,
+  referredOptions,
+} from "@/data/revoResearch";
 
-export default function DiagnosisPage() {
+function DiagnosisContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<number[]>([]);
   const [started, setStarted] = useState(false);
+  const [discoveryChannel, setDiscoveryChannel] = useState("");
+  const [isReferred, setIsReferred] = useState("");
 
   const handleAnswer = useCallback(
     (value: number) => {
@@ -24,10 +33,22 @@ export default function DiagnosisPage() {
       } else {
         // 全問回答完了 → 結果ページへ
         const encoded = encodeAnswers(newAnswers);
-        router.push(`/result?answers=${encoded}`);
+        const params = new URLSearchParams({
+          answers: encoded,
+        });
+        const tracking = getTrackingParams(searchParams);
+
+        if (discoveryChannel) params.set("discoveryChannel", discoveryChannel);
+        if (isReferred) params.set("isReferred", isReferred);
+        if (tracking.referrerSlug) params.set("ref", tracking.referrerSlug);
+        if (tracking.utmSource) params.set("utm_source", tracking.utmSource);
+        if (tracking.utmMedium) params.set("utm_medium", tracking.utmMedium);
+        if (tracking.utmCampaign) params.set("utm_campaign", tracking.utmCampaign);
+
+        router.push(`/result?${params.toString()}`);
       }
     },
-    [answers, currentIndex, router]
+    [answers, currentIndex, discoveryChannel, isReferred, router, searchParams]
   );
 
   if (!started) {
@@ -49,6 +70,42 @@ export default function DiagnosisPage() {
           <li>・ 今の自分に当てはまるかで答えてください</li>
           <li>・ 途中でやり直すこともできます</li>
         </ul>
+        <div className="w-full max-w-xs space-y-4 mb-8 text-left">
+          <div>
+            <label className="block text-xs font-medium text-gray-500 mb-2">
+              Revo111をどこで知りましたか？ 任意
+            </label>
+            <select
+              value={discoveryChannel}
+              onChange={(event) => setDiscoveryChannel(event.target.value)}
+              className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-700 focus:border-gray-400 focus:outline-none"
+            >
+              <option value="">未回答</option>
+              {discoveryChannelOptions.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-gray-500 mb-2">
+              誰かの紹介で知りましたか？ 任意
+            </label>
+            <select
+              value={isReferred}
+              onChange={(event) => setIsReferred(event.target.value)}
+              className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-700 focus:border-gray-400 focus:outline-none"
+            >
+              <option value="">未回答</option>
+              {referredOptions.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
         <button
           onClick={() => setStarted(true)}
           className="bg-black text-white px-8 py-4 rounded-full text-base font-medium hover:bg-gray-800 transition-colors"
@@ -79,5 +136,19 @@ export default function DiagnosisPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function DiagnosisPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center px-6">
+          <p className="text-sm text-gray-500">診断を読み込んでいます...</p>
+        </div>
+      }
+    >
+      <DiagnosisContent />
+    </Suspense>
   );
 }

@@ -10,6 +10,11 @@ import {
   isValidRevo111Answers,
 } from "@/lib/calculateRevo111Result";
 import { activityScoreLabels } from "@/data/revo111Navigation";
+import {
+  getDeviceLabel,
+  joinMultiSelect,
+  type RevoResearchPayload,
+} from "@/data/revoResearch";
 
 const FORMSPREE_ID = process.env.NEXT_PUBLIC_FORMSPREE_ID ?? "meeddgby";
 const FORMSPREE_ENDPOINT = `https://formspree.io/f/${FORMSPREE_ID}`;
@@ -26,6 +31,48 @@ function extractReactionText(texts: string[], keywords: string[]) {
   return texts
     .filter((text) => keywords.some((keyword) => text.includes(keyword)))
     .join("\n\n");
+}
+
+function loadStoredResearch(encoded: string | null): RevoResearchPayload {
+  if (!encoded || typeof window === "undefined") return {};
+
+  const raw = window.sessionStorage.getItem(`revo111-research:${encoded}`);
+  if (!raw) return {};
+
+  try {
+    return JSON.parse(raw) as RevoResearchPayload;
+  } catch {
+    return {};
+  }
+}
+
+function toSheetResearchFields(research: RevoResearchPayload, fallbackReferrerSlug: string) {
+  return {
+    formType: research.formType ?? "monitor_44",
+    discoveryChannel: research.discoveryChannel ?? "",
+    discoveryDetail: research.discoveryDetail ?? "",
+    joinMotivation: joinMultiSelect(research.joinMotivation),
+    impressivePhrase: research.impressivePhrase ?? "",
+    isReferred: research.isReferred ?? "",
+    referrerName: research.referrerName ?? "",
+    referrerUrl: research.referrerUrl ?? "",
+    referrerSlug: research.referrerSlug || fallbackReferrerSlug,
+    referralContext: research.referralContext ?? "",
+    referrerPublishConsent: research.referrerPublishConsent ?? "",
+    currentInterest: joinMultiSelect(research.currentInterest),
+    interestedProjects: joinMultiSelect(research.interestedProjects),
+    communityInterest: research.communityInterest ?? "",
+    monitorInterest: research.monitorInterest ?? "44問版モニター診断",
+    possibleContribution: joinMultiSelect(research.possibleContribution),
+    expectationText: research.expectationText ?? "",
+    utmSource: research.utmSource ?? "",
+    utmMedium: research.utmMedium ?? "",
+    utmCampaign: research.utmCampaign ?? "",
+    pagePath: research.pagePath ?? (typeof window === "undefined" ? "" : window.location.pathname),
+    device: research.device ?? getDeviceLabel(),
+    ctaClicked: research.ctaClicked ?? "",
+    memo: research.memo ?? "",
+  };
 }
 
 function PillList({ items }: { items: string[] }) {
@@ -193,6 +240,11 @@ export default function Revo111ResultClient({ resultId }: Props) {
     };
   }, [encoded]);
 
+  const researchFields = useMemo(
+    () => toSheetResearchFields(loadStoredResearch(encoded), searchParams.get("ref") ?? ""),
+    [encoded, searchParams],
+  );
+
   const shareText = useMemo(() => {
     if (!resultState) return "";
     return [
@@ -224,8 +276,10 @@ export default function Revo111ResultClient({ resultId }: Props) {
 
     return {
       type: "revo111_result_log",
+      timestamp: new Date().toISOString(),
       diagnosisId: encoded,
       createdAt: new Date().toISOString(),
+      diagnosisType: "monitor_44",
       answers,
       roleScores,
       mainRoleKey: result.main.key,
@@ -293,8 +347,9 @@ export default function Revo111ResultClient({ resultId }: Props) {
       todayMission: details.todayMission,
       shareText,
       resultUrl,
+      ...researchFields,
     };
-  }, [encoded, resultState, resultUrl, shareText]);
+  }, [encoded, researchFields, resultState, resultUrl, shareText]);
 
   useEffect(() => {
     if (!resultLogPayload) return;
@@ -330,9 +385,13 @@ export default function Revo111ResultClient({ resultId }: Props) {
     const createdAt = new Date().toISOString();
     const feedbackTexts = [bestFit, feltDifferent].filter(Boolean);
     const payload = {
+      ...researchFields,
       type: "revo111_monitor_feedback",
+      formType: "feedback",
       diagnosisId: encoded ?? "",
+      diagnosisType: "monitor_44",
       createdAt,
+      timestamp: createdAt,
       mainRoleKey: resultState.result.main.key,
       mainRoleName: resultState.details.mainRole.name,
       subRoleKey: resultState.result.sub.key,
