@@ -112,6 +112,7 @@ export function getRevo111ResultDetails(result: Revo111Result) {
   const thirdPerson = findThirdPersonEffect(result.main.key, result.sub.key);
 
   return {
+    allRoles: revo111Roles,
     mainRole,
     subRole,
     supportRole,

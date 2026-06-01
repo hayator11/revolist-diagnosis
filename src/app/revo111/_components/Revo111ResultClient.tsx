@@ -16,6 +16,18 @@ const FORMSPREE_ENDPOINT = `https://formspree.io/f/${FORMSPREE_ID}`;
 
 const RATING_OPTIONS = [1, 2, 3, 4, 5];
 
+function toFormspreeValue(value: unknown) {
+  if (value === null || value === undefined) return "";
+  if (typeof value === "object") return JSON.stringify(value);
+  return String(value);
+}
+
+function extractReactionText(texts: string[], keywords: string[]) {
+  return texts
+    .filter((text) => keywords.some((keyword) => text.includes(keyword)))
+    .join("\n\n");
+}
+
 function PillList({ items }: { items: string[] }) {
   return (
     <div className="flex flex-wrap gap-2">
@@ -175,6 +187,7 @@ export default function Revo111ResultClient({ resultId }: Props) {
     if (!isValidRevo111Answers(answers)) return null;
     const result = calculateRevo111Result(answers);
     return {
+      answers,
       result,
       details: getRevo111ResultDetails(result),
     };
@@ -198,35 +211,107 @@ export default function Revo111ResultClient({ resultId }: Props) {
         ? `${window.location.origin}/revo111/result/${encoded}`
         : window.location.href;
 
-  useEffect(() => {
-    if (!resultState || !encoded) return;
+  const resultLogPayload = useMemo(() => {
+    if (!resultState || !encoded) return null;
 
-    const storageKey = `revo111-result-saved:${encoded}`;
-    if (window.sessionStorage.getItem(storageKey)) return;
+    const { answers, result, details } = resultState;
+    const roleScores = result.allScores.map((score) => ({
+      roleKey: score.key,
+      roleName: details.allRoles[score.key].name,
+      score: score.score,
+      percentage: score.percentage,
+    }));
 
-    const payload = {
-      種別: "Revo111診断結果",
-      結果ID: encoded,
-      メイン役割: resultState.details.mainRole.name,
-      サブ役割: resultState.details.subRole.name,
-      補助役割: resultState.details.supportRole.name,
-      メインスコア: resultState.result.main.score,
-      サブスコア: resultState.result.sub.score,
-      補助スコア: resultState.result.support.score,
-      結果URL: resultUrl,
-      送信日時: new Date().toISOString(),
+    return {
+      type: "revo111_result_log",
+      diagnosisId: encoded,
+      createdAt: new Date().toISOString(),
+      answers,
+      roleScores,
+      mainRoleKey: result.main.key,
+      mainRoleName: details.mainRole.name,
+      subRoleKey: result.sub.key,
+      subRoleName: details.subRole.name,
+      supportRoleKey: result.support.key,
+      supportRoleName: details.supportRole.name,
+      mainRole: {
+        key: result.main.key,
+        name: details.mainRole.name,
+        publicLabel: details.mainNavigation.publicLabel,
+        score: result.main.score,
+        percentage: result.main.percentage,
+      },
+      subRole: {
+        key: result.sub.key,
+        name: details.subRole.name,
+        publicLabel: details.subNavigation.publicLabel,
+        score: result.sub.score,
+        percentage: result.sub.percentage,
+      },
+      supportRole: {
+        key: result.support.key,
+        name: details.supportRole.name,
+        publicLabel: details.supportNavigation.publicLabel,
+        score: result.support.score,
+        percentage: result.support.percentage,
+      },
+      resultSummary: {
+        roleCopy: details.roleCopy,
+        publicLabel: details.mainNavigation.publicLabel,
+        publicSummary: details.mainNavigation.publicSummary,
+        gives: details.gives,
+        receives: details.receives,
+        comfortableEnvironment: details.comfortableEnvironment,
+      },
+      growthRoute: {
+        theme: details.growthRoute.theme,
+        roleNames: details.growthRoute.roles.map((role) => role.name),
+        meanings: details.growthRoute.meanings,
+        description: details.growthRoute.description,
+      },
+      futurePartners: details.futurePartners.map((partner) => ({
+        roleKey: partner.role.key,
+        roleName: partner.role.name,
+        publicLabel: partner.navigation.publicLabel,
+        creates: partner.creates,
+        description: partner.description,
+      })),
+      thirdPersonEffect: {
+        pairRoleNames: details.thirdPerson.pair.map((role) => role.name),
+        thirdRoleName: details.thirdPerson.third.name,
+        flow: details.thirdPerson.flow,
+        result: details.thirdPerson.result,
+      },
+      recommendedActivities: {
+        workExamples: details.workExamples,
+        activityScores: details.activityScores,
+      },
+      fundingRole: details.fundingRole,
+      weeklyQuest: details.quest,
+      weeklyQuestBeginner: details.quest.beginner,
+      weeklyQuestIntermediate: details.quest.intermediate,
+      todayMission: details.todayMission,
+      shareText,
+      resultUrl,
     };
+  }, [encoded, resultState, resultUrl, shareText]);
+
+  useEffect(() => {
+    if (!resultLogPayload) return;
+
+    const storageKey = `revo111-result-saved:${resultLogPayload.diagnosisId}`;
+    if (window.sessionStorage.getItem(storageKey)) return;
 
     fetch("/api/feedback", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
+      body: JSON.stringify(resultLogPayload),
     }).then(() => {
       window.sessionStorage.setItem(storageKey, "true");
     }).catch(() => {
       // Result display should never be blocked by monitor logging.
     });
-  }, [encoded, resultState, resultUrl]);
+  }, [resultLogPayload]);
 
   const handleCopyResult = async () => {
     const text = `${shareText}\n${resultUrl}`;
@@ -242,29 +327,63 @@ export default function Revo111ResultClient({ resultId }: Props) {
     setSending(true);
     setError("");
 
+    const createdAt = new Date().toISOString();
+    const feedbackTexts = [bestFit, feltDifferent].filter(Boolean);
     const payload = {
-      種別: "Revo111モニター感想",
-      結果ID: encoded ?? "なし",
-      結果URL: resultUrl,
-      メイン役割: resultState.details.mainRole.name,
-      サブ役割: resultState.details.subRole.name,
-      補助役割: resultState.details.supportRole.name,
-      診断結果はしっくりきたか: fitRating || "未回答",
-      どこが一番しっくりきたか: bestFit || "なし",
-      違和感があった部分: feltDifferent || "なし",
-      仕事や活動に活かせそうか: useRating || "未回答",
-      誰かに見せたいと思ったか: shareRating || "未回答",
-      "111問版ができたら受けたいか": want111Rating || "未回答",
-      名前: name || "匿名",
-      SNS: sns || "なし",
-      連絡先: contact || "なし",
-      送信日時: new Date().toISOString(),
+      type: "revo111_monitor_feedback",
+      diagnosisId: encoded ?? "",
+      createdAt,
+      mainRoleKey: resultState.result.main.key,
+      mainRoleName: resultState.details.mainRole.name,
+      subRoleKey: resultState.result.sub.key,
+      subRoleName: resultState.details.subRole.name,
+      supportRoleKey: resultState.result.support.key,
+      supportRoleName: resultState.details.supportRole.name,
+      mainRole: {
+        key: resultState.result.main.key,
+        name: resultState.details.mainRole.name,
+        publicLabel: resultState.details.mainNavigation.publicLabel,
+      },
+      subRole: {
+        key: resultState.result.sub.key,
+        name: resultState.details.subRole.name,
+        publicLabel: resultState.details.subNavigation.publicLabel,
+      },
+      supportRole: {
+        key: resultState.result.support.key,
+        name: resultState.details.supportRole.name,
+        publicLabel: resultState.details.supportNavigation.publicLabel,
+      },
+      fitScore: fitRating || null,
+      usefulForWorkScore: useRating || null,
+      shareWillingnessScore: shareRating || null,
+      wantFullVersionScore: want111Rating || null,
+      goodPointText: bestFit,
+      discomfortText: feltDifferent,
+      freeText: feedbackTexts.join("\n\n"),
+      name: name || null,
+      sns: sns || null,
+      contact: contact || null,
+      resultUrl,
+      quest: resultState.details.quest,
+      weeklyQuestBeginner: resultState.details.quest.beginner,
+      weeklyQuestIntermediate: resultState.details.quest.intermediate,
+      todayMission: resultState.details.todayMission,
+      questReactionText: extractReactionText(feedbackTexts, ["クエスト", "ミッション", "今日", "一歩"]),
+      futurePartners: resultState.details.futurePartners.map((partner) => ({
+        roleKey: partner.role.key,
+        roleName: partner.role.name,
+        publicLabel: partner.navigation.publicLabel,
+      })),
+      futurePartnerRoleNames: resultState.details.futurePartners.map((partner) => partner.role.name),
+      futurePartnerLabels: resultState.details.futurePartners.map((partner) => partner.navigation.publicLabel),
+      futurePartnerReactionText: extractReactionText(feedbackTexts, ["仲間", "未来", "広げる存在"]),
     };
 
     try {
       const formData = new FormData();
       for (const [key, value] of Object.entries(payload)) {
-        formData.append(key, String(value));
+        formData.append(key, toFormspreeValue(value));
       }
 
       const [formspreeRes] = await Promise.all([
