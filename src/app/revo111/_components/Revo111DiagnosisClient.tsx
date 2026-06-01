@@ -25,7 +25,7 @@ export default function Revo111DiagnosisClient() {
       if (currentIndex < revo111Questions.length - 1) {
         setTimeout(() => setCurrentIndex((index) => index + 1), 180);
       } else {
-        router.push(`/revo111/result?answers=${encodeRevo111Answers(newAnswers)}`);
+        router.push(`/revo111/result/${encodeRevo111Answers(newAnswers)}`);
       }
     },
     [answers, currentIndex, router]

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import {
   calculateRevo111Result,
@@ -9,6 +9,11 @@ import {
   getRevo111ResultDetails,
   isValidRevo111Answers,
 } from "@/lib/calculateRevo111Result";
+
+const FORMSPREE_ID = process.env.NEXT_PUBLIC_FORMSPREE_ID ?? "meeddgby";
+const FORMSPREE_ENDPOINT = `https://formspree.io/f/${FORMSPREE_ID}`;
+
+const RATING_OPTIONS = [1, 2, 3, 4, 5];
 
 function PillList({ items }: { items: string[] }) {
   return (
@@ -37,9 +42,107 @@ function ResultSection({
   );
 }
 
-export default function Revo111ResultClient() {
+function RatingInput({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: number;
+  onChange: (value: number) => void;
+}) {
+  return (
+    <div>
+      <label className="block text-sm font-medium text-black mb-3">{label}</label>
+      <div className="grid grid-cols-5 gap-2">
+        {RATING_OPTIONS.map((option) => (
+          <button
+            key={option}
+            type="button"
+            onClick={() => onChange(option)}
+            className={`rounded-2xl border py-3 text-sm font-medium transition-colors ${
+              value === option
+                ? "border-black bg-black text-white"
+                : "border-gray-200 text-gray-600 hover:border-gray-400"
+            }`}
+          >
+            {option}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function TextAreaInput({
+  label,
+  value,
+  onChange,
+  placeholder,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  placeholder: string;
+}) {
+  return (
+    <div>
+      <label className="block text-sm font-medium text-black mb-2">{label}</label>
+      <textarea
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        placeholder={placeholder}
+        rows={3}
+        className="w-full resize-none rounded-2xl border border-gray-200 px-4 py-3 text-sm text-black placeholder-gray-300 focus:border-gray-400 focus:outline-none"
+      />
+    </div>
+  );
+}
+
+function OptionalInput({
+  label,
+  value,
+  onChange,
+  placeholder,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  placeholder: string;
+}) {
+  return (
+    <div>
+      <label className="block text-sm font-medium text-black mb-2">{label}</label>
+      <input
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        placeholder={placeholder}
+        className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-black placeholder-gray-300 focus:border-gray-400 focus:outline-none"
+      />
+    </div>
+  );
+}
+
+interface Props {
+  resultId?: string;
+}
+
+export default function Revo111ResultClient({ resultId }: Props) {
   const searchParams = useSearchParams();
-  const encoded = searchParams.get("answers");
+  const encoded = resultId ?? searchParams.get("answers");
+  const [copied, setCopied] = useState(false);
+  const [fitRating, setFitRating] = useState(0);
+  const [useRating, setUseRating] = useState(0);
+  const [shareRating, setShareRating] = useState(0);
+  const [want111Rating, setWant111Rating] = useState(0);
+  const [bestFit, setBestFit] = useState("");
+  const [feltDifferent, setFeltDifferent] = useState("");
+  const [name, setName] = useState("");
+  const [sns, setSns] = useState("");
+  const [contact, setContact] = useState("");
+  const [sending, setSending] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState("");
 
   const resultState = useMemo(() => {
     if (!encoded) return null;
@@ -51,6 +154,120 @@ export default function Revo111ResultClient() {
       details: getRevo111ResultDetails(result),
     };
   }, [encoded]);
+
+  const shareText = useMemo(() => {
+    if (!resultState) return "";
+    return [
+      "私のRevo111診断結果は",
+      `「${resultState.details.mainRole.name} × ${resultState.details.subRole.name} × ${resultState.details.supportRole.name}」でした。`,
+      "",
+      "役割は固定ではなく、活動で育つ。",
+      "あなたも診断してみてください。",
+    ].join("\n");
+  }, [resultState]);
+
+  const resultUrl =
+    typeof window === "undefined"
+      ? ""
+      : encoded
+        ? `${window.location.origin}/revo111/result/${encoded}`
+        : window.location.href;
+
+  useEffect(() => {
+    if (!resultState || !encoded) return;
+
+    const storageKey = `revo111-result-saved:${encoded}`;
+    if (window.sessionStorage.getItem(storageKey)) return;
+
+    const payload = {
+      種別: "Revo111診断結果",
+      結果ID: encoded,
+      メイン役割: resultState.details.mainRole.name,
+      サブ役割: resultState.details.subRole.name,
+      補助役割: resultState.details.supportRole.name,
+      メインスコア: resultState.result.main.score,
+      サブスコア: resultState.result.sub.score,
+      補助スコア: resultState.result.support.score,
+      結果URL: resultUrl,
+      送信日時: new Date().toISOString(),
+    };
+
+    fetch("/api/feedback", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    }).then(() => {
+      window.sessionStorage.setItem(storageKey, "true");
+    }).catch(() => {
+      // Result display should never be blocked by monitor logging.
+    });
+  }, [encoded, resultState, resultUrl]);
+
+  const handleCopyResult = async () => {
+    const text = `${shareText}\n${resultUrl}`;
+    await navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1800);
+  };
+
+  const handleSubmitFeedback = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!resultState) return;
+
+    setSending(true);
+    setError("");
+
+    const payload = {
+      種別: "Revo111モニター感想",
+      結果ID: encoded ?? "なし",
+      結果URL: resultUrl,
+      メイン役割: resultState.details.mainRole.name,
+      サブ役割: resultState.details.subRole.name,
+      補助役割: resultState.details.supportRole.name,
+      診断結果はしっくりきたか: fitRating || "未回答",
+      どこが一番しっくりきたか: bestFit || "なし",
+      違和感があった部分: feltDifferent || "なし",
+      仕事や活動に活かせそうか: useRating || "未回答",
+      誰かに見せたいと思ったか: shareRating || "未回答",
+      "111問版ができたら受けたいか": want111Rating || "未回答",
+      名前: name || "匿名",
+      SNS: sns || "なし",
+      連絡先: contact || "なし",
+      送信日時: new Date().toISOString(),
+    };
+
+    try {
+      const formData = new FormData();
+      for (const [key, value] of Object.entries(payload)) {
+        formData.append(key, String(value));
+      }
+
+      const [formspreeRes] = await Promise.all([
+        fetch(FORMSPREE_ENDPOINT, {
+          method: "POST",
+          headers: { Accept: "application/json" },
+          body: formData,
+        }),
+        fetch("/api/feedback", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        }),
+      ]);
+
+      if (!formspreeRes.ok) {
+        setError(`送信に失敗しました（${formspreeRes.status}）。もう一度お試しください。`);
+        return;
+      }
+
+      setSubmitted(true);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      setError(`送信エラー: ${message}`);
+    } finally {
+      setSending(false);
+    }
+  };
 
   if (!resultState) {
     return (
@@ -220,13 +437,131 @@ export default function Revo111ResultClient() {
         </div>
       </ResultSection>
 
+      <ResultSection title="Share">
+        <h2 className="text-lg font-bold text-black mb-3">結果を共有する</h2>
+        <p className="text-sm text-gray-600 leading-relaxed mb-5">
+          診断結果は、仲間と話すきっかけとして使えます。
+        </p>
+        <div className="grid grid-cols-1 gap-3">
+          <a
+            href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`${shareText}\n${resultUrl}`)}`}
+            target="_blank"
+            rel="noreferrer"
+            className="block rounded-2xl bg-black px-5 py-4 text-center text-sm font-medium text-white hover:bg-gray-800 transition-colors"
+          >
+            Xで共有
+          </a>
+          <a
+            href={`https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(resultUrl)}&text=${encodeURIComponent(shareText)}`}
+            target="_blank"
+            rel="noreferrer"
+            className="block rounded-2xl border border-gray-200 px-5 py-4 text-center text-sm font-medium text-gray-700 hover:border-black hover:text-black transition-colors"
+          >
+            LINEで共有
+          </a>
+          <button
+            type="button"
+            onClick={handleCopyResult}
+            className="rounded-2xl border border-gray-200 px-5 py-4 text-sm font-medium text-gray-700 hover:border-black hover:text-black transition-colors"
+          >
+            {copied ? "コピーしました" : "結果をコピー"}
+          </button>
+        </div>
+      </ResultSection>
+
+      <ResultSection title="Monitor Feedback">
+        <h2 className="text-lg font-bold text-black mb-3">モニター感想フォーム</h2>
+        <p className="text-sm text-gray-600 leading-relaxed mb-8">
+          あなたの感想が、111問版の質問設計と結果文の改善につながります。
+        </p>
+
+        {submitted ? (
+          <div className="rounded-2xl bg-gray-50 p-6 text-center">
+            <p className="text-lg font-bold text-black mb-2">ありがとうございます。</p>
+            <p className="text-sm text-gray-500 leading-relaxed">
+              感想を受け取りました。Revo111を育てるための大切な声として活かします。
+            </p>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmitFeedback} className="space-y-8">
+            <RatingInput
+              label="診断結果はしっくりきましたか？"
+              value={fitRating}
+              onChange={setFitRating}
+            />
+            <TextAreaInput
+              label="どこが一番しっくりきましたか？"
+              value={bestFit}
+              onChange={setBestFit}
+              placeholder="役割名、文章、成長ルートなど..."
+            />
+            <TextAreaInput
+              label="違和感があった部分はありますか？"
+              value={feltDifferent}
+              onChange={setFeltDifferent}
+              placeholder="質問文、結果文、役割の組み合わせなど..."
+            />
+            <RatingInput
+              label="この結果を仕事や活動に活かせそうですか？"
+              value={useRating}
+              onChange={setUseRating}
+            />
+            <RatingInput
+              label="誰かに見せたいと思いましたか？"
+              value={shareRating}
+              onChange={setShareRating}
+            />
+            <RatingInput
+              label="111問版ができたら受けたいですか？"
+              value={want111Rating}
+              onChange={setWant111Rating}
+            />
+            <div className="space-y-4">
+              <OptionalInput
+                label="名前 任意"
+                value={name}
+                onChange={setName}
+                placeholder="お名前"
+              />
+              <OptionalInput
+                label="SNS 任意"
+                value={sns}
+                onChange={setSns}
+                placeholder="@username など"
+              />
+              <OptionalInput
+                label="連絡先 任意"
+                value={contact}
+                onChange={setContact}
+                placeholder="メールアドレス、SNSなど"
+              />
+            </div>
+
+            {error && (
+              <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3">
+                <p className="text-sm text-red-600">{error}</p>
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={sending}
+              className="flex w-full items-center justify-center gap-2 rounded-full bg-black py-4 text-sm font-medium text-white hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50 transition-colors"
+            >
+              {sending ? (
+                <>
+                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                  送信中…
+                </>
+              ) : (
+                "感想を送る"
+              )}
+            </button>
+          </form>
+        )}
+      </ResultSection>
+
       <section className="px-6 py-8 space-y-3">
-        <Link
-          href="/monitor/feedback"
-          className="block w-full text-center py-4 rounded-2xl bg-black text-white text-sm font-medium hover:bg-gray-800 transition-colors"
-        >
-          この結果の感想を送る
-        </Link>
         <Link
           href="/revo111"
           className="block w-full text-center py-4 rounded-2xl border border-gray-200 text-gray-600 text-sm hover:border-black hover:text-black transition-colors"
