@@ -76,24 +76,24 @@ export default function Revo111ResultClient() {
         </p>
         <h1 className="text-3xl font-bold text-black leading-snug mb-4">
           あなたの今の中心役割は、<br />
-          {details.mainType.name}
+          {details.mainRole.name}
         </h1>
         <p className="text-sm text-gray-500 leading-relaxed mb-8">
-          Revo111は性格を決めるものではなく、今の役割・成長・仲間・活動の循環を見える形にする成長OSです。
+          Revo111は人を固定するものではなく、今の役割・成長・仲間・活動の循環を見える形にする成長OSです。
         </p>
 
         <div className="rounded-2xl bg-black p-6 text-white">
           <p className="text-sm text-gray-400 mb-2">役割コピー</p>
-          <p className="text-2xl font-bold leading-snug">{details.roleCopy}</p>
+          <p className="text-xl font-bold leading-relaxed">{details.roleCopy}</p>
         </div>
       </section>
 
       <ResultSection title="Role Balance">
         <div className="space-y-3">
           {[
-            ["メイン役割", details.mainType.name, result.main.percentage],
-            ["サブ役割", details.subType.name, result.sub.percentage],
-            ["補助役割", details.auxiliaryType.name, result.auxiliary.percentage],
+            ["メイン役割", details.mainRole.name, result.main.percentage],
+            ["サブ役割", details.subRole.name, result.sub.percentage],
+            ["補助役割", details.supportRole.name, result.support.percentage],
           ].map(([label, name, percentage]) => (
             <div key={label} className="rounded-2xl border border-gray-100 p-4">
               <div className="flex items-center justify-between mb-2">
@@ -106,37 +106,80 @@ export default function Revo111ResultClient() {
         </div>
       </ResultSection>
 
+      <ResultSection title="Current Point">
+        <div className="space-y-5">
+          <div>
+            <h2 className="text-lg font-bold text-black mb-3">あなたの現在地</h2>
+            <p className="text-sm text-gray-600 leading-relaxed">{details.currentText}</p>
+          </div>
+          <div>
+            <h2 className="text-lg font-bold text-black mb-3">サブ役割</h2>
+            <p className="text-sm text-gray-600 leading-relaxed">{details.subText}</p>
+          </div>
+          <div>
+            <h2 className="text-lg font-bold text-black mb-3">補助役割</h2>
+            <p className="text-sm text-gray-600 leading-relaxed">{details.supportText}</p>
+          </div>
+        </div>
+      </ResultSection>
+
       <ResultSection title="Give">
         <h2 className="text-lg font-bold text-black mb-3">自然に渡しているもの</h2>
         <PillList items={details.gives} />
-        <p className="text-sm text-gray-600 leading-relaxed mt-4">{details.givesDetail}</p>
       </ResultSection>
 
       <ResultSection title="Receive">
         <h2 className="text-lg font-bold text-black mb-3">受け取ると潤うもの</h2>
         <PillList items={details.receives} />
-        <p className="text-sm text-gray-600 leading-relaxed mt-4">{details.receivesDetail}</p>
+        <p className="text-sm text-gray-600 leading-relaxed mt-4">{details.comfortableEnvironment}</p>
       </ResultSection>
 
       <ResultSection title="Growth Route">
-        <h2 className="text-lg font-bold text-black mb-3">
-          次に育つ可能性：{details.growthRoute.type.name}
-        </h2>
+        <h2 className="text-lg font-bold text-black mb-3">成長ルート</h2>
+        <div className="flex flex-wrap items-center gap-2 mb-4">
+          {details.growthRoute.roles.map((role, index) => (
+            <div key={role.key} className="flex items-center gap-2">
+              <span className="rounded-full bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-700">
+                {role.name}
+              </span>
+              {index < details.growthRoute.roles.length - 1 && (
+                <span className="text-xs text-gray-300">→</span>
+              )}
+            </div>
+          ))}
+        </div>
         <p className="text-sm text-gray-600 leading-relaxed">{details.growthRoute.description}</p>
       </ResultSection>
 
       <ResultSection title="Future Partner">
-        <h2 className="text-lg font-bold text-black mb-3">
-          未来を広げる存在：{details.futurePartner.type.name}
-        </h2>
-        <p className="text-sm text-gray-600 leading-relaxed">{details.futurePartner.description}</p>
+        <h2 className="text-lg font-bold text-black mb-3">未来を広げる存在</h2>
+        <p className="text-sm text-gray-600 leading-relaxed mb-4">
+          これは何かを埋めるという意味ではありません。違う役割と出会うことで、あなたの可能性が広がるということです。
+        </p>
+        <div className="space-y-3">
+          {details.futurePartners.map((partner) => (
+            <div key={partner.role.key} className="rounded-2xl bg-gray-50 p-4">
+              <p className="text-sm font-bold text-black mb-1">{partner.role.name}</p>
+              <p className="text-xs text-gray-500 leading-relaxed">
+                {partner.creates.join(" → ")}。{partner.description}
+              </p>
+            </div>
+          ))}
+        </div>
       </ResultSection>
 
       <ResultSection title="Third Person">
         <h2 className="text-lg font-bold text-black mb-3">
-          第三者効果：{details.thirdPerson.type.name}
+          第三者効果：{details.thirdPerson.third.name}
         </h2>
-        <p className="text-sm text-gray-600 leading-relaxed">{details.thirdPerson.description}</p>
+        <p className="text-sm text-gray-600 leading-relaxed mb-4">
+          {details.thirdPerson.pair[0].name}と{details.thirdPerson.pair[1].name}の間に、
+          {details.thirdPerson.third.name}が加わることで、流れが生まれます。
+        </p>
+        <div className="rounded-2xl bg-gray-50 p-4">
+          <p className="text-sm font-bold text-black mb-2">{details.thirdPerson.flow.join(" → ")}</p>
+          <p className="text-xs text-gray-500 leading-relaxed">{details.thirdPerson.result}</p>
+        </div>
       </ResultSection>
 
       <ResultSection title="Activities">
@@ -152,20 +195,41 @@ export default function Revo111ResultClient() {
 
       <ResultSection title="Funding Role">
         <h2 className="text-lg font-bold text-black mb-3">Fundingでの役割</h2>
-        <p className="text-sm text-gray-600 leading-relaxed">{details.fundingRole}</p>
+        <p className="text-sm font-bold text-black mb-3">{details.fundingRole.title}</p>
+        <div className="space-y-4">
+          <div>
+            <p className="text-xs text-gray-400 mb-2">得意</p>
+            <PillList items={details.fundingRole.strengths} />
+          </div>
+          <div>
+            <p className="text-xs text-gray-400 mb-2">関わり方</p>
+            <PillList items={details.fundingRole.ways} />
+          </div>
+        </div>
       </ResultSection>
 
       <ResultSection title="Weekly Quest">
         <h2 className="text-lg font-bold text-black mb-3">今週のクエスト</h2>
-        <p className="rounded-2xl bg-black px-5 py-4 text-sm font-medium leading-relaxed text-white">
-          {details.weeklyQuest}
-        </p>
+        <div className="space-y-3">
+          <p className="rounded-2xl bg-black px-5 py-4 text-sm font-medium leading-relaxed text-white">
+            {details.quest.beginner}
+          </p>
+          <p className="text-xs text-gray-500 leading-relaxed">
+            余裕があれば、次に「{details.quest.intermediate}」へ進んでみてください。
+          </p>
+        </div>
       </ResultSection>
 
       <section className="px-6 py-8 space-y-3">
         <Link
-          href="/revo111"
+          href="/monitor/feedback"
           className="block w-full text-center py-4 rounded-2xl bg-black text-white text-sm font-medium hover:bg-gray-800 transition-colors"
+        >
+          この結果の感想を送る
+        </Link>
+        <Link
+          href="/revo111"
+          className="block w-full text-center py-4 rounded-2xl border border-gray-200 text-gray-600 text-sm hover:border-black hover:text-black transition-colors"
         >
           もう一度診断する
         </Link>

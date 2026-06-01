@@ -1,6 +1,10 @@
 import type { RevoTypeKey } from "@/data/revotypes";
-import { revoTypes } from "@/data/revotypes";
-import { roleResultText } from "@/data/monitorResults";
+import {
+  growthRoutes,
+  matchRules,
+  revo111Roles,
+  thirdPersonEffects,
+} from "@/data/revo111Roles";
 import {
   REVO111_TOTAL_QUESTIONS,
   revo111Questions,
@@ -15,7 +19,7 @@ export interface Revo111TypeScore {
 export interface Revo111Result {
   main: Revo111TypeScore;
   sub: Revo111TypeScore;
-  auxiliary: Revo111TypeScore;
+  support: Revo111TypeScore;
   allScores: Revo111TypeScore[];
 }
 
@@ -38,26 +42,24 @@ export function calculateRevo111Result(answers: number[]): Revo111Result {
 
   revo111Questions.forEach((question, index) => {
     const value = answers[index] ?? 3;
-    for (const [key, weight] of Object.entries(question.scores)) {
-      raw[key as RevoTypeKey] += (weight ?? 0) * value;
-    }
+    raw[question.role] += value;
   });
 
-  const maxScore = Math.max(...Object.values(raw));
+  const maxScore = 20;
   const allScores = (Object.keys(raw) as RevoTypeKey[])
     .map((key) => ({
       key,
       score: raw[key],
-      percentage: maxScore > 0 ? Math.round((raw[key] / maxScore) * 100) : 0,
+      percentage: Math.round((raw[key] / maxScore) * 100),
     }))
     .sort((a, b) => b.score - a.score);
 
-  const [main, sub, auxiliary] = allScores;
+  const [main, sub, support] = allScores;
 
   return {
     main,
     sub,
-    auxiliary,
+    support,
     allScores,
   };
 }
@@ -77,39 +79,69 @@ export function isValidRevo111Answers(answers: number[]): boolean {
   );
 }
 
+function includesPair(pair: [RevoTypeKey, RevoTypeKey], a: RevoTypeKey, b: RevoTypeKey) {
+  return pair.includes(a) && pair.includes(b);
+}
+
+function findThirdPersonEffect(mainKey: RevoTypeKey, subKey: RevoTypeKey) {
+  return (
+    thirdPersonEffects.find((effect) => includesPair(effect.pair, mainKey, subKey)) ??
+    thirdPersonEffects.find((effect) => effect.pair.includes(mainKey)) ??
+    thirdPersonEffects[0]
+  );
+}
+
+function createRoleCopy(mainKey: RevoTypeKey, subKey: RevoTypeKey, supportKey: RevoTypeKey) {
+  const main = revo111Roles[mainKey];
+  const sub = revo111Roles[subKey];
+  const support = revo111Roles[supportKey];
+
+  return `${main.catchCopy} ${sub.name}の力がその動きを支え、${support.name}の育つ可能性が未来をさらに広げます。`;
+}
+
 export function getRevo111ResultDetails(result: Revo111Result) {
-  const mainType = revoTypes[result.main.key];
-  const subType = revoTypes[result.sub.key];
-  const auxiliaryType = revoTypes[result.auxiliary.key];
-  const growthType = revoTypes[mainType.growthQuest.targetType];
-  const futureType = revoTypes[mainType.teamDesign.bestPair];
-  const thirdType = revoTypes[mainType.teamDesign.thirdPerson];
+  const mainRole = revo111Roles[result.main.key];
+  const subRole = revo111Roles[result.sub.key];
+  const supportRole = revo111Roles[result.support.key];
+  const growthRoute = growthRoutes[result.main.key];
+  const futurePartners = matchRules[result.main.key];
+  const thirdPerson = findThirdPersonEffect(result.main.key, result.sub.key);
 
   return {
-    mainType,
-    subType,
-    auxiliaryType,
-    roleCopy: mainType.catchcopy,
-    gives: mainType.gives,
-    givesDetail: mainType.givesDetail,
-    receives: mainType.receives,
-    receivesDetail: mainType.receivesDetail,
+    mainRole,
+    subRole,
+    supportRole,
+    roleCopy: createRoleCopy(result.main.key, result.sub.key, result.support.key),
+    currentText: `あなたは現在、${mainRole.name}の役割が強く出ています。${mainRole.mission}`,
+    subText: `サブ役割として${subRole.name}が出ています。これは、${mainRole.name}の動きを支え、活動をより豊かにする力です。`,
+    supportText: `補助役割として${supportRole.name}が出ています。これは、活動や出会いを通してさらに育つ可能性を示しています。`,
+    gives: mainRole.gives,
+    receives: mainRole.receives,
+    comfortableEnvironment: mainRole.comfortableEnvironment,
     growthRoute: {
-      type: growthType,
-      description: mainType.growthQuest.description,
+      roles: growthRoute.route.map((key) => revo111Roles[key]),
+      theme: growthRoute.theme,
+      description: growthRoute.description,
     },
-    futurePartner: {
-      type: futureType,
-      description:
-        mainType.goodWithDetail[futureType.key] ??
-        `${futureType.name}は、あなたの未来を広げる存在です。`,
-    },
+    futurePartners: futurePartners.map((rule) => ({
+      role: revo111Roles[rule.partner],
+      creates: rule.creates,
+      description: rule.description,
+    })),
     thirdPerson: {
-      type: thirdType,
-      description: mainType.teamDesign.teamNote,
+      pair: thirdPerson.pair.map((key) => revo111Roles[key]),
+      third: revo111Roles[thirdPerson.third],
+      flow: thirdPerson.flow,
+      result: thirdPerson.result,
     },
-    activities: mainType.generalActivities,
-    fundingRole: roleResultText[mainType.key].revoFunding,
-    weeklyQuest: mainType.growthQuest.tasks[0],
+    activities: mainRole.recommendedActivities,
+    fundingRole: {
+      title: mainRole.fundingRole,
+      strengths: mainRole.fundingStrengths,
+      ways: mainRole.fundingWays,
+    },
+    quest: mainRole.quest,
+    linkRole: mainRole.linkRole,
+    songRole: mainRole.songRole,
   };
 }
