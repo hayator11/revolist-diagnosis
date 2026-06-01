@@ -4,10 +4,10 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "レボリスト診断",
   description:
-    "あなたは、誰と組むと未来を動かせるか。レボリスト診断は、あなたの役割・仲間との組み合わせ・これから育つ可能性を見つけるための診断です。",
+    "人生が広がる次の関わり方を見つける診断です。仕事・副業・転職・仲間・活動の中で、あなたの力の使い方を見つけます。",
   openGraph: {
     title: "レボリスト診断",
-    description: "あなたは、誰と組むと未来を動かせるか。",
+    description: "人生が広がる次の関わり方を見つける診断です。",
     type: "website",
   },
 };

@@ -8,42 +8,37 @@ export default function HomePage() {
       {/* ── ① ファーストビュー ── */}
       <Hero />
 
-      {/* ── ② 他の診断との違い ── */}
-      <section className="px-6 py-20 bg-black">
+      {/* ── ② 成功はひとつじゃない ── */}
+      <section className="px-6 py-20 bg-gray-50">
         <div className="max-w-lg mx-auto">
-          <p className="text-xs tracking-widest text-gray-500 uppercase mb-6 text-center">
-            What&apos;s Different
-          </p>
-          <h2 className="text-2xl font-bold text-white mb-10 text-center leading-snug">
-            「あなたは何者か」で終わる診断は、
-            <br />
-            もうたくさんあります。
-          </h2>
-
-          <div className="space-y-3 mb-10">
-            {[
-              { name: "MBTI", stop: "個人の性格タイプ" },
-              { name: "ストレングスファインダー", stop: "個人の強み" },
-              { name: "動物占い", stop: "個人の特性と相性" },
-            ].map((item) => (
-              <div
-                key={item.name}
-                className="flex items-center justify-between border border-gray-800 rounded-2xl px-5 py-4"
-              >
-                <span className="text-sm text-gray-400">{item.name}</span>
-                <span className="text-xs text-gray-600">→ {item.stop} で止まる</span>
-              </div>
-            ))}
-            <div className="flex items-center justify-between border border-white rounded-2xl px-5 py-4">
-              <span className="text-sm text-white font-bold">レボリスト診断</span>
-              <span className="text-xs text-gray-300">→ チームの設計図まで出せる</span>
+          <div className="rounded-[2rem] border border-gray-100 bg-white px-7 py-10 shadow-[0_18px_60px_rgba(0,0,0,0.04)]">
+            <p className="text-xs tracking-widest text-gray-400 uppercase mb-6">
+              Next Choice
+            </p>
+            <h2 className="text-2xl font-bold text-black mb-8 leading-snug">
+              成功は、ひとつじゃない。
+            </h2>
+            <div className="text-sm text-gray-600 leading-[2.1] space-y-5">
+              <p>
+                時間、人、もの、こと、心。<br />
+                その人にとって大切なものは、それぞれ違います。
+              </p>
+              <p>
+                お金を求める時期があってもいい。<br />
+                肩書きを目指す時期があってもいい。<br />
+                実績を積み上げる時期があってもいい。<br />
+                人とのつながりを大切にする時期があってもいい。<br />
+                心を整える時期があってもいい。
+              </p>
+              <p>
+                大切なのは、他人が決めた成功ではなく、<br />
+                今の自分にとって本当に必要なものに気づくこと。
+              </p>
+              <p className="font-medium text-black">
+                Revo111は、その道標になります。
+              </p>
             </div>
           </div>
-
-          <p className="text-sm text-gray-400 text-center leading-relaxed">
-            誰が優れているかではなく、<br />
-            誰と組むと力が発揮されるか。
-          </p>
         </div>
       </section>
 
