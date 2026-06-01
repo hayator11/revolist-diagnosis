@@ -5,7 +5,7 @@ import FadeInSection from "@/components/FadeInSection";
 export const metadata: Metadata = {
   title: "Revo | レボリスト診断",
   description:
-    "違いを持ち寄り、循環によって未来を育てる。Revoは、役割と感情が循環する共創文化です。",
+    "違いを持ち寄り、循環によって未来を育てる。Revoは、役割と感情が循環する共創文化です。レボリストLab、レボファンディング、レボアート、レボリンク、レボソングなどの活動がつながります。",
   openGraph: {
     title: "Revo",
     description: "違いを持ち寄り、循環によって未来を育てる。",
@@ -48,6 +48,63 @@ const cycleRoles = [
   "受け止める",
 ];
 
+const revoProjects = [
+  {
+    label: "CENTER",
+    title: "レボファンディング",
+    body: "応援者・ファン・商品・活動レポートを循環させる中心の仕組み。",
+    href: "https://revofunding.onokun.com/",
+  },
+  {
+    label: "LAB",
+    title: "レボリストLab",
+    body: "すべての企画を小さく試し、実際の活動へ育てる実験場。",
+    href: "https://revolist.earth/revolist-lab",
+  },
+  {
+    label: "PROJECT",
+    title: "レボアート",
+    body: "地域・企業・行政・学校・アーティストが参加し、想いを形に残す活動。",
+    href: "https://revofunding.onokun.com/revo-art.html",
+  },
+  {
+    label: "REVO SERIES",
+    title: "レボソング",
+    body: "活動の背景や想いを、歌や音楽として広げる表現の入口。",
+    href: "https://revosong.onokun.com/",
+  },
+  {
+    label: "REVO SERIES",
+    title: "レボリンク",
+    body: "企業協賛や広告を、地域・防災・アートを支える流れへ変える仕組み。",
+    href: "https://revofunding.onokun.com/project-revolinks.html",
+  },
+  {
+    label: "REVO SERIES",
+    title: "レボハット",
+    body: "帽子文化を入口に、ものづくり・表現・防災体験をつなげる活動。",
+    href: "https://revofunding.onokun.com/shop.html",
+  },
+  {
+    label: "SUPPORT",
+    title: "認定アーティスト",
+    body: "想いを伝わる形へ整え、活動が届きやすくなる表現を支える存在。",
+    href: "https://revofunding.onokun.com/designers.html",
+  },
+  {
+    label: "FOUNDATION",
+    title: "おのくん",
+    body: "持ち寄り文化と地域のつながりを育ててきた、Revo構想の大切な土台。",
+    href: "https://onokun.com/",
+  },
+  {
+    label: "FOUNDATION",
+    title: "防災×帽祭",
+    body: "防災を身近に、楽しく、話しやすいものとして届ける活動。",
+    href: "https://revolist.earth/bosai-bosai",
+  },
+];
+
 export default function RevoPage() {
   return (
     <div className="max-w-lg mx-auto pb-24">
@@ -76,6 +133,144 @@ export default function RevoPage() {
           <p>
             違う役割が重なることで、<br />人も環境も少しずつ育っていきます。
           </p>
+        </div>
+      </section>
+
+      {/* ── Section: Revo全体の構成図 ── */}
+      <section className="px-6 py-20 border-b border-gray-100">
+        <FadeInSection>
+          <p className="text-xs tracking-widest text-gray-400 uppercase mb-6">Revo Map</p>
+          <h2 className="text-2xl font-bold text-black mb-5 leading-snug">
+            Revoは、活動がつながる<br />共創循環です。
+          </h2>
+          <p className="text-sm text-gray-600 leading-[2] mb-10">
+            レボリストLabから生まれた企画が、レボファンディング、アート、音楽、企業協賛、防災、持ち寄り文化へ広がっていきます。
+          </p>
+        </FadeInSection>
+
+        <FadeInSection delay={80}>
+          <div className="-mx-6 overflow-x-auto px-6 pb-4">
+            <div className="min-w-[680px] rounded-2xl border border-gray-200 bg-gray-50 p-5">
+              <svg viewBox="0 0 680 520" role="img" aria-labelledby="revo-map-title revo-map-desc" className="h-auto w-full">
+                <title id="revo-map-title">Revoの活動構成図</title>
+                <desc id="revo-map-desc">
+                  レボリストLabを中心に、レボファンディング、レボアート、レボソング、レボリンク、レボハット、認定アーティスト、おのくん、防災×帽祭がつながる図。
+                </desc>
+                <defs>
+                  <marker id="revoArrow" markerHeight="8" markerWidth="8" orient="auto" refX="7" refY="4">
+                    <path d="M0,0 L8,4 L0,8 z" fill="#9ca3af" />
+                  </marker>
+                  <linearGradient id="fundingGradient" x1="0" x2="1" y1="0" y2="1">
+                    <stop offset="0%" stopColor="#8b5cf6" />
+                    <stop offset="100%" stopColor="#6d28d9" />
+                  </linearGradient>
+                  <linearGradient id="labGradient" x1="0" x2="1" y1="0" y2="1">
+                    <stop offset="0%" stopColor="#ef4444" />
+                    <stop offset="100%" stopColor="#dc2626" />
+                  </linearGradient>
+                  <linearGradient id="artGradient" x1="0" x2="1" y1="0" y2="1">
+                    <stop offset="0%" stopColor="#ec4899" />
+                    <stop offset="100%" stopColor="#db2777" />
+                  </linearGradient>
+                </defs>
+
+                <text x="340" y="34" textAnchor="middle" fontSize="22" fontWeight="800" fill="#111827">
+                  レボファンディングを中心に広がる社会貢献型の活動
+                </text>
+                <text x="340" y="58" textAnchor="middle" fontSize="11" fontWeight="700" fill="#6b7280">
+                  応援、アート、音楽、企業協賛、防災、持ち寄り文化がひとつの流れでつながる
+                </text>
+
+                <path d="M340 196 L340 132" stroke="#8b5cf6" strokeWidth="4" markerEnd="url(#revoArrow)" />
+                <path d="M340 284 L340 344" stroke="#ec4899" strokeWidth="4" markerEnd="url(#revoArrow)" />
+                <path d="M260 240 L142 194" stroke="#06b6d4" strokeWidth="3" markerEnd="url(#revoArrow)" />
+                <path d="M420 240 L538 194" stroke="#22c55e" strokeWidth="3" markerEnd="url(#revoArrow)" />
+                <path d="M260 270 L142 344" stroke="#3b82f6" strokeWidth="3" markerEnd="url(#revoArrow)" />
+                <path d="M420 270 L538 344" stroke="#eab308" strokeWidth="3" markerEnd="url(#revoArrow)" />
+                <path d="M318 432 C278 454 244 462 198 468" stroke="#ec4899" strokeWidth="3" markerEnd="url(#revoArrow)" />
+                <path d="M362 432 C402 454 436 462 482 468" stroke="#eab308" strokeWidth="3" markerEnd="url(#revoArrow)" />
+                <path d="M242 480 C286 500 394 500 438 480" stroke="#6b7280" strokeWidth="3" markerEnd="url(#revoArrow)" />
+
+                <g>
+                  <rect x="210" y="80" width="260" height="68" rx="20" fill="url(#fundingGradient)" />
+                  <text x="340" y="105" textAnchor="middle" fontSize="10" fontWeight="800" fill="#ede9fe">CENTER</text>
+                  <text x="340" y="130" textAnchor="middle" fontSize="24" fontWeight="900" fill="#ffffff">レボファンディング</text>
+                  <text x="340" y="144" textAnchor="middle" fontSize="10" fontWeight="700" fill="#ddd6fe">応援者・ファン・商品・活動レポートを循環</text>
+                </g>
+
+                <g>
+                  <rect x="220" y="196" width="240" height="88" rx="20" fill="url(#labGradient)" />
+                  <text x="340" y="226" textAnchor="middle" fontSize="10" fontWeight="800" fill="#fee2e2">LAB</text>
+                  <text x="340" y="258" textAnchor="middle" fontSize="30" fontWeight="900" fill="#ffffff">レボリストLab</text>
+                  <text x="340" y="276" textAnchor="middle" fontSize="10" fontWeight="700" fill="#fee2e2">すべての企画を生む実験場</text>
+                </g>
+
+                <g>
+                  <rect x="218" y="344" width="244" height="70" rx="18" fill="url(#artGradient)" />
+                  <text x="340" y="370" textAnchor="middle" fontSize="10" fontWeight="800" fill="#fce7f3">PROJECT</text>
+                  <text x="340" y="400" textAnchor="middle" fontSize="26" fontWeight="900" fill="#ffffff">レボアート</text>
+                </g>
+
+                <g>
+                  <rect x="36" y="154" width="164" height="64" rx="18" fill="#ecfeff" stroke="#06b6d4" strokeWidth="2" />
+                  <text x="118" y="180" textAnchor="middle" fontSize="10" fontWeight="800" fill="#64748b">REVO SERIES</text>
+                  <text x="118" y="204" textAnchor="middle" fontSize="19" fontWeight="900" fill="#111827">レボソング</text>
+                </g>
+
+                <g>
+                  <rect x="480" y="154" width="164" height="64" rx="18" fill="#f0fdf4" stroke="#22c55e" strokeWidth="2" />
+                  <text x="562" y="180" textAnchor="middle" fontSize="10" fontWeight="800" fill="#64748b">REVO SERIES</text>
+                  <text x="562" y="204" textAnchor="middle" fontSize="19" fontWeight="900" fill="#111827">レボリンク</text>
+                </g>
+
+                <g>
+                  <rect x="40" y="322" width="174" height="64" rx="18" fill="#eff6ff" stroke="#3b82f6" strokeWidth="2" />
+                  <text x="127" y="348" textAnchor="middle" fontSize="10" fontWeight="800" fill="#64748b">REVO SERIES</text>
+                  <text x="127" y="372" textAnchor="middle" fontSize="19" fontWeight="900" fill="#111827">レボハット</text>
+                </g>
+
+                <g>
+                  <rect x="466" y="322" width="174" height="64" rx="18" fill="#fffbeb" stroke="#eab308" strokeWidth="2" />
+                  <text x="553" y="348" textAnchor="middle" fontSize="10" fontWeight="800" fill="#64748b">SUPPORT</text>
+                  <text x="553" y="372" textAnchor="middle" fontSize="18" fontWeight="900" fill="#111827">認定アーティスト</text>
+                </g>
+
+                <g>
+                  <rect x="98" y="448" width="188" height="54" rx="18" fill="#fdf2f8" stroke="#ec4899" strokeWidth="2" />
+                  <text x="192" y="470" textAnchor="middle" fontSize="10" fontWeight="800" fill="#64748b">FOUNDATION</text>
+                  <text x="192" y="494" textAnchor="middle" fontSize="20" fontWeight="900" fill="#111827">おのくん</text>
+                </g>
+
+                <g>
+                  <rect x="394" y="448" width="188" height="54" rx="18" fill="#fffbeb" stroke="#eab308" strokeWidth="2" />
+                  <text x="488" y="470" textAnchor="middle" fontSize="10" fontWeight="800" fill="#64748b">FOUNDATION</text>
+                  <text x="488" y="494" textAnchor="middle" fontSize="20" fontWeight="900" fill="#111827">防災×帽祭</text>
+                </g>
+              </svg>
+            </div>
+          </div>
+          <p className="mt-4 text-center text-xs text-gray-400 leading-relaxed">
+            横に動かすと全体図を確認できます。
+          </p>
+        </FadeInSection>
+
+        <div className="mt-10 space-y-3">
+          {revoProjects.map((project, i) => (
+            <FadeInSection key={project.title} delay={i * 45}>
+              <a
+                href={project.href}
+                target="_blank"
+                rel="noreferrer"
+                className="block rounded-2xl border border-gray-100 bg-white p-5 hover:border-gray-300 hover:-translate-y-0.5 transition-all duration-300"
+              >
+                <p className="text-[10px] font-bold tracking-widest text-gray-400 mb-2">
+                  {project.label}
+                </p>
+                <h3 className="text-base font-bold text-black mb-2">{project.title}</h3>
+                <p className="text-xs text-gray-500 leading-relaxed">{project.body}</p>
+              </a>
+            </FadeInSection>
+          ))}
         </div>
       </section>
 
