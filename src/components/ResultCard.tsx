@@ -9,6 +9,7 @@ import {
 } from "@/lib/calculateResult";
 import ShareButtons from "./ShareButtons";
 import Link from "next/link";
+import OperationLinks from "./OperationLinks";
 
 interface Props {
   result: DiagnosisResult;
@@ -522,6 +523,8 @@ export default function ResultCard({ result }: Props) {
           </Link>
         </div>
       </section>
+
+      <OperationLinks />
     </div>
   );
 }

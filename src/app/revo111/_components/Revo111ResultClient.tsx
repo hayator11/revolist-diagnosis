@@ -15,6 +15,7 @@ import {
   joinMultiSelect,
   type RevoResearchPayload,
 } from "@/data/revoResearch";
+import OperationLinks from "@/components/OperationLinks";
 
 const FORMSPREE_ID = process.env.NEXT_PUBLIC_FORMSPREE_ID ?? "meeddgby";
 const FORMSPREE_ENDPOINT = `https://formspree.io/f/${FORMSPREE_ID}`;
@@ -813,6 +814,8 @@ export default function Revo111ResultClient({ resultId }: Props) {
           Revoの活動を見る
         </Link>
       </section>
+
+      <OperationLinks />
     </div>
   );
 }

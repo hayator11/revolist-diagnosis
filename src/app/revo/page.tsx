@@ -59,7 +59,7 @@ const revoProjects = [
     label: "LAB",
     title: "レボリストLab",
     body: "すべての企画を小さく試し、実際の活動へ育てる実験場。",
-    href: "https://revolist.earth/revolist-lab",
+    href: "https://onokun.com/revolist-lab/",
   },
   {
     label: "PROJECT",
@@ -200,7 +200,7 @@ export default function RevoPage() {
                 </g>
                 </a>
 
-                <a href="https://revolist.earth/revolist-lab" target="_blank" rel="noreferrer" aria-label="レボリストLabのページへ" className="cursor-pointer">
+                <a href="https://onokun.com/revolist-lab/" target="_blank" rel="noreferrer" aria-label="レボリストLabのページへ" className="cursor-pointer">
                 <g>
                   <rect x="220" y="196" width="240" height="88" rx="20" fill="url(#labGradient)" />
                   <text x="340" y="226" textAnchor="middle" fontSize="10" fontWeight="800" fill="#fee2e2">LAB</text>

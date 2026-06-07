@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://revo.onokun.com"),
   title: "レボリスト診断",
   description:
     "人生が広がる次の関わり方を見つける診断です。仕事・副業・転職・仲間・活動の中で、あなたの力の使い方を見つけます。",

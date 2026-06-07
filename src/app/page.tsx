@@ -1,6 +1,17 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Hero from "@/components/Hero";
+import OperationLinks from "@/components/OperationLinks";
 import { revoTypeList } from "@/data/revotypes";
+
+export const metadata: Metadata = {
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    url: "https://revo.onokun.com/",
+  },
+};
 
 export default function HomePage() {
   return (
@@ -190,6 +201,8 @@ export default function HomePage() {
           直感で答えてください。
         </p>
       </section>
+
+      <OperationLinks />
     </>
   );
 }

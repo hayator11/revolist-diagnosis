@@ -116,7 +116,7 @@ export async function GET(req: NextRequest) {
             </span>
           </div>
           <span style={{ fontSize: "11px", color: "rgba(255,255,255,0.2)" }}>
-            revolist-diagnosis.vercel.app
+            revo.onokun.com
           </span>
         </div>
 

@@ -146,7 +146,7 @@ export default function ShareCard({ result }: Props) {
             color: "rgba(255,255,255,0.2)",
           }}
         >
-          revolist-diagnosis.vercel.app
+          revo.onokun.com
         </span>
       </div>
 
