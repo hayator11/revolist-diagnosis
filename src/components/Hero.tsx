@@ -6,10 +6,19 @@ export default function Hero() {
       <p className="text-xs tracking-[0.3em] text-gray-400 uppercase mb-10">
         Revo111
       </p>
-      <h1 className="text-4xl md:text-6xl font-bold text-black leading-[1.35] mb-10 max-w-3xl">
-        「このままでいいのか」と思える人は、
-        <br className="hidden sm:block" />
-        まだ進める。
+      <h1 className="mb-8 max-w-5xl text-black">
+        <span className="block text-4xl md:text-6xl font-bold leading-[1.35]">
+          孤独な挑戦者を、減らしたい。
+        </span>
+        <span className="block mt-6 text-2xl md:text-4xl font-semibold leading-[1.55]">
+          だから、あなたの一歩を一緒に見つける。
+        </span>
+        <span className="block mt-8 text-lg md:text-2xl font-medium leading-[1.8] text-gray-700">
+          得意、役割、関わり方。
+        </span>
+        <span className="block mt-2 text-lg md:text-2xl font-medium leading-[1.8] text-gray-700">
+          診断が、動き出すきっかけになる。
+        </span>
       </h1>
       <div className="text-sm md:text-base text-gray-600 mb-14 max-w-md leading-[2.2] space-y-5">
         <p>
