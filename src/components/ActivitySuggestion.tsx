@@ -19,7 +19,6 @@ export default function ActivitySuggestion({ activities, topTypes }: Props) {
         const matchingTypes = activity.suitableTypes.filter((t) =>
           topTypes.includes(t)
         );
-        const primaryType = revoTypes[topTypes[0]];
 
         return (
           <div

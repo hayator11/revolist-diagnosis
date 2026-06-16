@@ -4,7 +4,6 @@ import { useState } from "react";
 import Link from "next/link";
 import { revoTypes, revoTypeList } from "@/data/revotypes";
 import {
-  getCompatibility,
   getPartnersByTier,
   tierLabel,
   type CompatibilityTier,

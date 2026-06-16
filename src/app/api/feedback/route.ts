@@ -10,6 +10,16 @@ const REVO111_GOOGLE_SCRIPT_URL =
 const REVO111_TYPES = new Set([
   "revo111_result_log",
   "revo111_monitor_feedback",
+  "research_light_answer",
+  "research_light_result",
+  "research_light_feedback",
+  "energy_light_answer",
+  "energy_light_result",
+  "energy_light_feedback",
+  "icebreak_answer",
+  "icebreak_result",
+  "icebreak_feedback",
+  "icebreak_share",
   "light_diagnosis",
   "monitor_44",
   "community_survey",
@@ -42,7 +52,7 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json({ result: "success" });
-  } catch (err) {
+  } catch {
     return NextResponse.json({ result: "error" }, { status: 500 });
   }
 }

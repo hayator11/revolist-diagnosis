@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -24,34 +25,34 @@ export default function RootLayout({
         {/* Nav */}
         <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-sm border-b border-gray-100">
           <div className="max-w-lg mx-auto px-6 h-14 flex items-center justify-between">
-            <a href="/" className="text-sm font-bold text-black tracking-tight">
+            <Link href="/" className="text-sm font-bold text-black tracking-tight">
               REVOLIST
-            </a>
+            </Link>
             <div className="flex items-center gap-4">
-              <a
+              <Link
                 href="/types"
                 className="text-xs text-gray-500 hover:text-black transition-colors hidden sm:block"
               >
                 11タイプ
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/team"
                 className="text-xs text-gray-500 hover:text-black transition-colors hidden sm:block"
               >
                 チーム設計
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/revo"
                 className="text-xs text-gray-500 hover:text-black transition-colors"
               >
                 Revo
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/diagnosis"
                 className="text-xs bg-black text-white px-4 py-2 rounded-full hover:bg-gray-800 transition-colors"
               >
                 診断する
-              </a>
+              </Link>
             </div>
           </div>
         </nav>

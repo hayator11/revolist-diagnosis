@@ -1,0 +1,177 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1100" viewBox="0 0 1600 1100" role="img" aria-labelledby="title desc">
+  <title id="title">レボリスト11 化学反応ユニット</title>
+  <desc id="desc">11の役割を3人組の化学反応として表現した図。名称より先に働きを表示する。</desc>
+  <defs>
+    <style>
+      .bg { fill: #fbfaf7; }
+      .title { font: 800 42px sans-serif; fill: #111827; }
+      .subtitle { font: 500 17px sans-serif; fill: #6b7280; }
+      .unit { fill: #ffffff; stroke: #e5e7eb; stroke-width: 2; filter: drop-shadow(0 14px 28px rgba(17,24,39,.10)); }
+      .unit-title { font: 800 23px sans-serif; fill: #111827; }
+      .formula { font: 700 16px sans-serif; fill: #374151; }
+      .role { fill: #ffffff; stroke-width: 3; }
+      .role-work { font: 700 15px sans-serif; fill: #111827; }
+      .role-name { font: 700 12px sans-serif; fill: #6b7280; }
+      .center { fill: #111827; }
+      .center-title { font: 800 26px sans-serif; fill: #ffffff; }
+      .center-sub { font: 500 14px sans-serif; fill: #d1d5db; }
+      .line { stroke: #d1d5db; stroke-width: 2; stroke-dasharray: 7 9; }
+      .spark { fill: #fef3c7; stroke: #f59e0b; stroke-width: 2; }
+      .ignite { stroke: #e2543e; }
+      .design { stroke: #7c3aed; }
+      .connect { stroke: #f97316; }
+      .structure { stroke: #2563eb; }
+      .care { stroke: #16a34a; }
+      .rare { fill: #fff7ed; }
+      .soft { fill: #f8fafc; }
+    </style>
+  </defs>
+
+  <rect class="bg" width="1600" height="1100"/>
+  <text class="title" x="800" y="64" text-anchor="middle">レボリスト11 化学反応ユニット</text>
+  <text class="subtitle" x="800" y="96" text-anchor="middle">「何タイプか」ではなく「誰と組むと何が生まれるか」で見せる</text>
+
+  <circle class="center" cx="800" cy="540" r="118"/>
+  <text class="center-title" x="800" y="520" text-anchor="middle">組み合わせで</text>
+  <text class="center-title" x="800" y="553" text-anchor="middle">力が立ち上がる</text>
+  <text class="center-sub" x="800" y="584" text-anchor="middle">発想 / 実行 / 言語化 / 安心 / 仕組み</text>
+
+  <!-- Core unit -->
+  <g transform="translate(520 132)">
+    <rect class="unit" width="560" height="238" rx="24"/>
+    <text class="unit-title" x="280" y="42" text-anchor="middle">常識の外の発想が、社会に伝わる挑戦になる</text>
+    <line class="line" x1="280" y1="60" x2="280" y2="92"/>
+    <g transform="translate(28 88)">
+      <rect class="role ignite rare" width="156" height="92" rx="14"/>
+      <text class="role-work" x="78" y="28" text-anchor="middle">常識の外から</text>
+      <text class="role-work" x="78" y="49" text-anchor="middle">可能性を出す</text>
+      <text class="role-name" x="78" y="73" text-anchor="middle">クレイジスト</text>
+    </g>
+    <g transform="translate(202 88)">
+      <rect class="role ignite rare" width="156" height="92" rx="14"/>
+      <text class="role-work" x="78" y="28" text-anchor="middle">新しいことに</text>
+      <text class="role-work" x="78" y="49" text-anchor="middle">挑戦する</text>
+      <text class="role-name" x="78" y="73" text-anchor="middle">レボリスト</text>
+    </g>
+    <g transform="translate(376 88)">
+      <rect class="role structure" width="156" height="92" rx="14"/>
+      <text class="role-work" x="78" y="28" text-anchor="middle">わかりやすく</text>
+      <text class="role-work" x="78" y="49" text-anchor="middle">言語化する</text>
+      <text class="role-name" x="78" y="73" text-anchor="middle">ロジカルマイスター</text>
+    </g>
+    <rect class="spark" x="104" y="194" width="352" height="30" rx="15"/>
+    <text class="formula" x="280" y="215" text-anchor="middle">発想 + 実行 + 理解 = 広がる挑戦</text>
+  </g>
+
+  <!-- Creative value unit -->
+  <g transform="translate(96 388)">
+    <rect class="unit" width="456" height="238" rx="24"/>
+    <text class="unit-title" x="228" y="42" text-anchor="middle">世界観が、人に届く価値になる</text>
+    <g transform="translate(28 86)">
+      <rect class="role design" width="124" height="90" rx="14"/>
+      <text class="role-work" x="62" y="27" text-anchor="middle">空気を</text>
+      <text class="role-work" x="62" y="48" text-anchor="middle">形にする</text>
+      <text class="role-name" x="62" y="72" text-anchor="middle">イメージ</text>
+    </g>
+    <g transform="translate(166 86)">
+      <rect class="role care" width="124" height="90" rx="14"/>
+      <text class="role-work" x="62" y="27" text-anchor="middle">価値を</text>
+      <text class="role-work" x="62" y="48" text-anchor="middle">磨く</text>
+      <text class="role-name" x="62" y="72" text-anchor="middle">クラフター</text>
+    </g>
+    <g transform="translate(304 86)">
+      <rect class="role connect" width="124" height="90" rx="14"/>
+      <text class="role-work" x="62" y="27" text-anchor="middle">人へ</text>
+      <text class="role-work" x="62" y="48" text-anchor="middle">届ける</text>
+      <text class="role-name" x="62" y="72" text-anchor="middle">コミュニケーター</text>
+    </g>
+    <rect class="spark" x="74" y="194" width="308" height="30" rx="15"/>
+    <text class="formula" x="228" y="215" text-anchor="middle">世界観 + 品質 + 届ける力</text>
+  </g>
+
+  <!-- Safe action unit -->
+  <g transform="translate(1048 388)">
+    <rect class="unit" width="456" height="238" rx="24"/>
+    <text class="unit-title" x="228" y="42" text-anchor="middle">安心が、人の一歩を生む</text>
+    <g transform="translate(28 86)">
+      <rect class="role care" width="124" height="90" rx="14"/>
+      <text class="role-work" x="62" y="27" text-anchor="middle">安心を</text>
+      <text class="role-work" x="62" y="48" text-anchor="middle">作る</text>
+      <text class="role-name" x="62" y="72" text-anchor="middle">ソウル</text>
+    </g>
+    <g transform="translate(166 86)">
+      <rect class="role care" width="124" height="90" rx="14"/>
+      <text class="role-work" x="62" y="27" text-anchor="middle">一歩を</text>
+      <text class="role-work" x="62" y="48" text-anchor="middle">応援する</text>
+      <text class="role-name" x="62" y="72" text-anchor="middle">メンター</text>
+    </g>
+    <g transform="translate(304 86)">
+      <rect class="role connect" width="124" height="90" rx="14"/>
+      <text class="role-work" x="62" y="27" text-anchor="middle">会話を</text>
+      <text class="role-work" x="62" y="48" text-anchor="middle">生む</text>
+      <text class="role-name" x="62" y="72" text-anchor="middle">コミュニケーター</text>
+    </g>
+    <rect class="spark" x="74" y="194" width="308" height="30" rx="15"/>
+    <text class="formula" x="228" y="215" text-anchor="middle">安心 + 応援 + 会話</text>
+  </g>
+
+  <!-- Operation unit -->
+  <g transform="translate(200 760)">
+    <rect class="unit" width="456" height="238" rx="24"/>
+    <text class="unit-title" x="228" y="42" text-anchor="middle">情報が、続く運営になる</text>
+    <g transform="translate(28 86)">
+      <rect class="role structure" width="124" height="90" rx="14"/>
+      <text class="role-work" x="62" y="27" text-anchor="middle">材料を</text>
+      <text class="role-work" x="62" y="48" text-anchor="middle">集める</text>
+      <text class="role-name" x="62" y="72" text-anchor="middle">インフォ</text>
+    </g>
+    <g transform="translate(166 86)">
+      <rect class="role connect" width="124" height="90" rx="14"/>
+      <text class="role-work" x="62" y="27" text-anchor="middle">役割を</text>
+      <text class="role-work" x="62" y="48" text-anchor="middle">流す</text>
+      <text class="role-name" x="62" y="72" text-anchor="middle">アレンジャー</text>
+    </g>
+    <g transform="translate(304 86)">
+      <rect class="role structure" width="124" height="90" rx="14"/>
+      <text class="role-work" x="62" y="27" text-anchor="middle">仕組みに</text>
+      <text class="role-work" x="62" y="48" text-anchor="middle">する</text>
+      <text class="role-name" x="62" y="72" text-anchor="middle">ロジカル</text>
+    </g>
+    <rect class="spark" x="74" y="194" width="308" height="30" rx="15"/>
+    <text class="formula" x="228" y="215" text-anchor="middle">情報 + 調整 + 仕組み</text>
+  </g>
+
+  <!-- Magnetic project unit -->
+  <g transform="translate(944 760)">
+    <rect class="unit" width="456" height="238" rx="24"/>
+    <text class="unit-title" x="228" y="42" text-anchor="middle">人が乗りたくなる企画になる</text>
+    <g transform="translate(28 86)">
+      <rect class="role design" width="124" height="90" rx="14"/>
+      <text class="role-work" x="62" y="27" text-anchor="middle">可能性を</text>
+      <text class="role-work" x="62" y="48" text-anchor="middle">広げる</text>
+      <text class="role-name" x="62" y="72" text-anchor="middle">マックス</text>
+    </g>
+    <g transform="translate(166 86)">
+      <rect class="role design" width="124" height="90" rx="14"/>
+      <text class="role-work" x="62" y="27" text-anchor="middle">魅力を</text>
+      <text class="role-work" x="62" y="48" text-anchor="middle">見せる</text>
+      <text class="role-name" x="62" y="72" text-anchor="middle">イメージ</text>
+    </g>
+    <g transform="translate(304 86)">
+      <rect class="role ignite rare" width="124" height="90" rx="14"/>
+      <text class="role-work" x="62" y="27" text-anchor="middle">挑戦へ</text>
+      <text class="role-work" x="62" y="48" text-anchor="middle">動かす</text>
+      <text class="role-name" x="62" y="72" text-anchor="middle">レボリスト</text>
+    </g>
+    <rect class="spark" x="74" y="194" width="308" height="30" rx="15"/>
+    <text class="formula" x="228" y="215" text-anchor="middle">可能性 + 魅力 + 始動</text>
+  </g>
+
+  <line class="line" x1="800" y1="422" x2="800" y2="370"/>
+  <line class="line" x1="682" y1="540" x2="552" y2="507"/>
+  <line class="line" x1="918" y1="540" x2="1048" y2="507"/>
+  <line class="line" x1="724" y1="632" x2="656" y2="760"/>
+  <line class="line" x1="876" y1="632" x2="944" y2="760"/>
+
+  <text class="subtitle" x="800" y="1048" text-anchor="middle">役割名は記号。先に「働き」と「組み合わせで生まれるもの」を見せる。</text>
+</svg>

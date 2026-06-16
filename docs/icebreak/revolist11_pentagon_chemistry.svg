@@ -1,0 +1,178 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1120" viewBox="0 0 1600 1120" role="img" aria-labelledby="title desc">
+  <title id="title">レボリスト11 五角形ベースの化学反応モデル</title>
+  <desc id="desc">5つの力の五角形を中心に、11役割と可変の組み合わせを表現した図。</desc>
+  <defs>
+    <style>
+      .bg { fill: #ffffff; }
+      .title { font: 800 40px sans-serif; fill: #111827; }
+      .sub { font: 500 16px sans-serif; fill: #6b7280; }
+      .axis-label { font: 800 18px sans-serif; }
+      .axis-desc { font: 500 12px sans-serif; fill: #6b7280; }
+      .role { fill: #fff; stroke-width: 3; filter: drop-shadow(0 10px 18px rgba(17,24,39,.08)); }
+      .role-main { font: 700 14px sans-serif; fill: #111827; }
+      .role-name { font: 700 11px sans-serif; fill: #6b7280; }
+      .note { fill: #f9fafb; stroke: #e5e7eb; stroke-width: 2; }
+      .note-title { font: 800 16px sans-serif; fill: #111827; }
+      .note-text { font: 500 13px sans-serif; fill: #4b5563; }
+      .grid { fill: none; stroke: #e5e7eb; stroke-width: 1.5; }
+      .axis { stroke: #f3f4f6; stroke-width: 2; }
+      .variable { fill: none; stroke: #9ca3af; stroke-width: 2.5; stroke-dasharray: 8 10; }
+      .team { fill: rgba(17,24,39,.04); stroke: #111827; stroke-width: 3; }
+      .own { fill: rgba(226,84,62,.14); stroke: #e2543e; stroke-width: 4; }
+      .partner { fill: rgba(37,99,235,.12); stroke: #2563eb; stroke-width: 3; stroke-dasharray: 7 7; }
+      .ignite { stroke: #e2543e; fill: #fff7ed; }
+      .design { stroke: #7c3aed; fill: #faf5ff; }
+      .connect { stroke: #f97316; fill: #fff7ed; }
+      .structure { stroke: #2563eb; fill: #eff6ff; }
+      .care { stroke: #16a34a; fill: #f0fdf4; }
+      .c-ignite { fill: #e2543e; }
+      .c-design { fill: #7c3aed; }
+      .c-connect { fill: #f97316; }
+      .c-structure { fill: #2563eb; }
+      .c-care { fill: #16a34a; }
+    </style>
+  </defs>
+
+  <rect class="bg" width="1600" height="1120"/>
+  <text class="title" x="800" y="62" text-anchor="middle">レボリスト11は、固定ペアではなく「5つの力の形」で組み合わせる</text>
+  <text class="sub" x="800" y="94" text-anchor="middle">自分の五角形、相手の五角形、チームの五角形が重なることで、無数の化学反応が生まれる</text>
+
+  <!-- Pentagon grid -->
+  <g transform="translate(800 520)">
+    <polygon class="grid" points="0,-270 256.8,-83.4 158.7,218.4 -158.7,218.4 -256.8,-83.4"/>
+    <polygon class="grid" points="0,-205 195.0,-63.4 120.5,165.9 -120.5,165.9 -195.0,-63.4"/>
+    <polygon class="grid" points="0,-140 133.1,-43.3 82.3,113.3 -82.3,113.3 -133.1,-43.3"/>
+    <line class="axis" x1="0" y1="0" x2="0" y2="-270"/>
+    <line class="axis" x1="0" y1="0" x2="256.8" y2="-83.4"/>
+    <line class="axis" x1="0" y1="0" x2="158.7" y2="218.4"/>
+    <line class="axis" x1="0" y1="0" x2="-158.7" y2="218.4"/>
+    <line class="axis" x1="0" y1="0" x2="-256.8" y2="-83.4"/>
+
+    <polygon class="own" points="0,-248 178,-58 88,121 -74,102 -118,-38"/>
+    <polygon class="partner" points="0,-118 94,-30 139,191 -144,198 -231,-75"/>
+    <polygon class="team" points="0,-225 212,-69 145,200 -142,195 -214,-69"/>
+
+    <circle class="c-ignite" cx="0" cy="-270" r="8"/>
+    <circle class="c-design" cx="256.8" cy="-83.4" r="8"/>
+    <circle class="c-connect" cx="158.7" cy="218.4" r="8"/>
+    <circle class="c-care" cx="-158.7" cy="218.4" r="8"/>
+    <circle class="c-structure" cx="-256.8" cy="-83.4" r="8"/>
+
+    <text class="axis-label" x="0" y="-306" text-anchor="middle" fill="#e2543e">はじめる力</text>
+    <text class="axis-desc" x="0" y="-285" text-anchor="middle">始動・挑戦・火種</text>
+
+    <text class="axis-label" x="306" y="-88" text-anchor="middle" fill="#7c3aed">描く力</text>
+    <text class="axis-desc" x="306" y="-67" text-anchor="middle">構想・世界観・企画</text>
+
+    <text class="axis-label" x="210" y="254" text-anchor="middle" fill="#f97316">つなぐ力</text>
+    <text class="axis-desc" x="210" y="275" text-anchor="middle">会話・紹介・場づくり</text>
+
+    <text class="axis-label" x="-210" y="254" text-anchor="middle" fill="#16a34a">支える力</text>
+    <text class="axis-desc" x="-210" y="275" text-anchor="middle">安心・応援・品質</text>
+
+    <text class="axis-label" x="-318" y="-88" text-anchor="middle" fill="#2563eb">整える力</text>
+    <text class="axis-desc" x="-318" y="-67" text-anchor="middle">情報・設計・仕組み</text>
+  </g>
+
+  <!-- Roles around axes -->
+  <g transform="translate(645 164)">
+    <rect class="role ignite" width="150" height="78" rx="14"/>
+    <text class="role-main" x="75" y="26" text-anchor="middle">未来に火を灯す</text>
+    <text class="role-main" x="75" y="46" text-anchor="middle">一歩を作る</text>
+    <text class="role-name" x="75" y="64" text-anchor="middle">レボリスト</text>
+  </g>
+  <g transform="translate(815 164)">
+    <rect class="role ignite" width="150" height="78" rx="14"/>
+    <text class="role-main" x="75" y="26" text-anchor="middle">常識の外から</text>
+    <text class="role-main" x="75" y="46" text-anchor="middle">可能性を出す</text>
+    <text class="role-name" x="75" y="64" text-anchor="middle">クレイジスト</text>
+  </g>
+
+  <g transform="translate(1098 334)">
+    <rect class="role design" width="168" height="78" rx="14"/>
+    <text class="role-main" x="84" y="26" text-anchor="middle">可能性を広げる</text>
+    <text class="role-main" x="84" y="46" text-anchor="middle">企画にする</text>
+    <text class="role-name" x="84" y="64" text-anchor="middle">マックスデザイナー</text>
+  </g>
+  <g transform="translate(1118 430)">
+    <rect class="role design" width="168" height="78" rx="14"/>
+    <text class="role-main" x="84" y="26" text-anchor="middle">想いや空気を</text>
+    <text class="role-main" x="84" y="46" text-anchor="middle">見える形にする</text>
+    <text class="role-name" x="84" y="64" text-anchor="middle">イメージマイスター</text>
+  </g>
+
+  <g transform="translate(1016 786)">
+    <rect class="role connect" width="168" height="78" rx="14"/>
+    <text class="role-main" x="84" y="26" text-anchor="middle">人と人の間に</text>
+    <text class="role-main" x="84" y="46" text-anchor="middle">会話を生む</text>
+    <text class="role-name" x="84" y="64" text-anchor="middle">コミュニケーター</text>
+  </g>
+  <g transform="translate(834 850)">
+    <rect class="role connect" width="168" height="78" rx="14"/>
+    <text class="role-main" x="84" y="26" text-anchor="middle">人・情報・役割を</text>
+    <text class="role-main" x="84" y="46" text-anchor="middle">整えて流す</text>
+    <text class="role-name" x="84" y="64" text-anchor="middle">アレンジャー</text>
+  </g>
+
+  <g transform="translate(416 850)">
+    <rect class="role care" width="168" height="78" rx="14"/>
+    <text class="role-main" x="84" y="26" text-anchor="middle">安心して話せる</text>
+    <text class="role-main" x="84" y="46" text-anchor="middle">土台を作る</text>
+    <text class="role-name" x="84" y="64" text-anchor="middle">ソウルオーナー</text>
+  </g>
+  <g transform="translate(234 786)">
+    <rect class="role care" width="168" height="78" rx="14"/>
+    <text class="role-main" x="84" y="26" text-anchor="middle">人の一歩を</text>
+    <text class="role-main" x="84" y="46" text-anchor="middle">応援する</text>
+    <text class="role-name" x="84" y="64" text-anchor="middle">ムーブメンター</text>
+  </g>
+  <g transform="translate(230 684)">
+    <rect class="role care" width="168" height="78" rx="14"/>
+    <text class="role-main" x="84" y="26" text-anchor="middle">価値を磨き</text>
+    <text class="role-main" x="84" y="46" text-anchor="middle">信頼にする</text>
+    <text class="role-name" x="84" y="64" text-anchor="middle">プルミエルクラフター</text>
+  </g>
+
+  <g transform="translate(250 334)">
+    <rect class="role structure" width="168" height="78" rx="14"/>
+    <text class="role-main" x="84" y="26" text-anchor="middle">判断材料を集め</text>
+    <text class="role-main" x="84" y="46" text-anchor="middle">知恵にする</text>
+    <text class="role-name" x="84" y="64" text-anchor="middle">インフォレイダー</text>
+  </g>
+  <g transform="translate(230 430)">
+    <rect class="role structure" width="168" height="78" rx="14"/>
+    <text class="role-main" x="84" y="26" text-anchor="middle">複雑なことを</text>
+    <text class="role-main" x="84" y="46" text-anchor="middle">仕組みにする</text>
+    <text class="role-name" x="84" y="64" text-anchor="middle">ロジカルマイスター</text>
+  </g>
+
+  <!-- Variable route lines -->
+  <path class="variable" d="M800 272 C1030 300 1130 430 1115 600 C1080 780 950 850 790 840"/>
+  <path class="variable" d="M800 272 C575 315 455 440 475 620 C505 780 650 860 800 850"/>
+  <path class="variable" d="M800 272 C785 440 625 470 398 469"/>
+  <path class="variable" d="M418 374 C600 300 910 310 1100 374"/>
+  <path class="variable" d="M402 724 C650 650 890 670 1018 824"/>
+
+  <!-- Notes -->
+  <g transform="translate(92 118)">
+    <rect class="note" width="360" height="134" rx="18"/>
+    <text class="note-title" x="24" y="36">固定の3人組ではない</text>
+    <text class="note-text" x="24" y="64">強い力、空きスロット、目的、人数で</text>
+    <text class="note-text" x="24" y="86">組み合わせは変わる。</text>
+    <text class="note-text" x="24" y="108">線は「代表例」ではなく可変ルート。</text>
+  </g>
+
+  <g transform="translate(1148 118)">
+    <rect class="note" width="360" height="134" rx="18"/>
+    <text class="note-title" x="24" y="36">五角形の重なりで見る</text>
+    <text class="note-text" x="24" y="64">赤: 自分の形</text>
+    <text class="note-text" x="24" y="86">青点線: 相手の形</text>
+    <text class="note-text" x="24" y="108">黒: チームとして満たしたい形</text>
+  </g>
+
+  <g transform="translate(520 972)">
+    <rect class="note" width="560" height="78" rx="18"/>
+    <text class="note-title" x="280" y="32" text-anchor="middle">結果画面では「あなたの形」「近くにいると動きやすい力」「今の場に足す力」を出す</text>
+    <text class="note-text" x="280" y="56" text-anchor="middle">役割名は後から添える。まずは働きと組み合わせで生まれるものを見せる。</text>
+  </g>
+</svg>

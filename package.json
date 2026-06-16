@@ -6,6 +6,9 @@
     "dev": "next dev",
     "build": "next build --webpack",
     "start": "next start",
+    "test:research-light": "node scripts/test-research-light.mjs",
+    "test:energy-light": "node scripts/test-energy-light.mjs",
+    "test:icebreak": "node scripts/test-icebreak.mjs && node scripts/test-icebreak-seating.mjs && node scripts/test-icebreak-event-store.mjs",
     "lint": "eslint"
   },
   "dependencies": {

@@ -1,215 +1,222 @@
-# Revo111 Master Index
+# Revo111 マスター目次
 
-## Purpose
+## Revo111の目的
 
-Revo111 is not a personality test.
+Revo111は、性格診断ではない。
 
-It is a growth operating system designed to help people discover:
+人を固定するためのものではなく、以下を見つけるための成長OSである。
 
-- their current role
-- their growth path
-- their ideal collaborators
-- their future possibilities
-- their contribution to projects and communities
+- 今の役割
+- 成長ルート
+- 一緒に動きやすい仲間
+- 未来を広げる可能性
+- プロジェクトやコミュニティでの関わり方
 
 ---
 
-# Core Files
+## 中核ドキュメント
 
-## Philosophy
+### 思想・基本方針
 
+```text
 docs/revo111/core/Revo111_Core_Philosophy.md
+```
 
-Purpose:
-
-Defines the worldview and principles of Revo111.
+Revo111の世界観、表現ルール、診断としての立ち位置を定義する。
 
 ---
 
-## Role Dictionary
+### 11役割の辞書
 
+```text
 docs/revo111/core/Revo11_Role_Complete_Dictionary.md
+```
 
-Purpose:
-
-Defines all 11 Revo roles.
+11種類のRevo役割を定義する。
 
 ---
 
-## Growth Routes
+### 成長ルート
 
+```text
 docs/revo111/core/Revo11_Growth_Routes.md
+```
 
-Purpose:
-
-Defines how each role grows over time.
+各役割が、どのように育ち、次の可能性へ広がるかを定義する。
 
 ---
 
-## Match Rules
+### 仲間との組み方
 
+```text
 docs/revo111/core/Revo11_Match_Rules.md
+```
 
-Purpose:
-
-Defines what happens when two roles work together.
+2人で組む場合の関係性や、力が出やすい組み合わせを定義する。
 
 ---
 
-## Third Person Effects
+### 3人目の効果
 
+```text
 docs/revo111/core/Revo11_ThirdPerson_Effects.md
+```
 
-Purpose:
-
-Defines what happens when a third role joins a team.
+2人の関係に3人目が加わったとき、どのような流れが生まれるかを定義する。
 
 ---
 
-# Question Engine
+## 質問設計
 
+```text
 docs/revo111/core/Revo111_Question_Master.md
+```
 
-44 question beta version.
+44問モニター版の質問を管理する。
 
-Future:
+将来の拡張予定:
 
-44
-↓
-66
-↓
-88
-↓
-111
+```text
+44問
+66問
+88問
+111問
+```
 
 ---
 
-# Scoring Engine
+## スコア計算
 
+```text
 docs/revo111/scoring/Revo111_Scoring_Master.md
+```
 
-Purpose:
+回答を11役割のスコアに変換するルールを定義する。
 
-Converts answers into role scores.
+出力するもの:
 
-Output:
-
-- Main Role
-- Sub Role
-- Support Role
+- メイン役割
+- サブ役割
+- 補助役割
 
 ---
 
-# Result Engine
+## 結果ページ
 
+```text
 docs/revo111/results/Revo111_Result_Item_Master.md
+```
 
-Purpose:
-
-Defines result page sections.
+結果ページに表示する項目と構成を定義する。
 
 ---
 
-# Funding Integration
+## Revo Funding連携
 
+```text
 docs/revo111/funding/Revo_Funding_Team_Algorithm.md
+```
 
-Purpose:
-
-Project role recommendations.
-
-Team recommendations.
-
-Funding participation suggestions.
+プロジェクト参加やFundingでの役割提案を定義する。
 
 ---
 
-# Match Integration
+## 仲間診断・相互診断連携
 
+```text
 docs/revo111/match/Revo_Match_Algorithm.md
+```
 
-Purpose:
-
-Future expansion recommendations.
-
-Partner recommendations.
-
-Role expansion logic.
+将来的な仲間診断、相互診断、パートナー提案の考え方を定義する。
 
 ---
 
-# Monitor System
+## モニター診断
 
+```text
 docs/revo111/monitor
+```
 
-Purpose:
+現実の回答データと感想を集め、診断精度と結果文を改善するための検証領域。
 
-Collect real-world feedback.
+想定する検証:
 
-Monitor A
-Role Validation
-
-Monitor B
-Team Validation
-
-Monitor C
-Activity Validation
-
-Monitor D
-Eastern Philosophy Validation
+- 役割のしっくり度
+- 仲間との組み方
+- 活動提案
+- 生年月日や人生リズムを使う番外編
 
 ---
 
-# Revo111 Evolution Roadmap
+## 番外編リサーチ版
 
-Phase 1
+```text
+docs/revo111/special/Revo111_Special_Research_Versions.md
+```
 
-44 Question Beta
+通常の診断導線とは切り離した、招待制・モニター用の番外編リサーチ版を定義する。
 
-Phase 2
+特別プラン:
 
-100-300 Monitor Responses
+- Revo111 価値の流れプラン
+- Revo111 生年月日リズムプラン
 
-Phase 3
+関連ファイル:
 
-66 Questions
-
-Phase 4
-
-88 Questions
-
-Phase 5
-
-111 Questions
-
-Phase 6
-
-AI Result Generator
-
-Phase 7
-
-Revo Funding Integration
-
-Phase 8
-
-Revo Link Integration
-
-Phase 9
-
-RevoOS Integration
+- docs/revo111/special/Revo111_Value_Flow_Plan_Spec.md
+- docs/revo111/special/Revo111_Birth_Rhythm_Plan_Spec.md
+- docs/revo111/special/Revo111_Special_Research_Operation_Plan.md
+- docs/revo111/special/Revo111_Special_Research_Database_Design.md
+- docs/revo111/special/Revo111_Special_Research_GoogleSheets_Setup.md
 
 ---
 
-# Ultimate Goal
+## 進化ロードマップ
 
-Revo111 is not designed to label people.
+### 第1段階
 
-It is designed to help people grow.
+44問モニター版を公開する。
 
-The goal is not diagnosis.
+### 第2段階
 
-The goal is action.
+100人から300人規模のモニター回答を集める。
 
-The goal is contribution.
+### 第3段階
 
-The goal is creating a culture where roles circulate and support each other.
+66問版へ拡張する。
+
+### 第4段階
+
+88問版へ拡張する。
+
+### 第5段階
+
+111問版へ拡張する。
+
+### 第6段階
+
+AIによる結果文生成を検証する。
+
+### 第7段階
+
+Revo Fundingとの連携を強化する。
+
+### 第8段階
+
+Revo Linkとの連携を強化する。
+
+### 第9段階
+
+RevoOS全体へ統合する。
+
+---
+
+## 最終目的
+
+Revo111は、人を分類して終わるためのものではない。
+
+目的は、診断ではなく行動である。
+
+目的は、役割を固定することではなく、育てることである。
+
+目的は、ひとりで抱える挑戦を減らし、役割が循環する文化をつくることである。
