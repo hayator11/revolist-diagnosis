@@ -3,13 +3,20 @@ import { revo111Navigation } from "@/data/revo111Navigation";
 import { revo111Roles } from "@/data/revo111Roles";
 import { icebreakQuestions, ICEBREAK_TOTAL_QUESTIONS } from "@/data/icebreakQuestions";
 import { calculateMovementStyleResult, type MovementStyleResult } from "@/lib/calculateMovementStyleResult";
-import { calculateMultiAxisRoleResult, type MultiAxisRoleResult } from "@/lib/calculateMultiAxisRoleResult";
+import {
+  calculateMultiAxisRoleResult,
+  calculateMultiAxisRoleResultCentered,
+  type CenteredMultiAxisRoleResult,
+  type MultiAxisRoleResult,
+} from "@/lib/calculateMultiAxisRoleResult";
 import {
   FORCE_DEFINITIONS,
   FORCE_KEYS,
   type ForceKey,
 } from "@/lib/diagnosisCore/forces";
+import { ICEBREAK_CENTERED_WEIGHT_OVERRIDES } from "@/lib/diagnosisCore/icebreakCenteredWeights";
 import type { AxisScores } from "@/lib/diagnosisCore/multiAxis";
+import type { CenteredMultiAxisQuestion } from "@/lib/diagnosisCore/multiAxis";
 import type { ForceScores } from "@/lib/diagnosisCore/types";
 
 export interface IcebreakResult {
@@ -27,6 +34,31 @@ export interface IcebreakResult {
   mainTypeKey: RevoTypeKey;
   partnerTypeKey: RevoTypeKey;
   thirdTypeKey: RevoTypeKey;
+}
+
+export interface IcebreakParallelResult {
+  legacyResult: IcebreakResult;
+  centeredResult: CenteredMultiAxisRoleResult;
+}
+
+export interface CenteredResultSummaryScore {
+  key: string;
+  score: number;
+}
+
+export interface IcebreakCenteredResultSummary {
+  centeredAnswerMean: number;
+  centeredAnswerSpread: number;
+  zeroAnswerCount: number;
+  hasNegativeScore: boolean;
+  centeredTopRole: CenteredResultSummaryScore;
+  centeredBottomRole: CenteredResultSummaryScore;
+  centeredTopForce: CenteredResultSummaryScore;
+  centeredBottomForce: CenteredResultSummaryScore;
+}
+
+export interface IcebreakCenteredAdapterOptions {
+  includeExperimentalWeights?: boolean;
 }
 
 const INITIAL_ROLE_SCORES: Record<RevoTypeKey, number> = {
@@ -131,6 +163,21 @@ function rankRoleKeys(roleScores: Record<RevoTypeKey, number>) {
   });
 }
 
+function pickScoreEntry<T extends string>(
+  scores: Record<T, number>,
+  direction: "asc" | "desc",
+): CenteredResultSummaryScore {
+  const multiplier = direction === "desc" ? -1 : 1;
+  const [key, score] = Object.entries(scores)
+    .sort(([keyA, valueA], [keyB, valueB]) => {
+      const diff = (valueA as number) - (valueB as number);
+      if (diff !== 0) return diff * multiplier;
+      return keyA.localeCompare(keyB);
+    })[0] as [string, number];
+
+  return { key, score };
+}
+
 function calculateForcePctFromAxis(axisPct: AxisScores): ForceScores {
   const totals = initialForceScores();
   const weights = initialForceScores();
@@ -149,6 +196,30 @@ function calculateForcePctFromAxis(axisPct: AxisScores): ForceScores {
 
 function choosePartner(slotForce: ForceKey, excluded: RevoTypeKey[]) {
   return PARTNER_BY_SLOT[slotForce].find((key) => !excluded.includes(key)) ?? PARTNER_BY_SLOT[slotForce][0];
+}
+
+export function adaptIcebreakQuestionsToCentered(
+  options: IcebreakCenteredAdapterOptions = {},
+): CenteredMultiAxisQuestion[] {
+  return icebreakQuestions.map((question) => ({
+    id: question.id,
+    text: question.text,
+    weights: [
+      ...question.weights,
+      ...(options.includeExperimentalWeights
+        ? ICEBREAK_CENTERED_WEIGHT_OVERRIDES[question.id]?.axisWeights ?? []
+        : []),
+    ],
+    role: question.role,
+    force: question.force,
+    roleWeights: options.includeExperimentalWeights
+      ? ICEBREAK_CENTERED_WEIGHT_OVERRIDES[question.id]?.roleWeights
+      : undefined,
+    forceWeights: options.includeExperimentalWeights
+      ? ICEBREAK_CENTERED_WEIGHT_OVERRIDES[question.id]?.forceWeights
+      : undefined,
+    reverse: question.reverse,
+  }));
 }
 
 export function calculateIcebreakResult(answers: number[]): IcebreakResult {
@@ -189,6 +260,31 @@ export function calculateIcebreakResult(answers: number[]): IcebreakResult {
     mainTypeKey,
     partnerTypeKey,
     thirdTypeKey,
+  };
+}
+
+export function calculateIcebreakParallelResult(answers: number[]): IcebreakParallelResult {
+  return {
+    legacyResult: calculateIcebreakResult(answers),
+    centeredResult: calculateMultiAxisRoleResultCentered(
+      adaptIcebreakQuestionsToCentered({ includeExperimentalWeights: true }),
+      answers,
+    ),
+  };
+}
+
+export function createCenteredResultSummary(
+  centeredResult: CenteredMultiAxisRoleResult,
+): IcebreakCenteredResultSummary {
+  return {
+    centeredAnswerMean: centeredResult.centeredAnswerMean,
+    centeredAnswerSpread: centeredResult.centeredAnswerSpread,
+    zeroAnswerCount: centeredResult.zeroAnswerCount,
+    hasNegativeScore: centeredResult.hasNegativeScore,
+    centeredTopRole: pickScoreEntry(centeredResult.roleScores, "desc"),
+    centeredBottomRole: pickScoreEntry(centeredResult.roleScores, "asc"),
+    centeredTopForce: pickScoreEntry(centeredResult.forceScores, "desc"),
+    centeredBottomForce: pickScoreEntry(centeredResult.forceScores, "asc"),
   };
 }
 
