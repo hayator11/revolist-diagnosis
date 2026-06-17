@@ -87,6 +87,52 @@ override不要の設問も、中心0計算自体では意味を持つ。回答�
 
 第8セットは空overrideのみなので、21問時点からマイナス合計は増えていない。
 
+## centeredResultSummaryのローカルaudit確認
+
+`/private/tmp/icebreak-centered-audit.json` で、代表65ケースの `legacyResult` と `centeredResultSummary` を比較確認している。
+
+確認できたこと:
+
+- 全回答3は完全中立
+- 空overrideだけ5では `hasNegativeScore=false`
+- 空overrideだけ1でも、不自然な反対タイプの爆上がりは出ていない
+- マイナスありoverrideだけ1では、構造・観察・品質側の相対情報として読める
+- 奇数/偶数パターンでも破綻は見られない
+
+現時点では、`centeredResultSummary` は分析用としては自然に動いている。
+
+ただし、ユーザー表示用としてはまだ使わない。`legacyResult` は引き続き表示用として維持する。`centeredResult` は、内部比較・分布監査・将来の解釈レイヤー検討用として扱う。
+
+## 現時点で気になる傾向
+
+全肯定系では `care / soulowner` が強く出やすい。
+
+これはレボリスト診断の思想上、悪い傾向とは限らない。ただし、実回答でも `care / soulowner / movmentor` が出すぎないかは確認が必要である。
+
+全回答1/2ではスコア全体がマイナスになる。そのため、`centeredTopRole / centeredTopForce` をそのまま表示すると、「上位タイプ」と誤解される可能性がある。
+
+`centeredTopRole` や `centeredBottomRole` は、分析上の相対値であり、ユーザーにそのまま見せる言葉ではない。
+
+## 表示反映しない理由
+
+`centeredTopRole / centeredTopForce` は、そのまま結果タイプ名として使わない。
+
+特に全体マイナス時の `top` は「良いタイプ」や「あなたのタイプ」ではなく、あくまで相対的に高い項目にすぎない。
+
+ユーザー表示には、別途「解釈レイヤー」「文章化レイヤー」が必要である。
+
+実回答30〜100件以上で分布を確認してから、表示反映を検討する。
+
+## 次に見るべき実測ポイント
+
+実回答が集まったら、以下を見る。
+
+- `care / soulowner / movmentor` が出すぎないか
+- `connect / design / ignite` が沈みすぎないか
+- 0回答が特定設問に集中しないか
+- `legacyResult` と `centeredSummary` のズレが説明可能か
+- `centeredSummary` がマッチングやオフ会導線に活かせるか
+
 ## 今後の見直し条件
 
 実回答データが30〜100件以上集まったら、分布を見る。
