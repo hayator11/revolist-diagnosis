@@ -82,3 +82,33 @@ alter table public.icebreak_anonymous_summaries enable row level security;
 
 -- No public RLS policies are created here.
 -- The Next.js API routes should access these tables with SUPABASE_SERVICE_ROLE_KEY on the server only.
+
+-- Icebreak 33 centered model validation feedback.
+-- This table is for real-answer validation of the Icebreak 33 centered-0 model.
+-- centeredResultSummary is not stored here; analysis should join later by diagnosis_id or result_url.
+-- Do not store personal information. Initial implementation assumes server-only inserts.
+create table if not exists public.icebreak_centered_validation_feedback (
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default now(),
+  diagnosis_id text,
+  result_url text,
+  fit_score integer not null check (fit_score between 1 and 5),
+  self_like_text text not null,
+  discomfort_text text not null,
+  conversation_use_score integer not null check (conversation_use_score between 1 and 5),
+  matching_use_score integer not null check (matching_use_score between 1 and 5),
+  want_to_know_text text,
+  free_comment text,
+  self_type_text text,
+  others_say_text text,
+  hard_question_text text,
+  neutral_reason_text text,
+  matching_resistance text,
+  constraint icebreak_centered_validation_feedback_reference_check
+    check (diagnosis_id is not null or result_url is not null)
+);
+
+alter table public.icebreak_centered_validation_feedback enable row level security;
+
+-- No public RLS policies are created for validation feedback yet.
+-- Insert should go through a future Next.js API route using SUPABASE_SERVICE_ROLE_KEY.
