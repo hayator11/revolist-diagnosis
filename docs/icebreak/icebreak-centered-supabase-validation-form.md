@@ -22,6 +22,14 @@ Googleフォームではなく、Supabaseに保存する自前フォームとす
 
 Supabaseの無料枠で始める前提にする。
 
+検証フォームの送信は、ブラウザからSupabaseへ直接insertしない。
+
+送信は専用API routeを経由する。
+
+既存 `/api/feedback` とは分ける。
+
+推奨API route候補は `src/app/api/icebreak/centered-validation/route.ts`。
+
 ## フォームで集める項目
 
 ### 必須項目
@@ -101,11 +109,19 @@ icebreak_centered_validation_feedback
 
 ## RLS方針
 
-public insert は許可する。
+RLSは有効にする。
 
-select / update / delete は管理者のみ許可する。
+public insert policy は作らない。
 
-anon keyでフォーム送信だけできるようにする。
+select / update / delete は公開しない。
+
+insertは Next.js API route 経由で行う。
+
+API route内で `SUPABASE_SERVICE_ROLE_KEY` を使う server-only insert を想定する。
+
+`SUPABASE_SERVICE_ROLE_KEY` はブラウザに出さない。
+
+`NEXT_PUBLIC_SUPABASE_*` は初期実装では使わない。
 
 個人情報を集めない前提でも、読み取り公開はしない。
 
@@ -145,6 +161,11 @@ anon keyでフォーム送信だけできるようにする。
 - URL変更
 - 重み変更
 - Supabaseへの実装接続
+- Supabase client 実装
+- `@supabase/supabase-js` 追加
+- API route実装
+- フォームUI実装
+- public insert policy作成
 
 ## 関連ファイル
 
@@ -152,3 +173,5 @@ anon keyでフォーム送信だけできるようにする。
 - `docs/icebreak/icebreak-centered-validation-survey.md`
 - `docs/icebreak/supabase_schema.sql`
 - `docs/icebreak/event_box_design.md`
+- `src/lib/supabase/server.ts`（将来候補）
+- `src/app/api/icebreak/centered-validation/route.ts`（将来候補）
