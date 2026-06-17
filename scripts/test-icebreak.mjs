@@ -1,9 +1,11 @@
 import assert from "node:assert/strict";
+import fs from "node:fs";
 import { createJiti } from "jiti";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const feedbackRoutePath = path.join(root, "src/app/api/feedback/route.ts");
 const jiti = createJiti(import.meta.url, {
   alias: {
     "@": path.join(root, "src"),
@@ -48,6 +50,33 @@ function answersWithQuestionSet(questionIds, targetValue, otherValue) {
 
 function allScoresNearZero(scores) {
   return Object.values(scores).every((score) => Math.abs(score) < 0.000001);
+}
+
+function assertCenteredSummaryShape(summary) {
+  const expectedSummaryKeys = [
+    "centeredAnswerMean",
+    "centeredAnswerSpread",
+    "zeroAnswerCount",
+    "hasNegativeScore",
+    "centeredTopRole",
+    "centeredBottomRole",
+    "centeredTopForce",
+    "centeredBottomForce",
+  ];
+
+  assert.deepEqual(Object.keys(summary), expectedSummaryKeys);
+  assert.equal(typeof summary.centeredAnswerMean, "number");
+  assert.equal(typeof summary.centeredAnswerSpread, "number");
+  assert.equal(typeof summary.zeroAnswerCount, "number");
+  assert.equal(typeof summary.hasNegativeScore, "boolean");
+  assert.equal(typeof summary.centeredTopRole.key, "string");
+  assert.equal(typeof summary.centeredTopRole.score, "number");
+  assert.equal(typeof summary.centeredBottomRole.key, "string");
+  assert.equal(typeof summary.centeredBottomRole.score, "number");
+  assert.equal(typeof summary.centeredTopForce.key, "string");
+  assert.equal(typeof summary.centeredTopForce.score, "number");
+  assert.equal(typeof summary.centeredBottomForce.key, "string");
+  assert.equal(typeof summary.centeredBottomForce.score, "number");
 }
 
 const experimentalWeightExpectations = {
@@ -440,16 +469,6 @@ const experimentalQuestionIds = Object.keys(experimentalWeightExpectations);
     Array(ICEBREAK_TOTAL_QUESTIONS).fill(3),
   );
   const summary = createCenteredResultSummary(centeredResult);
-  const expectedSummaryKeys = [
-    "centeredAnswerMean",
-    "centeredAnswerSpread",
-    "zeroAnswerCount",
-    "hasNegativeScore",
-    "centeredTopRole",
-    "centeredBottomRole",
-    "centeredTopForce",
-    "centeredBottomForce",
-  ];
 
   assert.equal(legacyResult.roleJudgment.mode, "low_confidence");
   assert.equal(centeredResult.zeroAnswerCount, ICEBREAK_TOTAL_QUESTIONS);
@@ -459,14 +478,10 @@ const experimentalQuestionIds = Object.keys(experimentalWeightExpectations);
   assert.equal(allScoresNearZero(centeredResult.roleScores), true);
   assert.equal(allScoresNearZero(centeredResult.forceScores), true);
   assert.equal(centeredResult.hasNegativeScore, false);
-  assert.deepEqual(Object.keys(summary), expectedSummaryKeys);
+  assertCenteredSummaryShape(summary);
   assert.equal(summary.centeredAnswerMean, 0);
   assert.equal(summary.zeroAnswerCount, ICEBREAK_TOTAL_QUESTIONS);
   assert.equal(summary.hasNegativeScore, false);
-  assert.equal(typeof summary.centeredTopRole.key, "string");
-  assert.equal(typeof summary.centeredTopRole.score, "number");
-  assert.equal(typeof summary.centeredBottomForce.key, "string");
-  assert.equal(typeof summary.centeredBottomForce.score, "number");
   assert.equal("rawAnswers" in summary, false);
   assert.equal("centeredAnswers" in summary, false);
   assert.equal("axisScores" in summary, false);
@@ -484,6 +499,33 @@ const experimentalQuestionIds = Object.keys(experimentalWeightExpectations);
   assert.equal(summary.centeredTopForce.key, "ignite");
   assert.ok(summary.centeredTopRole.score > 0);
   assert.ok(summary.centeredTopForce.score > 0);
+}
+
+{
+  const representativeAnswers = [
+    Array(ICEBREAK_TOTAL_QUESTIONS).fill(3),
+    answersWithQuestionSet(experimentalQuestionIds, 5, 3),
+    answersWithQuestionSet(experimentalQuestionIds, 1, 3),
+    icebreakQuestions.map((_, index) => ((index + 1) % 2 === 1 ? 5 : 1)),
+  ];
+
+  for (const answers of representativeAnswers) {
+    const { legacyResult, centeredResult } = calculateIcebreakParallelResult(answers);
+    const summary = createCenteredResultSummary(centeredResult);
+
+    assert.deepEqual(legacyResult, calculateIcebreakResult(answers));
+    assertCenteredSummaryShape(summary);
+    assert.equal(summary.centeredTopRole.key.length > 0, true);
+    assert.equal(summary.centeredBottomRole.key.length > 0, true);
+    assert.equal(summary.centeredTopForce.key.length > 0, true);
+    assert.equal(summary.centeredBottomForce.key.length > 0, true);
+  }
+}
+
+{
+  const feedbackRouteSource = fs.readFileSync(feedbackRoutePath, "utf8");
+  assert.equal(feedbackRouteSource.includes("icebreak_centered_summary"), false);
+  assert.equal(feedbackRouteSource.includes("centeredResultSummary"), false);
 }
 
 {

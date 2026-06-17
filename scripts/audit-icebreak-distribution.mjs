@@ -50,7 +50,11 @@ const RUNS = Number(process.env.RUNS ?? 20000);
 
 const { icebreakQuestions, ICEBREAK_TOTAL_QUESTIONS } = require("../src/data/icebreakQuestions.ts");
 const { researchLightQuestions } = require("../src/data/researchLightQuestions.ts");
-const { calculateIcebreakParallelResult, calculateIcebreakResult } = require("../src/lib/calculateIcebreakResult.ts");
+const {
+  calculateIcebreakParallelResult,
+  calculateIcebreakResult,
+  createCenteredResultSummary,
+} = require("../src/lib/calculateIcebreakResult.ts");
 const { ICEBREAK_CENTERED_WEIGHT_OVERRIDES } = require("../src/lib/diagnosisCore/icebreakCenteredWeights.ts");
 
 const FIFTH_SET_QUESTION_IDS = new Set(["ice33_q12", "ice33_q22", "ice33_q23"]);
@@ -317,6 +321,7 @@ function summarizeMovement({ length, runs, generator }) {
 
 function compareRepresentative(name, answers) {
   const { legacyResult, centeredResult } = calculateIcebreakParallelResult(answers);
+  const centeredResultSummary = createCenteredResultSummary(centeredResult);
   return {
     name,
     legacy: {
@@ -344,6 +349,7 @@ function compareRepresentative(name, answers) {
       roleScores: topBottomScores(centeredResult.roleScores),
       forceScores: topBottomScores(centeredResult.forceScores),
     },
+    centeredResultSummary,
   };
 }
 
@@ -356,12 +362,21 @@ function answersWithQuestionSet(questionIds, targetValue, otherValue) {
   return icebreakQuestions.map((question) => (targetIds.has(question.id) ? targetValue : otherValue));
 }
 
+function answersByIndexParity(oddValue, evenValue) {
+  return icebreakQuestions.map((_, index) => ((index + 1) % 2 === 1 ? oddValue : evenValue));
+}
+
+function answersByHalf(firstHalfValue, secondHalfValue) {
+  return icebreakQuestions.map((_, index) => (index < 16 ? firstHalfValue : secondHalfValue));
+}
+
 const allNeutralAnswers = Array(ICEBREAK_TOTAL_QUESTIONS).fill(3);
 const allNeutral = calculateIcebreakResult(allNeutralAnswers);
 const experimentalQuestionIds = Object.keys(ICEBREAK_CENTERED_WEIGHT_OVERRIDES);
 const negativeWeightSummary = summarizeOverrideNegativeWeights(ICEBREAK_CENTERED_WEIGHT_OVERRIDES);
 const overrideLabel = `override対象${experimentalQuestionIds.length}問`;
 const emptyOverrideQuestionIds = negativeWeightSummary.emptyOverrideQuestionIds;
+const negativeOverrideQuestionIds = negativeWeightSummary.negativeOverrideQuestionIds;
 const representativeCases = [
   ["全回答5", Array(ICEBREAK_TOTAL_QUESTIONS).fill(5)],
   ["全回答4", Array(ICEBREAK_TOTAL_QUESTIONS).fill(4)],
@@ -374,6 +389,12 @@ const representativeCases = [
   [`${overrideLabel}だけ1、その他は2`, answersWithQuestionSet(experimentalQuestionIds, 1, 2)],
   [`空override${emptyOverrideQuestionIds.length}問だけ5、他は3`, answersWithQuestionSet(emptyOverrideQuestionIds, 5, 3)],
   [`空override${emptyOverrideQuestionIds.length}問だけ1、他は3`, answersWithQuestionSet(emptyOverrideQuestionIds, 1, 3)],
+  [`マイナスありoverride${negativeOverrideQuestionIds.length}問だけ5、他は3`, answersWithQuestionSet(negativeOverrideQuestionIds, 5, 3)],
+  [`マイナスありoverride${negativeOverrideQuestionIds.length}問だけ1、他は3`, answersWithQuestionSet(negativeOverrideQuestionIds, 1, 3)],
+  ["奇数問だけ5、偶数問だけ1", answersByIndexParity(5, 1)],
+  ["偶数問だけ5、奇数問だけ1", answersByIndexParity(1, 5)],
+  ["前半16問だけ5、後半17問だけ3", answersByHalf(5, 3)],
+  ["前半16問だけ1、後半17問だけ3", answersByHalf(1, 3)],
   ...experimentalQuestionIds.flatMap((questionId) => [
     [`${questionId}だけ5、他は3`, answersWithOnly(questionId, 5)],
     [`${questionId}だけ1、他は3`, answersWithOnly(questionId, 1)],
@@ -474,6 +495,19 @@ function printRepresentativeComparison(comparison) {
   console.log(`Role bottom: ${formatScoreList(comparison.centered.roleScores.bottom)}`);
   console.log(`Force top: ${formatScoreList(comparison.centered.forceScores.top)}`);
   console.log(`Force bottom: ${formatScoreList(comparison.centered.forceScores.bottom)}`);
+  console.log(
+    [
+      "Summary:",
+      `mean=${round(comparison.centeredResultSummary.centeredAnswerMean)}`,
+      `spread=${round(comparison.centeredResultSummary.centeredAnswerSpread)}`,
+      `zero=${comparison.centeredResultSummary.zeroAnswerCount}`,
+      `hasNegativeScore=${comparison.centeredResultSummary.hasNegativeScore}`,
+      `topRole=${comparison.centeredResultSummary.centeredTopRole.key}:${round(comparison.centeredResultSummary.centeredTopRole.score)}`,
+      `bottomRole=${comparison.centeredResultSummary.centeredBottomRole.key}:${round(comparison.centeredResultSummary.centeredBottomRole.score)}`,
+      `topForce=${comparison.centeredResultSummary.centeredTopForce.key}:${round(comparison.centeredResultSummary.centeredTopForce.score)}`,
+      `bottomForce=${comparison.centeredResultSummary.centeredBottomForce.key}:${round(comparison.centeredResultSummary.centeredBottomForce.score)}`,
+    ].join(" / "),
+  );
 }
 
 function printNegativeWeightSummary(summary) {
