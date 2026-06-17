@@ -1,11 +1,16 @@
 import type { RevoTypeKey } from "@/data/revotypes";
+import { FORCE_KEYS, type ForceKey } from "@/lib/diagnosisCore/forces";
 import {
   EMPTY_AXIS_SCORES,
   MULTI_AXIS_KEYS,
   RARITY_MIN_CONFIDENCE,
   ROLE_AXIS_PROFILES,
+  answerToCentered,
   type AxisScores,
+  type CenteredAnswerValue,
+  type CenteredMultiAxisQuestion,
   type MultiAxisQuestion,
+  type RawAnswerValue,
 } from "@/lib/diagnosisCore/multiAxis";
 
 export type MultiAxisJudgmentMode = "focused" | "dual" | "broad" | "low_confidence";
@@ -27,6 +32,24 @@ export interface MultiAxisRoleResult {
   dualRole: MultiAxisRoleScore | null;
   mode: MultiAxisJudgmentMode;
   flatness: number;
+}
+
+export interface CenteredMultiAxisRoleResult {
+  rawAnswers: number[];
+  centeredAnswers: CenteredAnswerValue[];
+  axisScores: AxisScores;
+  roleScores: Record<RevoTypeKey, number>;
+  forceScores: Record<ForceKey, number>;
+  zeroAnswerIndexes: number[];
+  zeroAnswerCount: number;
+  rawAnswerMean: number;
+  centeredAnswerMean: number;
+  centeredAnswerSpread: number;
+  minAxisScore: number;
+  minRoleScore: number;
+  minForceScore: number;
+  hasNegativeScore: boolean;
+  invalidAnswerCount: number;
 }
 
 function normalizeAnswer(value: number, reverse?: boolean) {
@@ -128,5 +151,95 @@ export function calculateMultiAxisRoleResult(
     dualRole: mode === "low_confidence" ? null : dualRole,
     mode,
     flatness,
+  };
+}
+
+function createRoleScoreRecord(): Record<RevoTypeKey, number> {
+  return Object.fromEntries(
+    (Object.keys(ROLE_AXIS_PROFILES) as RevoTypeKey[]).map((role) => [role, 0]),
+  ) as Record<RevoTypeKey, number>;
+}
+
+function createForceScoreRecord(): Record<ForceKey, number> {
+  return Object.fromEntries(FORCE_KEYS.map((force) => [force, 0])) as Record<ForceKey, number>;
+}
+
+function isRawAnswerValue(value: number): value is RawAnswerValue {
+  return Number.isInteger(value) && value >= 1 && value <= 5;
+}
+
+function calculateMean(values: number[]) {
+  return values.length ? values.reduce((sum, value) => sum + value, 0) / values.length : 0;
+}
+
+function calculateSpread(values: number[]) {
+  const mean = calculateMean(values);
+  return values.length
+    ? Math.sqrt(values.reduce((sum, value) => sum + (value - mean) ** 2, 0) / values.length)
+    : 0;
+}
+
+export function calculateMultiAxisRoleResultCentered(
+  questions: CenteredMultiAxisQuestion[],
+  answers: number[],
+): CenteredMultiAxisRoleResult {
+  const axisScores = { ...EMPTY_AXIS_SCORES };
+  const roleScores = createRoleScoreRecord();
+  const forceScores = createForceScoreRecord();
+  const rawAnswers = answers.slice(0, questions.length);
+  const centeredAnswers = questions.map((question, index) => {
+    const rawAnswer = answers[index] ?? 3;
+    const centered = answerToCentered(rawAnswer);
+    return question.reverse ? ((centered * -1) as CenteredAnswerValue) : centered;
+  });
+  const zeroAnswerIndexes = centeredAnswers
+    .map((answer, index) => (answer === 0 ? index : -1))
+    .filter((index) => index >= 0);
+  const invalidAnswerCount = rawAnswers.filter((answer) => !isRawAnswerValue(answer)).length;
+
+  questions.forEach((question, index) => {
+    const centered = centeredAnswers[index];
+
+    for (const item of question.weights) {
+      axisScores[item.axis] += centered * item.weight;
+    }
+
+    if (question.role) {
+      roleScores[question.role] += centered;
+    }
+
+    for (const item of question.roleWeights ?? []) {
+      roleScores[item.role] += centered * item.weight;
+    }
+
+    if (question.force) {
+      forceScores[question.force] += centered;
+    }
+
+    for (const item of question.forceWeights ?? []) {
+      forceScores[item.force] += centered * item.weight;
+    }
+  });
+
+  const minAxisScore = Math.min(...MULTI_AXIS_KEYS.map((axis) => axisScores[axis]));
+  const minRoleScore = Math.min(...Object.values(roleScores));
+  const minForceScore = Math.min(...Object.values(forceScores));
+
+  return {
+    rawAnswers,
+    centeredAnswers,
+    axisScores,
+    roleScores,
+    forceScores,
+    zeroAnswerIndexes,
+    zeroAnswerCount: zeroAnswerIndexes.length,
+    rawAnswerMean: calculateMean(rawAnswers),
+    centeredAnswerMean: calculateMean(centeredAnswers),
+    centeredAnswerSpread: calculateSpread(centeredAnswers),
+    minAxisScore,
+    minRoleScore,
+    minForceScore,
+    hasNegativeScore: minAxisScore < 0 || minRoleScore < 0 || minForceScore < 0,
+    invalidAnswerCount,
   };
 }

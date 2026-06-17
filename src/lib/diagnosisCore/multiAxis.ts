@@ -1,4 +1,5 @@
 import type { RevoTypeKey } from "@/data/revotypes";
+import type { ForceKey } from "@/lib/diagnosisCore/forces";
 
 export const MULTI_AXIS_KEYS = [
   "noveltyDrive",
@@ -31,6 +32,35 @@ export interface MultiAxisQuestion {
   id: string;
   text: string;
   weights: AxisQuestionWeight[];
+  reverse?: boolean;
+}
+
+export type RawAnswerValue = 1 | 2 | 3 | 4 | 5;
+export type CenteredAnswerValue = -2 | -1 | 0 | 1 | 2;
+
+export interface CenteredAxisQuestionWeight {
+  axis: MultiAxisKey;
+  weight: number;
+}
+
+export interface CenteredRoleQuestionWeight {
+  role: RevoTypeKey;
+  weight: number;
+}
+
+export interface CenteredForceQuestionWeight {
+  force: ForceKey;
+  weight: number;
+}
+
+export interface CenteredMultiAxisQuestion {
+  id: string;
+  text: string;
+  weights: CenteredAxisQuestionWeight[];
+  role?: RevoTypeKey;
+  force?: ForceKey;
+  roleWeights?: CenteredRoleQuestionWeight[];
+  forceWeights?: CenteredForceQuestionWeight[];
   reverse?: boolean;
 }
 
@@ -233,3 +263,9 @@ export const RARITY_MIN_CONFIDENCE: Record<RoleAxisProfile["rarity"], number> = 
   balanced: 0.64,
   rare: 0.72,
 };
+
+// 回答(1-5)を中心0(-2〜+2)に変換。測定モデル設計メモに基づく準備。現時点では未使用
+export function answerToCentered(answer: number): CenteredAnswerValue {
+  if (!Number.isInteger(answer) || answer < 1 || answer > 5) return 0;
+  return (answer - 3) as CenteredAnswerValue;
+}
