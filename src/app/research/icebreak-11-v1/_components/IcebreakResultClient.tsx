@@ -24,6 +24,8 @@ import {
 } from "@/lib/diagnosisCore/logSchema";
 import { createResearchEventFields } from "@/lib/researchTracking";
 
+const PUBLIC_SHARE_ORIGIN = "https://revo.onokun.com";
+
 interface Props {
   resultId?: string;
 }
@@ -43,10 +45,11 @@ export default function IcebreakResultClient({ resultId }: Props) {
     return { answers, result, details };
   }, [encoded]);
 
+  const resultPath = encoded ? `/research/${ICEBREAK_11_META.slug}/result/${encoded}` : "";
   const resultUrl =
     typeof window === "undefined" || !encoded
       ? ""
-      : `${window.location.origin}/research/${ICEBREAK_11_META.slug}/result/${encoded}`;
+      : `${window.location.origin}${resultPath}`;
 
   useEffect(() => {
     if (!encoded) return;
@@ -101,10 +104,13 @@ export default function IcebreakResultClient({ resultId }: Props) {
       });
   }, [encoded, resultState, resultUrl]);
 
+  const fallbackShareResultUrl = resultPath ? `${PUBLIC_SHARE_ORIGIN}${resultPath}` : "";
+  const shareResultUrl = resultUrl || sharePageUrl || fallbackShareResultUrl;
+
   const shareText = useMemo(() => {
     if (!resultState) return "";
     const shareRoleCopy = getIcebreakRoleResultCopy(resultState.result.mainTypeKey);
-    const shareUrl = resultUrl || sharePageUrl;
+    const shareUrl = shareResultUrl;
 
     if (shareRoleCopy) {
       return [
@@ -122,11 +128,11 @@ export default function IcebreakResultClient({ resultId }: Props) {
       `話してみたいのは${resultState.details.partnerRole.name}タイプ。`,
       shareUrl,
     ].join("\n");
-  }, [resultState, resultUrl, sharePageUrl]);
+  }, [resultState, shareResultUrl]);
 
   const handleShare = async () => {
     if (navigator.share) {
-      await navigator.share({ text: shareText, url: resultUrl });
+      await navigator.share({ text: shareText, url: shareResultUrl });
       return;
     }
 
@@ -277,7 +283,7 @@ export default function IcebreakResultClient({ resultId }: Props) {
             X
           </a>
           <a
-            href={`https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(resultUrl)}&text=${encodeURIComponent(shareText)}`}
+            href={`https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(shareResultUrl)}&text=${encodeURIComponent(shareText)}`}
             className="rounded-full border border-gray-200 px-5 py-3 text-center text-sm font-medium text-gray-700"
           >
             LINE
