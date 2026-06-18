@@ -132,10 +132,7 @@ export default function IcebreakResultClient({ resultId }: Props) {
   const { result, details } = resultState;
   const centerForce = FORCE_DEFINITIONS[result.centerForce];
   const slotForce = FORCE_DEFINITIONS[result.slotForce];
-  const roleCopy =
-    result.mainTypeKey === "arranger"
-      ? getIcebreakRoleResultCopy(result.mainTypeKey)
-      : null;
+  const roleCopy = getIcebreakRoleResultCopy(result.mainTypeKey);
 
   return (
     <div className="min-h-screen bg-white pb-16">
