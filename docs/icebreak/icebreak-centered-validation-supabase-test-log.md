@@ -1,8 +1,42 @@
 # Icebreak centered validation feedback Supabase送信テストログ
 
-## 今回の結論
+## 追記: Supabase実保存の成功確認
 
-この作業環境では、Icebreak centered validation feedback の Supabase 実保存は未確認です。
+確認日: 2026-06-18
+
+Icebreak centered validation feedback の Supabase 実保存が通ったことを確認しました。
+
+確認結果:
+
+- `POST /api/icebreak/centered-validation` に正常payloadを送信
+- レスポンス `{"ok":true}` を確認
+- Supabase Table Editorで `icebreak_centered_validation_feedback` にレコード保存を確認
+- `diagnosis_id: test-001` の保存を確認
+- `fit_score: 4` の保存を確認
+- Table Editor上で2 recordsを確認
+- 秘密キーの値は表示・記録していない
+- `.env.local` はGit管理対象外
+- 実装変更なし
+
+成功時の `SUPABASE_URL` は、次の形式である必要があります。
+
+```text
+https://<project-ref>.supabase.co
+```
+
+次の形式は誤りです。
+
+```text
+https://<project-ref>.supabase.co/rest/v1
+```
+
+以前発生していた `PGRST125 Invalid path specified in request URL` は、`SUPABASE_URL` に `/rest/v1` が含まれていたことが原因でした。
+
+`@supabase/supabase-js` は `SUPABASE_URL` からREST APIのパスを組み立てるため、環境変数にはプロジェクトURLのrootだけを設定します。
+
+## 初回テスト時の結論
+
+初回テスト時点では、Icebreak centered validation feedback の Supabase 実保存は未確認でした。
 
 理由は、Supabase保存に必要な環境変数が未設定だったためです。
 
@@ -19,7 +53,7 @@ HTTP status は `500` でした。
 
 これはAPI routeのバリデーション不具合ではなく、Supabase server client 作成時に必要な環境変数が見つからなかったことによる、環境設定未完了として扱います。
 
-## 確認できたこと
+## 初回テスト時に確認できたこと
 
 API route のバリデーションは動いています。
 
@@ -46,7 +80,7 @@ fit_score 範囲外: 400 validation_error
 - `.env.local` の作成・編集なし
 - 秘密キーの値は出力していない
 
-## 未確認のこと
+## 初回テスト時に未確認だったこと
 
 以下は、今回の作業環境では未確認です。
 
