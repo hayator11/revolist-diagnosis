@@ -32,6 +32,7 @@ export default function IcebreakResultClient({ resultId }: Props) {
   const searchParams = useSearchParams();
   const encoded = resultId ?? searchParams.get("id");
   const [copied, setCopied] = useState(false);
+  const [sharePageUrl, setSharePageUrl] = useState("");
 
   const resultState = useMemo(() => {
     if (!encoded) return null;
@@ -46,6 +47,11 @@ export default function IcebreakResultClient({ resultId }: Props) {
     typeof window === "undefined" || !encoded
       ? ""
       : `${window.location.origin}/research/${ICEBREAK_11_META.slug}/result/${encoded}`;
+
+  useEffect(() => {
+    if (!encoded) return;
+    setSharePageUrl(window.location.href);
+  }, [encoded]);
 
   useEffect(() => {
     if (!resultState || !encoded) return;
@@ -97,12 +103,26 @@ export default function IcebreakResultClient({ resultId }: Props) {
 
   const shareText = useMemo(() => {
     if (!resultState) return "";
+    const shareRoleCopy = getIcebreakRoleResultCopy(resultState.result.mainTypeKey);
+    const shareUrl = resultUrl || sharePageUrl;
+
+    if (shareRoleCopy) {
+      return [
+        shareRoleCopy.shareCopy,
+        "",
+        "Icebreak 33で診断してみました。",
+        "あなたはどんな役割が出る？",
+        "",
+        shareUrl,
+      ].join("\n");
+    }
+
     return [
       `私は今日、${resultState.details.mainRole.name}っぽく場に入れそう。`,
       `話してみたいのは${resultState.details.partnerRole.name}タイプ。`,
-      resultUrl,
+      shareUrl,
     ].join("\n");
-  }, [resultState, resultUrl]);
+  }, [resultState, resultUrl, sharePageUrl]);
 
   const handleShare = async () => {
     if (navigator.share) {
