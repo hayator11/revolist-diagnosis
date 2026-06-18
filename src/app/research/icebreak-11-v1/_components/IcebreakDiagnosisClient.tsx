@@ -18,11 +18,11 @@ import {
 import { createResearchEventFields } from "@/lib/researchTracking";
 
 const CHOICES = [
-  { value: 1, label: "今は遠い" },
-  { value: 2, label: "少しある" },
-  { value: 3, label: "どちらでも" },
-  { value: 4, label: "かなり近い" },
-  { value: 5, label: "今の自分っぽい" },
+  { value: 1, label: "今は違う" },
+  { value: 2, label: "あまり当てはまらない" },
+  { value: 3, label: "どちらとも言えない" },
+  { value: 4, label: "わりと当てはまる" },
+  { value: 5, label: "かなり自分らしい" },
 ];
 
 function getAnswerLabel(value: number) {
