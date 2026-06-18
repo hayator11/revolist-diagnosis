@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useState, type FormEvent } from "react";
+import { Suspense, useState, type FormEvent } from "react";
+import { useSearchParams } from "next/navigation";
 import { ICEBREAK_11_META } from "@/data/researchProjects";
 
 const RATING_OPTIONS = [1, 2, 3, 4, 5];
@@ -81,8 +82,9 @@ function TextAreaInput({
   );
 }
 
-export default function IcebreakValidationClient() {
-  const [reference, setReference] = useState("");
+function IcebreakValidationForm() {
+  const searchParams = useSearchParams();
+  const [reference, setReference] = useState(searchParams.get("result_url") ?? "");
   const [fitScore, setFitScore] = useState(0);
   const [selfLikeText, setSelfLikeText] = useState("");
   const [discomfortText, setDiscomfortText] = useState("");
@@ -322,5 +324,19 @@ export default function IcebreakValidationClient() {
         </button>
       </form>
     </div>
+  );
+}
+
+export default function IcebreakValidationClient() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center px-6 text-sm text-gray-500">
+          検証アンケートを読み込んでいます...
+        </div>
+      }
+    >
+      <IcebreakValidationForm />
+    </Suspense>
   );
 }

@@ -159,6 +159,9 @@ export default function IcebreakResultClient({ resultId }: Props) {
   const centerForce = FORCE_DEFINITIONS[result.centerForce];
   const slotForce = FORCE_DEFINITIONS[result.slotForce];
   const roleCopy = getIcebreakRoleResultCopy(result.mainTypeKey);
+  const validationHref = shareResultUrl
+    ? `/research/${ICEBREAK_11_META.slug}/validation?result_url=${encodeURIComponent(shareResultUrl)}`
+    : `/research/${ICEBREAK_11_META.slug}/validation`;
 
   return (
     <div className="min-h-screen bg-white pb-16">
@@ -255,19 +258,10 @@ export default function IcebreakResultClient({ resultId }: Props) {
       </section>
 
       <section className="mx-auto max-w-lg border-t border-gray-100 px-6 py-8">
-        <h2 className="mb-3 text-lg font-bold text-black">この体験を育てる</h2>
+        <h2 className="mb-3 text-lg font-bold text-black">結果を誰かに見せる</h2>
         <p className="mb-5 text-sm leading-relaxed text-gray-600">
-          今日の結果が話しかけるきっかけになったか、短いアンケートで教えてください。送信後に、次につながる場所も案内します。
+          気になった人に送ったり、自己紹介のきっかけとして使ってみてください。
         </p>
-        <Link
-          href={`/research/${ICEBREAK_11_META.slug}/feedback?id=${encodeURIComponent(encoded)}`}
-          className="block w-full rounded-full bg-black px-6 py-3 text-center text-sm font-medium text-white"
-        >
-          アンケートに答える
-        </Link>
-      </section>
-
-      <section className="mx-auto max-w-lg border-t border-gray-100 px-6 py-8">
         <div className="grid gap-3 sm:grid-cols-3">
           <button
             type="button"
@@ -289,6 +283,32 @@ export default function IcebreakResultClient({ resultId }: Props) {
             LINE
           </a>
         </div>
+      </section>
+
+      <section className="mx-auto max-w-lg border-t border-gray-100 px-6 py-8">
+        <h2 className="mb-3 text-lg font-bold text-black">この診断をよくするために感想を送る</h2>
+        <p className="mb-5 text-sm leading-relaxed text-gray-600">
+          しっくりきた部分や、違和感があった言葉を教えてください。本名や個人情報は不要です。
+        </p>
+        <Link
+          href={validationHref}
+          className="block w-full rounded-full bg-black px-6 py-3 text-center text-sm font-medium text-white"
+        >
+          検証フォームに回答する
+        </Link>
+      </section>
+
+      <section className="mx-auto max-w-lg border-t border-gray-100 px-6 py-8">
+        <h2 className="mb-3 text-lg font-bold text-black">簡易アンケート</h2>
+        <p className="mb-5 text-sm leading-relaxed text-gray-600">
+          今日の結果が話しかけるきっかけになったか、短く残したい場合はこちらから送れます。
+        </p>
+        <Link
+          href={`/research/${ICEBREAK_11_META.slug}/feedback?id=${encodeURIComponent(encoded)}`}
+          className="block w-full rounded-full border border-gray-200 px-6 py-3 text-center text-sm font-medium text-gray-700"
+        >
+          簡易アンケートに答える
+        </Link>
       </section>
     </div>
   );
