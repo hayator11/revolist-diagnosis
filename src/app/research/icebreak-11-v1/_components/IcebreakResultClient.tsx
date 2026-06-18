@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { getIcebreakRoleResultCopy } from "@/data/icebreakRoleResultCopy";
 import { ICEBREAK_11_META, getIcebreak11VersionFields } from "@/data/researchProjects";
 import { icebreakQuestions } from "@/data/icebreakQuestions";
 import {
@@ -131,6 +132,10 @@ export default function IcebreakResultClient({ resultId }: Props) {
   const { result, details } = resultState;
   const centerForce = FORCE_DEFINITIONS[result.centerForce];
   const slotForce = FORCE_DEFINITIONS[result.slotForce];
+  const roleCopy =
+    result.mainTypeKey === "arranger"
+      ? getIcebreakRoleResultCopy(result.mainTypeKey)
+      : null;
 
   return (
     <div className="min-h-screen bg-white pb-16">
@@ -140,6 +145,25 @@ export default function IcebreakResultClient({ resultId }: Props) {
         </p>
         <h1 className="mb-3 text-3xl font-bold leading-tight text-black">{details.title}</h1>
         <p className="mb-6 text-sm leading-relaxed text-gray-600">{details.lead}</p>
+        {roleCopy && (
+          <article className="mb-6 rounded-lg border border-gray-200 bg-gray-50 p-5">
+            <p className="text-xl font-bold leading-snug text-black">{roleCopy.workingCopy}</p>
+            <p className="mt-2 text-sm font-bold leading-relaxed text-gray-700">{roleCopy.catchCopy}</p>
+            <div className="mt-5">
+              <p className="mb-3 text-xs font-bold uppercase tracking-widest text-gray-400">
+                こんなところありませんか？
+              </p>
+              <ul className="space-y-2">
+                {roleCopy.selfCheckItems.map((item) => (
+                  <li key={item} className="flex gap-2 text-sm leading-relaxed text-gray-700">
+                    <span aria-hidden="true" className="mt-2 h-1.5 w-1.5 flex-none rounded-full bg-gray-400" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </article>
+        )}
         <div className="rounded-lg border border-gray-200 p-5">
           <p className="mb-2 text-xs uppercase tracking-widest text-gray-400">Center Force</p>
           <p className="text-2xl font-bold" style={{ color: centerForce.color }}>
