@@ -1,5 +1,27 @@
 # Icebreak centered validation feedback Supabase送信テストログ
 
+## 追記: 公開環境でのSupabase実保存成功確認
+
+確認日: 2026-06-18
+
+Icebreak centered validation feedback が、公開環境からも Supabase に保存できることを確認しました。
+
+確認結果:
+
+- 公開URLの検証フォームが表示された
+- 公開URLから `POST /api/icebreak/centered-validation` への送信が成功した
+- レスポンス `{"ok":true}` を確認
+- Supabase Table Editorで `icebreak_centered_validation_feedback` にレコード保存を確認
+- `diagnosis_id: public-test-001` の保存を確認
+- `fit_score: 4` の保存を確認
+- Table Editor上で3 recordsを確認
+- Vercel本番環境の `SUPABASE_URL` / `SUPABASE_SERVICE_ROLE_KEY` が反映されていることを確認
+- 秘密キーの値は表示・記録していない
+- 実際のSupabase URLは表示・記録していない
+- 実装変更なし
+
+この確認により、外部テスターに渡す前の技術条件として、公開環境からの検証フォーム表示、API送信、Supabase保存は揃った状態と扱う。
+
 ## 追記: Supabase実保存の成功確認
 
 確認日: 2026-06-18
