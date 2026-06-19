@@ -36,7 +36,24 @@ type OrganizerTable = {
   reason: string;
 };
 
+type OrganizerCreatedEvent = {
+  eventCode: string;
+  participantUrl: string;
+  hostUrl: string;
+};
+
 const RESULT_PATH = "/research/icebreak-11-v1/result";
+
+function normalizeEventDateForApi(value: string) {
+  const trimmed = value.trim();
+  const dateMatch = trimmed.match(/\d{4}-\d{2}-\d{2}/);
+
+  if (dateMatch?.[0]) {
+    return dateMatch[0];
+  }
+
+  return new Date().toISOString().slice(0, 10);
+}
 
 function createLocalId() {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
@@ -222,6 +239,10 @@ export default function IcebreakOrganizerClient() {
   const [expectedSeats, setExpectedSeats] = useState(8);
   const [tableCount, setTableCount] = useState(2);
   const [seatsPerTable, setSeatsPerTable] = useState(4);
+  const [createdEvent, setCreatedEvent] = useState<OrganizerCreatedEvent | null>(null);
+  const [eventGenerationError, setEventGenerationError] = useState("");
+  const [isCreatingEvent, setIsCreatingEvent] = useState(false);
+  const [copyMessage, setCopyMessage] = useState("");
   const [participantName, setParticipantName] = useState("");
   const [participantUrl, setParticipantUrl] = useState("");
   const [participants, setParticipants] = useState<OrganizerParticipant[]>([]);
@@ -239,6 +260,65 @@ export default function IcebreakOrganizerClient() {
       })),
     [participants],
   );
+
+  async function handleCreateEventUrl() {
+    const trimmedTitle = meetupTitle.trim();
+    setEventGenerationError("");
+    setCopyMessage("");
+
+    if (!trimmedTitle) {
+      setEventGenerationError("オフ会タイトルを入力してください。");
+      return;
+    }
+
+    setIsCreatingEvent(true);
+
+    try {
+      const response = await fetch("/api/icebreak/event", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          eventName: trimmedTitle,
+          eventDate: normalizeEventDateForApi(eventDate),
+          layoutType: "island",
+          tableCapacity: seatsPerTable,
+          copyVariant: "default",
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("failed");
+      }
+
+      const data = await response.json();
+      const origin = window.location.origin;
+
+      if (data?.result !== "success" || !data?.event?.eventCode || !data?.participantUrl || !data?.hostUrl) {
+        throw new Error("invalid response");
+      }
+
+      setCreatedEvent({
+        eventCode: data.event.eventCode,
+        participantUrl: `${origin}${data.participantUrl}`,
+        hostUrl: `${origin}${data.hostUrl}`,
+      });
+    } catch {
+      setEventGenerationError("参加URLを発行できませんでした。少し時間を置いてもう一度お試しください。");
+    } finally {
+      setIsCreatingEvent(false);
+    }
+  }
+
+  async function handleCopyUrl(value: string) {
+    setCopyMessage("");
+
+    try {
+      await navigator.clipboard.writeText(value);
+      setCopyMessage("コピーしました");
+    } catch {
+      setCopyMessage("コピーできませんでした");
+    }
+  }
 
   function handleAddParticipant(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -325,8 +405,9 @@ export default function IcebreakOrganizerClient() {
                   className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-100"
                   value={eventDate}
                   onChange={(event) => setEventDate(event.target.value)}
-                  placeholder="例：6/29 19:00、受付後に席順作成"
+                  placeholder="例：2026-06-29 19:00、受付後に席順作成"
                 />
+                <span className="text-xs text-slate-500">Phase 2のURL発行では、YYYY-MM-DDの日付部分だけを使います。</span>
               </label>
 
               <div className="grid gap-4 sm:grid-cols-2">
@@ -387,8 +468,67 @@ export default function IcebreakOrganizerClient() {
               <div className="rounded-xl border border-dashed border-orange-200 bg-orange-50 p-4 text-sm leading-6 text-slate-700">
                 <p className="font-bold text-slate-900">参加URL発行</p>
                 <p className="mt-1">
-                  Phase 2で、参加者に配布する診断URLを発行できるようにします。現在は準備中です。
+                  参加者に配布する診断URLを発行します。参加者はこのURLからニックネームを入力して診断できます。
                 </p>
+                <p className="mt-2 text-xs leading-5 text-slate-500">
+                  現在はメモリ上の試作保存です。本番イベント運用前にはSupabase等での永続化が必要です。
+                </p>
+                <button
+                  className="mt-4 w-full rounded-xl bg-orange-600 px-4 py-3 text-sm font-bold text-white transition hover:bg-orange-700 disabled:cursor-not-allowed disabled:bg-slate-300"
+                  type="button"
+                  disabled={isCreatingEvent}
+                  onClick={handleCreateEventUrl}
+                >
+                  {isCreatingEvent ? "発行中..." : "参加URLを発行する"}
+                </button>
+
+                {eventGenerationError ? (
+                  <div className="mt-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                    {eventGenerationError}
+                  </div>
+                ) : null}
+
+                {createdEvent ? (
+                  <div className="mt-4 space-y-4 rounded-xl bg-white p-4">
+                    <div>
+                      <p className="text-xs font-bold uppercase tracking-wide text-slate-400">Event Code</p>
+                      <p className="mt-1 text-lg font-bold text-slate-900">{createdEvent.eventCode}</p>
+                    </div>
+
+                    <div className="space-y-2">
+                      <p className="text-sm font-bold text-slate-900">参加者用URL</p>
+                      <p className="break-all rounded-lg bg-slate-50 p-3 text-xs text-slate-600">
+                        {createdEvent.participantUrl}
+                      </p>
+                      <button
+                        className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-700 transition hover:border-slate-400"
+                        type="button"
+                        onClick={() => handleCopyUrl(createdEvent.participantUrl)}
+                      >
+                        参加者用URLをコピー
+                      </button>
+                    </div>
+
+                    <div className="space-y-2">
+                      <p className="text-sm font-bold text-slate-900">主催者確認URL</p>
+                      <p className="text-xs leading-5 text-slate-500">
+                        参加者一覧や席順生成は、現在は既存の主催者確認URLで確認します。
+                      </p>
+                      <p className="break-all rounded-lg bg-slate-50 p-3 text-xs text-slate-600">
+                        {createdEvent.hostUrl}
+                      </p>
+                      <button
+                        className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-700 transition hover:border-slate-400"
+                        type="button"
+                        onClick={() => handleCopyUrl(createdEvent.hostUrl)}
+                      >
+                        主催者確認URLをコピー
+                      </button>
+                    </div>
+
+                    {copyMessage ? <p className="text-xs font-bold text-slate-600">{copyMessage}</p> : null}
+                  </div>
+                ) : null}
               </div>
             </div>
           </div>
