@@ -219,6 +219,7 @@ function ForceBadge({ force }: { force: ForceKey }) {
 export default function IcebreakOrganizerClient() {
   const [meetupTitle, setMeetupTitle] = useState("Icebreak 33 オフ会");
   const [eventDate, setEventDate] = useState("");
+  const [expectedSeats, setExpectedSeats] = useState(8);
   const [tableCount, setTableCount] = useState(2);
   const [seatsPerTable, setSeatsPerTable] = useState(4);
   const [participantName, setParticipantName] = useState("");
@@ -284,17 +285,29 @@ export default function IcebreakOrganizerClient() {
         <header className="space-y-3">
           <p className="text-sm font-semibold text-orange-600">Icebreak 33 organizer prototype</p>
           <div className="space-y-2">
-            <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Icebreak 33 オフ会席順メーカー</h1>
+            <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Icebreak 33 オフ会運営ツール</h1>
             <p className="max-w-3xl text-sm leading-7 text-slate-600 sm:text-base">
-              診断済み参加者の結果URLを貼り付けて、役割タイプと中心forceを復元し、テーブルごとの席順を試作します。
-              初期版のため保存はせず、この画面内だけで確認します。
+              参加者の診断結果から、会話が始まりやすい席順を作ります。
             </p>
           </div>
         </header>
 
+        <section className="rounded-2xl border border-orange-100 bg-orange-50 p-5 text-sm leading-7 text-slate-700 shadow-sm">
+          <h2 className="text-lg font-bold text-slate-900">このページについて</h2>
+          <p className="mt-3">
+            オフ会や交流会の主催者向けの試作ページです。イベント情報を入力し、参加者の診断結果をもとに、
+            11タイプのバランスを見ながら席順を作れます。現在は保存なしのプロトタイプです。
+          </p>
+        </section>
+
         <section className="grid gap-5 lg:grid-cols-[1fr_1.1fr]">
           <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-            <h2 className="text-lg font-bold">イベント情報</h2>
+            <div>
+              <h2 className="text-lg font-bold">イベント作成</h2>
+              <p className="mt-1 text-sm leading-6 text-slate-600">
+                正式版では、ここでイベントを作成して参加者用URLを発行します。Phase 1では入力内容をこの画面内だけで扱います。
+              </p>
+            </div>
             <div className="mt-5 space-y-4">
               <label className="block space-y-2">
                 <span className="text-sm font-semibold text-slate-700">オフ会タイトル</span>
@@ -307,16 +320,28 @@ export default function IcebreakOrganizerClient() {
               </label>
 
               <label className="block space-y-2">
-                <span className="text-sm font-semibold text-slate-700">開催日メモ</span>
+                <span className="text-sm font-semibold text-slate-700">開催日時</span>
                 <input
                   className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-100"
                   value={eventDate}
                   onChange={(event) => setEventDate(event.target.value)}
-                  placeholder="例：6/29 夜、受付後に席順作成"
+                  placeholder="例：6/29 19:00、受付後に席順作成"
                 />
               </label>
 
               <div className="grid gap-4 sm:grid-cols-2">
+                <label className="block space-y-2">
+                  <span className="text-sm font-semibold text-slate-700">予定席数</span>
+                  <input
+                    className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-100"
+                    type="number"
+                    min={1}
+                    max={200}
+                    value={expectedSeats}
+                    onChange={(event) => setExpectedSeats(Math.max(1, Number(event.target.value) || 1))}
+                  />
+                </label>
+
                 <label className="block space-y-2">
                   <span className="text-sm font-semibold text-slate-700">テーブル数</span>
                   <input
@@ -331,7 +356,9 @@ export default function IcebreakOrganizerClient() {
                     }}
                   />
                 </label>
+              </div>
 
+              <div className="grid gap-4 sm:grid-cols-2">
                 <label className="block space-y-2">
                   <span className="text-sm font-semibold text-slate-700">1卓人数</span>
                   <input
@@ -350,16 +377,29 @@ export default function IcebreakOrganizerClient() {
 
               <div className="rounded-xl bg-slate-50 p-4 text-sm text-slate-600">
                 <p className="font-semibold text-slate-800">{meetupTitle || "オフ会タイトル未入力"}</p>
-                <p className="mt-1">{eventDate || "開催日メモは未入力です"}</p>
+                <p className="mt-1">{eventDate || "開催日時は未入力です"}</p>
+                <p className="mt-2">予定席数 {expectedSeats}</p>
                 <p className="mt-2">
                   席数 {totalSeats} / 登録 {participants.length} / 残り {remainingSeats}
+                </p>
+              </div>
+
+              <div className="rounded-xl border border-dashed border-orange-200 bg-orange-50 p-4 text-sm leading-6 text-slate-700">
+                <p className="font-bold text-slate-900">参加URL発行</p>
+                <p className="mt-1">
+                  Phase 2で、参加者に配布する診断URLを発行できるようにします。現在は準備中です。
                 </p>
               </div>
             </div>
           </div>
 
           <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-            <h2 className="text-lg font-bold">参加者登録</h2>
+            <div>
+              <h2 className="text-lg font-bold">診断済み参加者を手動で追加する</h2>
+              <p className="mt-1 text-sm leading-6 text-slate-600">
+                すでに診断が終わっている参加者は、結果URLを貼り付けて仮登録できます。
+              </p>
+            </div>
             <form className="mt-5 space-y-4" onSubmit={handleAddParticipant}>
               <label className="block space-y-2">
                 <span className="text-sm font-semibold text-slate-700">参加者名 / ニックネーム</span>
@@ -528,6 +568,14 @@ export default function IcebreakOrganizerClient() {
               参加者を追加して「席順を作る」を押すと、テーブルごとの席順と理由が表示されます。
             </div>
           )}
+        </section>
+
+        <section className="rounded-2xl border border-slate-200 bg-white p-5 text-sm leading-7 text-slate-600 shadow-sm">
+          <h2 className="text-lg font-bold text-slate-900">データの扱い</h2>
+          <p className="mt-3">
+            正式版では、イベント終了後3日まで席順確認用データを保持し、その後は参加者名・席順・個別紐づきデータを削除する設計です。
+            このプロトタイプでは保存を行わず、入力内容はこの画面内だけで扱います。
+          </p>
         </section>
 
         <section className="rounded-2xl border border-slate-200 bg-white p-5 text-sm leading-7 text-slate-600 shadow-sm">
