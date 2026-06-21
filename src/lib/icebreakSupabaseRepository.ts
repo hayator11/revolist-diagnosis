@@ -96,6 +96,8 @@ export interface IcebreakOrganizerApiEvent {
 }
 
 const EVENTS_TABLE = "icebreak_events";
+const PARTICIPANTS_TABLE = "icebreak_event_participants";
+const SEATINGS_TABLE = "icebreak_event_seatings";
 
 function toLegacyEventStatus(status: IcebreakOrganizerEventStatus): IcebreakEventStatus {
   return status === "open" ? "open" : "closed";
@@ -182,3 +184,36 @@ export async function getPublicEventByEventCode(eventCode: string) {
   return (data ?? null) as IcebreakOrganizerEventRow | null;
 }
 
+export async function getOrganizerParticipantsByEventId(eventId: string) {
+  const supabase = createSupabaseServerClient();
+  const { data, error } = await supabase
+    .from(PARTICIPANTS_TABLE)
+    .select("*")
+    .eq("event_id", eventId)
+    .is("deleted_at", null)
+    .order("joined_at", { ascending: true });
+
+  if (error) {
+    throw error;
+  }
+
+  return (data ?? []) as IcebreakOrganizerParticipantRow[];
+}
+
+export async function getLatestOrganizerSeatingByEventId(eventId: string) {
+  const supabase = createSupabaseServerClient();
+  const { data, error } = await supabase
+    .from(SEATINGS_TABLE)
+    .select("*")
+    .eq("event_id", eventId)
+    .is("deleted_at", null)
+    .order("generated_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (error) {
+    throw error;
+  }
+
+  return (data ?? null) as IcebreakOrganizerSeatingRow | null;
+}
