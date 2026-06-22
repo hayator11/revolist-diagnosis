@@ -92,6 +92,15 @@ export interface CreateOrganizerParticipantInput {
   joinedAt?: string;
 }
 
+export interface CreateOrganizerSeatingInput {
+  eventId: string;
+  algorithmVersion: string;
+  tables: unknown;
+  tableReasons?: unknown | null;
+  notes?: string | null;
+  generatedAt?: string;
+}
+
 export interface IcebreakOrganizerApiEvent {
   id: string;
   eventCode: string;
@@ -255,4 +264,26 @@ export async function getLatestOrganizerSeatingByEventId(eventId: string) {
   }
 
   return (data ?? null) as IcebreakOrganizerSeatingRow | null;
+}
+
+export async function createOrganizerSeating(input: CreateOrganizerSeatingInput) {
+  const supabase = createSupabaseServerClient();
+  const { data, error } = await supabase
+    .from(SEATINGS_TABLE)
+    .insert({
+      event_id: input.eventId,
+      generated_at: input.generatedAt ?? new Date().toISOString(),
+      algorithm_version: input.algorithmVersion,
+      tables: input.tables,
+      table_reasons: input.tableReasons ?? null,
+      notes: input.notes ?? null,
+    })
+    .select("*")
+    .single();
+
+  if (error) {
+    throw error;
+  }
+
+  return data as IcebreakOrganizerSeatingRow;
 }
