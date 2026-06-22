@@ -81,6 +81,17 @@ export interface CreateOrganizerEventInput {
   copyVariant?: string;
 }
 
+export interface CreateOrganizerParticipantInput {
+  eventId: string;
+  displayName: string;
+  answers: number[];
+  mainTypeKey: string;
+  partnerTypeKey: string;
+  centerForce: string;
+  resultSummary?: Record<string, unknown> | null;
+  joinedAt?: string;
+}
+
 export interface IcebreakOrganizerApiEvent {
   id: string;
   eventCode: string;
@@ -182,6 +193,34 @@ export async function getPublicEventByEventCode(eventCode: string) {
   }
 
   return (data ?? null) as IcebreakOrganizerEventRow | null;
+}
+
+export async function getJoinableEventByEventCode(eventCode: string) {
+  return getPublicEventByEventCode(eventCode);
+}
+
+export async function createOrganizerParticipant(input: CreateOrganizerParticipantInput) {
+  const supabase = createSupabaseServerClient();
+  const { data, error } = await supabase
+    .from(PARTICIPANTS_TABLE)
+    .insert({
+      event_id: input.eventId,
+      display_name: input.displayName,
+      answers: input.answers,
+      main_type_key: input.mainTypeKey,
+      partner_type_key: input.partnerTypeKey,
+      center_force: input.centerForce,
+      result_summary: input.resultSummary ?? null,
+      joined_at: input.joinedAt ?? new Date().toISOString(),
+    })
+    .select("*")
+    .single();
+
+  if (error) {
+    throw error;
+  }
+
+  return data as IcebreakOrganizerParticipantRow;
 }
 
 export async function getOrganizerParticipantsByEventId(eventId: string) {
