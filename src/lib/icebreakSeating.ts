@@ -1,10 +1,20 @@
 import { FORCE_KEYS, FORCE_LABELS, type ForceKey } from "@/lib/diagnosisCore/forces";
+import type { RevoTypeKey } from "@/data/revotypes";
+import {
+  getRoleMatchReason,
+  getRolePairScore,
+  getRoleTableScore,
+  type RoleMatchingParticipant,
+} from "@/lib/icebreakRoleMatching";
 
 export interface SeatingParticipant {
   id: string;
   nickname: string;
   centerForce: ForceKey;
   joinedAt: string;
+  mainTypeKey?: RevoTypeKey;
+  partnerTypeKey?: RevoTypeKey | null;
+  subForce?: ForceKey | null;
 }
 
 export interface SeatedParticipant extends SeatingParticipant {
@@ -118,6 +128,177 @@ export function generateIcebreakSeating(
           tableNo: tableIndex + 1,
           seatNo: memberIndex + 1,
           reason: createReason(member, orderedMembers),
+        })),
+      };
+    }),
+  };
+}
+
+function hasRoleData(participant: SeatingParticipant): participant is SeatingParticipant & RoleMatchingParticipant {
+  return Boolean(participant.mainTypeKey);
+}
+
+function toRoleParticipant(participant: SeatingParticipant): RoleMatchingParticipant | null {
+  if (!hasRoleData(participant)) {
+    return null;
+  }
+
+  return {
+    id: participant.id,
+    mainTypeKey: participant.mainTypeKey,
+    partnerTypeKey: participant.partnerTypeKey,
+    centerForce: participant.centerForce,
+  };
+}
+
+function getRoleReadyParticipants(participants: SeatingParticipant[]) {
+  return participants
+    .map(toRoleParticipant)
+    .filter((participant): participant is RoleMatchingParticipant => participant !== null);
+}
+
+function countMainType(members: SeatingParticipant[], participant: SeatingParticipant) {
+  if (!participant.mainTypeKey) {
+    return 0;
+  }
+
+  return members.filter((member) => member.mainTypeKey === participant.mainTypeKey).length;
+}
+
+function calculateRoleAwareTableScore(
+  candidate: SeatingParticipant,
+  members: SeatingParticipant[],
+  safeCapacity: number,
+) {
+  const nextMembers = [...members, candidate];
+  const roleParticipants = getRoleReadyParticipants(nextMembers);
+  const roleScore = roleParticipants.length >= 2 ? getRoleTableScore(roleParticipants).score : 0;
+  const sameForcePenalty = countForce(members, candidate.centerForce) * 12;
+  const sameMainTypePenalty = countMainType(members, candidate) * 10;
+  const sizePenalty = (members.length / safeCapacity) * 8;
+
+  return roleScore - sameForcePenalty - sameMainTypePenalty - sizePenalty;
+}
+
+function createRoleAwareReason(member: SeatingParticipant, members: SeatingParticipant[]) {
+  const index = members.findIndex((candidate) => candidate.id === member.id);
+  const next = members[(index + 1) % members.length];
+
+  if (next && next.id !== member.id && member.mainTypeKey && next.mainTypeKey) {
+    return getRoleMatchReason(
+      {
+        id: member.id,
+        mainTypeKey: member.mainTypeKey,
+        partnerTypeKey: member.partnerTypeKey,
+        centerForce: member.centerForce,
+      },
+      {
+        id: next.id,
+        mainTypeKey: next.mainTypeKey,
+        partnerTypeKey: next.partnerTypeKey,
+        centerForce: next.centerForce,
+      },
+    );
+  }
+
+  return createReason(member, members);
+}
+
+function getRolePairScoreForSeating(a: SeatingParticipant, b: SeatingParticipant) {
+  if (!a.mainTypeKey || !b.mainTypeKey) {
+    return 0;
+  }
+
+  return getRolePairScore(
+    {
+      id: a.id,
+      mainTypeKey: a.mainTypeKey,
+      partnerTypeKey: a.partnerTypeKey,
+      centerForce: a.centerForce,
+    },
+    {
+      id: b.id,
+      mainTypeKey: b.mainTypeKey,
+      partnerTypeKey: b.partnerTypeKey,
+      centerForce: b.centerForce,
+    },
+  ).score;
+}
+
+function sortRoleAwareMembers(members: SeatingParticipant[]) {
+  const remaining = members.slice().sort((a, b) => a.joinedAt.localeCompare(b.joinedAt));
+  const ordered = remaining.splice(0, 1);
+
+  while (remaining.length > 0) {
+    const previous = ordered[ordered.length - 1];
+    const [{ index: nextIndex }] = remaining
+      .map((member, index) => ({ index, member }))
+      .sort((a, b) => {
+        const scoreDiff = getRolePairScoreForSeating(previous, b.member) - getRolePairScoreForSeating(previous, a.member);
+
+        if (scoreDiff !== 0) {
+          return scoreDiff;
+        }
+
+        return (
+          FORCE_KEYS.indexOf(a.member.centerForce) - FORCE_KEYS.indexOf(b.member.centerForce) ||
+          a.member.joinedAt.localeCompare(b.member.joinedAt)
+        );
+      });
+
+    ordered.push(...remaining.splice(nextIndex, 1));
+  }
+
+  return ordered;
+}
+
+export function generateIcebreakRoleAwareSeating(
+  participants: SeatingParticipant[],
+  tableCapacity: number,
+): SeatingResult {
+  const safeCapacity = Math.max(2, tableCapacity || 4);
+  const tableCount = Math.max(1, Math.ceil(participants.length / safeCapacity));
+  const tables: SeatingParticipant[][] = Array.from({ length: tableCount }, () => []);
+  const sortedParticipants = participants.slice().sort((a, b) => a.joinedAt.localeCompare(b.joinedAt));
+
+  for (const participant of sortedParticipants) {
+    const rankedTables = tables
+      .map((members, index) => ({ members, index }))
+      .filter(({ members }) => members.length < safeCapacity)
+      .sort((a, b) => {
+        const scoreDiff =
+          calculateRoleAwareTableScore(participant, b.members, safeCapacity) -
+          calculateRoleAwareTableScore(participant, a.members, safeCapacity);
+
+        if (scoreDiff !== 0) {
+          return scoreDiff;
+        }
+
+        const sizeDiff = a.members.length - b.members.length;
+        if (sizeDiff !== 0) {
+          return sizeDiff;
+        }
+
+        return a.index - b.index;
+      });
+
+    const target = rankedTables[0] ?? { members: tables[0], index: 0 };
+    target.members.push(participant);
+  }
+
+  return {
+    tables: tables.map((members, tableIndex) => {
+      const orderedMembers = sortRoleAwareMembers(members);
+
+      return {
+        tableNo: tableIndex + 1,
+        tableName: createIcebreakTableName(orderedMembers),
+        isCompleteForceSet: hasCompleteForceSet(orderedMembers),
+        members: orderedMembers.map((member, memberIndex) => ({
+          ...member,
+          tableNo: tableIndex + 1,
+          seatNo: memberIndex + 1,
+          reason: createRoleAwareReason(member, orderedMembers),
         })),
       };
     }),
