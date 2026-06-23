@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
+import type { RevoTypeKey } from "@/data/revotypes";
 import type { ForceKey } from "@/lib/diagnosisCore/forces";
 import { createIcebreakHostKeyHash } from "@/lib/icebreakHostKey";
-import { generateIcebreakSeating, type SeatingResult } from "@/lib/icebreakSeating";
+import { generateIcebreakRoleAwareSeating, type SeatingResult } from "@/lib/icebreakSeating";
 import {
   createOrganizerSeating,
   getOrganizerEventByHostKeyHash,
@@ -10,7 +11,7 @@ import {
   type IcebreakOrganizerParticipantRow,
 } from "@/lib/icebreakSupabaseRepository";
 
-const SEATING_ALGORITHM_VERSION = "icebreak-seating-v1";
+const SEATING_ALGORITHM_VERSION = "icebreak-seating-role-aware-v1";
 
 function readResultSummaryForce(row: IcebreakOrganizerParticipantRow, key: "subForce") {
   const summary = row.result_summary;
@@ -24,6 +25,8 @@ function mapParticipantRow(row: IcebreakOrganizerParticipantRow) {
     nickname: row.display_name,
     centerForce: (row.center_force ?? "ignite") as ForceKey,
     subForce: readResultSummaryForce(row, "subForce"),
+    mainTypeKey: row.main_type_key as RevoTypeKey,
+    partnerTypeKey: row.partner_type_key as RevoTypeKey | null,
     tableNo: null as number | null,
     seatNo: null as number | null,
     seatReason: null as string | null,
@@ -86,11 +89,14 @@ export async function POST(req: NextRequest) {
     }
 
     const participants = participantRows.map(mapParticipantRow);
-    const seating = generateIcebreakSeating(
+    const seating = generateIcebreakRoleAwareSeating(
       participants.map((participant) => ({
         id: participant.id,
         nickname: participant.nickname,
         centerForce: participant.centerForce,
+        mainTypeKey: participant.mainTypeKey,
+        partnerTypeKey: participant.partnerTypeKey,
+        subForce: participant.subForce,
         joinedAt: participant.joinedAt,
       })),
       eventRow.seats_per_table ?? 4,
