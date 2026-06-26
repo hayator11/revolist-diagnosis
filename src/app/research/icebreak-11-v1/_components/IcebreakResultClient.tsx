@@ -34,7 +34,6 @@ export default function IcebreakResultClient({ resultId }: Props) {
   const searchParams = useSearchParams();
   const encoded = resultId ?? searchParams.get("id");
   const [copied, setCopied] = useState(false);
-  const [sharePageUrl, setSharePageUrl] = useState("");
 
   const resultState = useMemo(() => {
     if (!encoded) return null;
@@ -50,11 +49,6 @@ export default function IcebreakResultClient({ resultId }: Props) {
     typeof window === "undefined" || !encoded
       ? ""
       : `${window.location.origin}${resultPath}`;
-
-  useEffect(() => {
-    if (!encoded) return;
-    setSharePageUrl(window.location.href);
-  }, [encoded]);
 
   useEffect(() => {
     if (!resultState || !encoded) return;
@@ -105,7 +99,7 @@ export default function IcebreakResultClient({ resultId }: Props) {
   }, [encoded, resultState, resultUrl]);
 
   const fallbackShareResultUrl = resultPath ? `${PUBLIC_SHARE_ORIGIN}${resultPath}` : "";
-  const shareResultUrl = resultUrl || sharePageUrl || fallbackShareResultUrl;
+  const shareResultUrl = resultUrl || fallbackShareResultUrl;
 
   const shareText = useMemo(() => {
     if (!resultState) return "";
@@ -169,7 +163,29 @@ export default function IcebreakResultClient({ resultId }: Props) {
         <p className="mb-4 text-xs uppercase tracking-widest text-gray-400">
           Icebreak 33 Result
         </p>
-        <h1 className="mb-3 text-3xl font-bold leading-tight text-black">{details.title}</h1>
+        <h1 className="mb-3 text-3xl font-bold leading-tight text-black">あなたの11役割</h1>
+        <p className="mb-6 text-sm leading-relaxed text-gray-600">
+          まずは今日の会話で使える役割名として見てみてください。
+        </p>
+        <article className="mb-6 rounded-lg border border-gray-200 bg-black p-5 text-white">
+          <p className="mb-3 text-xs font-bold uppercase tracking-widest text-gray-400">
+            Profile Card
+          </p>
+          <p className="text-2xl font-bold leading-snug">
+            今日の私は、{details.mainRole.name}タイプ。
+          </p>
+          <p className="mt-3 text-sm font-bold leading-relaxed text-gray-200">
+            {roleCopy?.catchCopy ?? details.mainNavigation.publicLabel}
+          </p>
+          <div className="mt-5 rounded-lg bg-white/10 p-4">
+            <p className="mb-3 text-xs font-bold uppercase tracking-widest text-gray-400">
+              可能性を引き出し合いやすい相手
+            </p>
+            <p className="text-xl font-bold leading-snug">
+              {details.partnerRole.name}タイプ / {details.thirdRole.name}タイプ
+            </p>
+          </div>
+        </article>
         <p className="mb-6 text-sm leading-relaxed text-gray-600">{details.lead}</p>
         {roleCopy && (
           <article className="mb-6 rounded-lg border border-gray-200 bg-gray-50 p-5">
@@ -191,7 +207,9 @@ export default function IcebreakResultClient({ resultId }: Props) {
           </article>
         )}
         <div className="rounded-lg border border-gray-200 p-5">
-          <p className="mb-2 text-xs uppercase tracking-widest text-gray-400">Center Force</p>
+          <p className="mb-2 text-xs font-bold uppercase tracking-widest text-gray-400">
+            補助情報：あなたの中心にある力
+          </p>
           <p className="text-2xl font-bold" style={{ color: centerForce.color }}>
             {FORCE_LABELS[result.centerForce]}
           </p>
