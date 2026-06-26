@@ -19,12 +19,20 @@ function readResultSummaryForce(row: IcebreakOrganizerParticipantRow, key: "subF
   return (value ?? row.center_force ?? "ignite") as ForceKey;
 }
 
+function readResultSummaryString(row: IcebreakOrganizerParticipantRow, key: string) {
+  const summary = row.result_summary;
+  return summary && typeof summary[key] === "string" ? summary[key] : null;
+}
+
 function mapParticipantRow(row: IcebreakOrganizerParticipantRow) {
   return {
     id: row.id,
     nickname: row.display_name,
     centerForce: (row.center_force ?? "ignite") as ForceKey,
     subForce: readResultSummaryForce(row, "subForce"),
+    mainTypeKey: row.main_type_key ?? readResultSummaryString(row, "mainTypeKey"),
+    partnerTypeKey: row.partner_type_key ?? readResultSummaryString(row, "partnerTypeKey"),
+    thirdTypeKey: readResultSummaryString(row, "thirdTypeKey"),
     tableNo: null,
     seatNo: null,
     seatReason: null,

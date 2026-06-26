@@ -2,6 +2,9 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { getIcebreakRoleResultCopy } from "@/data/icebreakRoleResultCopy";
+import { revo111Roles } from "@/data/revo111Roles";
+import type { RevoTypeKey } from "@/data/revotypes";
 import { FORCE_COLORS, FORCE_LABELS, type ForceKey } from "@/lib/diagnosisCore/forces";
 
 interface HostEvent {
@@ -20,6 +23,9 @@ interface HostParticipant {
   nickname: string;
   centerForce: ForceKey;
   subForce: ForceKey;
+  mainTypeKey?: string;
+  partnerTypeKey?: string;
+  thirdTypeKey?: string;
   tableNo: number | null;
   seatNo: number | null;
   seatReason: string | null;
@@ -31,6 +37,45 @@ interface HostTable {
   tableName: string;
   isCompleteForceSet: boolean;
   members: Array<HostParticipant & { reason: string }>;
+}
+
+function getRoleInfo(roleKey?: string) {
+  if (!roleKey || !(roleKey in revo111Roles)) {
+    return null;
+  }
+
+  const typedRoleKey = roleKey as RevoTypeKey;
+  return {
+    role: revo111Roles[typedRoleKey],
+    copy: getIcebreakRoleResultCopy(typedRoleKey),
+  };
+}
+
+function ParticipantRoleSummary({ roleKey }: { roleKey?: string }) {
+  const roleInfo = getRoleInfo(roleKey);
+
+  if (!roleInfo) {
+    return null;
+  }
+
+  return (
+    <div className="mb-3 rounded-lg bg-gray-50 p-3">
+      <p className="text-sm font-bold text-black">{roleInfo.role.name}タイプ</p>
+      {roleInfo.copy?.catchCopy && (
+        <p className="mt-1 text-xs leading-relaxed text-gray-600">{roleInfo.copy.catchCopy}</p>
+      )}
+    </div>
+  );
+}
+
+function SeatRoleName({ roleKey }: { roleKey?: string }) {
+  const roleInfo = getRoleInfo(roleKey);
+
+  if (!roleInfo) {
+    return null;
+  }
+
+  return <p className="mt-2 text-sm font-bold text-black">{roleInfo.role.name}タイプ</p>;
 }
 
 export default function IcebreakHostClient() {
@@ -258,9 +303,10 @@ export default function IcebreakHostClient() {
                     />
                     <p className="font-bold text-black">{participant.nickname}</p>
                   </div>
+                  <ParticipantRoleSummary roleKey={participant.mainTypeKey} />
                   <div className="space-y-1 text-xs text-gray-500">
-                    <p>入口: {FORCE_LABELS[participant.centerForce]}</p>
-                    <p>広がり: {FORCE_LABELS[participant.subForce ?? participant.centerForce]}</p>
+                    <p>中心の力：{FORCE_LABELS[participant.centerForce]}</p>
+                    <p>広がり：{FORCE_LABELS[participant.subForce ?? participant.centerForce]}</p>
                   </div>
                   {participant.tableNo && (
                     <p className="mt-3 text-xs font-medium text-black">
@@ -310,6 +356,10 @@ export default function IcebreakHostClient() {
                             {member.seatNo}. {member.nickname}
                           </p>
                         </div>
+                        <SeatRoleName roleKey={member.mainTypeKey} />
+                        <p className="mt-1 text-xs text-gray-500">
+                          中心の力：{FORCE_LABELS[member.centerForce]}
+                        </p>
                         <p className="text-xs leading-relaxed text-gray-500">{member.reason}</p>
                       </div>
                     ))}
