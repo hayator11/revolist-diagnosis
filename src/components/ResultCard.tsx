@@ -475,7 +475,7 @@ export default function ResultCard({ result }: Props) {
         <div className="text-center mb-8">
           <p className="text-xs tracking-widest text-gray-400 uppercase mb-3">Next Stage</p>
           <h2 className="text-lg font-bold text-black mb-4 leading-snug">
-            ライト診断では、<br />
+            レボリスト診断では、<br />
             あなたの現在地の一部が見えました。
           </h2>
           <p className="text-sm text-gray-600 leading-relaxed">

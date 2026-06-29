@@ -106,7 +106,7 @@ export default function FullDiagnosisPage() {
           </h2>
           <div className="text-sm text-gray-600 leading-[2.2] space-y-4">
             <p>
-              ライト診断では、<br />今、強く出ている役割の一部が見えました。
+              レボリスト診断では、<br />今、強く出ている役割の一部が見えました。
             </p>
             <p>
               44問版では、<br />役割・仲間・活動・成長の流れをもう少し深く見ていきます。
@@ -290,7 +290,7 @@ export default function FullDiagnosisPage() {
               href="/diagnosis"
               className="block w-full text-center py-4 rounded-2xl border border-gray-200 text-gray-600 text-sm hover:border-black hover:text-black transition-colors"
             >
-              ライト診断をする
+              レボリスト診断をする
             </Link>
           </div>
         </FadeInSection>

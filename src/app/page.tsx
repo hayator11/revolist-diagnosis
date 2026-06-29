@@ -171,7 +171,7 @@ export default function HomePage() {
           役割を知るところから。
         </h2>
         <p className="text-sm text-gray-500 mb-10 leading-relaxed">
-          21問・約3分。今の自分に当てはまるかで答えてください。
+          33問・約5分。場面ごとに、あなたに近い選択を直感で選んでください。
         </p>
 
         <div className="space-y-3">
@@ -179,7 +179,7 @@ export default function HomePage() {
             href="/diagnosis"
             className="block w-full bg-black text-white py-4 rounded-full text-sm font-medium hover:bg-gray-800 transition-colors"
           >
-            ライト診断をはじめる →
+            レボリスト診断をはじめる →
           </Link>
           <Link
             href="/team"

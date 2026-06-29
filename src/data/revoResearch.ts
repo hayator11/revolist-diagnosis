@@ -100,7 +100,7 @@ export const currentInterestOptions = [
 ];
 
 export const interestedProjectsOptions = [
-  "ライト診断21問",
+  "レボリスト診断33問",
   "44問版モニター診断",
   "レボリストLab",
   "Revo Funding",

@@ -171,7 +171,7 @@ export default function MonitorPage() {
       {/* ── フッター案内 ──────────────────────────────────────────── */}
       <section className="px-6 py-10 text-center">
         <p className="text-xs text-gray-400">
-          ライト診断（21問）は
+          レボリスト診断（33問）は
           <Link href="/diagnosis" className="underline hover:text-black transition-colors ml-1">
             こちら
           </Link>

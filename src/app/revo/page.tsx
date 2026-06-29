@@ -413,7 +413,7 @@ export default function RevoPage() {
               href="/diagnosis"
               className="block w-full text-center py-4 rounded-2xl border border-gray-200 text-gray-600 text-sm hover:border-black hover:text-black transition-colors"
             >
-              ライト診断をする
+              レボリスト診断をする
             </Link>
           </div>
         </FadeInSection>

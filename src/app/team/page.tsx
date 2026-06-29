@@ -256,7 +256,7 @@ export default function TeamPage() {
                 href="/diagnosis"
                 className="block w-full py-4 rounded-2xl bg-black text-white text-sm font-medium hover:bg-gray-800 transition-colors"
               >
-                ライト診断でタイプを調べる
+                レボリスト診断でタイプを調べる
               </Link>
               <Link
                 href="/monitor"

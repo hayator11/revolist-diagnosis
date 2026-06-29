@@ -55,13 +55,13 @@ function DiagnosisContent() {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center px-6 text-center">
         <p className="text-xs tracking-widest text-gray-400 uppercase mb-4">
-          Light Diagnosis
+          Revolist Diagnosis
         </p>
         <h1 className="text-3xl font-bold text-black mb-4 leading-snug">
-          ライト診断
+          レボリスト診断
         </h1>
         <p className="text-sm text-gray-600 leading-relaxed mb-4 max-w-xs">
-          21問・約3分の診断です。
+          33問・約5分の診断です。
           <br />
           場面ごとに、あなたに近い選択を直感で選んでください。
         </p>

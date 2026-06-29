@@ -48,7 +48,7 @@ export default function TypesPage() {
           href="/diagnosis"
           className="inline-flex items-center gap-2 bg-black text-white px-8 py-4 rounded-full text-base font-medium hover:bg-gray-800 transition-colors"
         >
-          ライト診断をはじめる →
+          レボリスト診断をはじめる →
         </Link>
       </div>
     </div>
