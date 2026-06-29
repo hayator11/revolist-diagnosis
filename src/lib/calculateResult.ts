@@ -33,8 +33,11 @@ export function calculateResult(answers: number[]): DiagnosisResult {
 
   questions.forEach((q, i) => {
     const value = answers[i] ?? 3;
-    for (const [typeKey, weight] of Object.entries(q.scores)) {
-      raw[typeKey as RevoTypeKey] += (weight as number) * value;
+    const selectedChoice = q.choices?.find((choice) => choice.value === value);
+    const scores = selectedChoice?.scores ?? q.scores;
+
+    for (const [typeKey, weight] of Object.entries(scores)) {
+      raw[typeKey as RevoTypeKey] += selectedChoice ? (weight as number) : (weight as number) * value;
     }
   });
 

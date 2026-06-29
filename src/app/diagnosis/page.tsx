@@ -63,11 +63,38 @@ function DiagnosisContent() {
         <p className="text-sm text-gray-600 leading-relaxed mb-4 max-w-xs">
           21問・約3分の診断です。
           <br />
-          直感で答えてください。
+          場面ごとに、あなたに近い選択を直感で選んでください。
         </p>
+        <section className="w-full max-w-xs mb-5 rounded-2xl border border-gray-200 bg-gray-50 p-5 text-left">
+          <p className="mb-3 text-sm font-semibold leading-relaxed text-black">
+            自分の得意なことのはずなのに、なぜかうまく伝わらない。
+          </p>
+          <div className="space-y-2 text-sm leading-relaxed text-gray-600">
+            <p>人のことを考えているのに、自分だけが疲れてしまう。</p>
+            <p>やりたいことはあるのに、誰と組めば形になるのかわからない。</p>
+            <p className="pt-2 text-black">
+              それは、あなたに力がないからではありません。あなたの力が、まだ“役割”として見えていないだけかもしれません。
+            </p>
+          </div>
+        </section>
+        <section className="w-full max-w-xs mb-8 rounded-2xl border border-gray-200 p-5 text-left">
+          <p className="mb-3 text-xs uppercase tracking-widest text-gray-400">What you find</p>
+          <h2 className="mb-3 text-lg font-bold leading-snug text-black">
+            すべての人は、自分の役割に出逢ったとき天才になる。
+          </h2>
+          <p className="mb-4 text-sm leading-relaxed text-gray-600">
+            まだない未来を生み出す人。それを言葉にする人。動く形にする人。安心と循環をつくる人。
+          </p>
+          <ul className="space-y-2 text-sm leading-relaxed text-gray-700">
+            <li>・自分が何を持ち寄る人なのか</li>
+            <li>・なぜ得意が伝わりにくかったのか</li>
+            <li>・どんな場で力を発揮しやすいのか</li>
+            <li>・誰と組むと可能性が広がりやすいのか</li>
+          </ul>
+        </section>
         <ul className="text-xs text-gray-500 mb-10 space-y-1 text-left">
           <li>・ 正解も不正解もありません</li>
-          <li>・ 今の自分に当てはまるかで答えてください</li>
+          <li>・ どの選択にも、別の持ち寄り方があります</li>
           <li>・ 途中でやり直すこともできます</li>
         </ul>
         <div className="w-full max-w-xs space-y-4 mb-8 text-left">

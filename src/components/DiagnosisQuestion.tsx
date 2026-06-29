@@ -9,7 +9,11 @@ const ANSWER_LABELS = [
 ];
 
 interface Props {
-  question: { id: number; text: string };
+  question: {
+    id: number;
+    text: string;
+    choices?: Array<{ value: number; label: string }>;
+  };
   totalQuestions: number;
   onAnswer: (value: number) => void;
   currentAnswer?: number;
@@ -22,6 +26,9 @@ export default function DiagnosisQuestion({
   currentAnswer,
 }: Props) {
   const progress = ((question.id - 1) / totalQuestions) * 100;
+  const answerChoices = question.choices?.length
+    ? question.choices
+    : [1, 2, 3, 4, 5].map((value) => ({ value, label: ANSWER_LABELS[value - 1] }));
 
   return (
     <div className="min-h-screen flex flex-col px-6 py-10">
@@ -50,12 +57,12 @@ export default function DiagnosisQuestion({
 
         {/* Answer buttons */}
         <div className="flex flex-col gap-3">
-          {[1, 2, 3, 4, 5].map((value) => {
-            const isSelected = currentAnswer === value;
+          {answerChoices.map((choice, index) => {
+            const isSelected = currentAnswer === choice.value;
             return (
               <button
-                key={value}
-                onClick={() => onAnswer(value)}
+                key={choice.value}
+                onClick={() => onAnswer(choice.value)}
                 className={`
                   w-full py-4 px-5 rounded-2xl text-left transition-all duration-200
                   flex items-center gap-4
@@ -72,10 +79,10 @@ export default function DiagnosisQuestion({
                     ${isSelected ? "border-white text-white" : "border-gray-300 text-gray-400"}
                   `}
                 >
-                  {value}
+                  {question.choices?.length ? String.fromCharCode(65 + index) : choice.value}
                 </span>
                 <span className="text-sm font-medium whitespace-pre-line">
-                  {ANSWER_LABELS[value - 1]}
+                  {choice.label}
                 </span>
               </button>
             );
