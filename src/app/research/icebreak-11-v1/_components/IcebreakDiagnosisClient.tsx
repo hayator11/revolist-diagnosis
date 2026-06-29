@@ -200,15 +200,17 @@ export default function IcebreakDiagnosisClient() {
             </ul>
           </section>
 
-          <section className="mb-8 rounded-2xl border border-gray-200 p-5">
-            <p className="mb-3 text-xs uppercase tracking-widest text-gray-400">For meetup</p>
-            <h2 className="mb-3 text-lg font-bold leading-snug text-black">
-              オフ会では、会話と席順のきっかけになります。
-            </h2>
-            <p className="text-sm leading-relaxed text-gray-600">
-              診断結果は「あなたの11役割」と「可能性を引き出し合いやすい相手」を見つけるために使います。ひとりで背負うものを、みんなで持ち寄れる未来へ変える入口です。
-            </p>
-          </section>
+          {!eventCode && (
+            <section className="mb-8 rounded-2xl border border-gray-200 p-5">
+              <p className="mb-3 text-xs uppercase tracking-widest text-gray-400">Next step</p>
+              <h2 className="mb-3 text-lg font-bold leading-snug text-black">
+                ひとりで背負うものから、持ち寄れる未来へ。
+              </h2>
+              <p className="text-sm leading-relaxed text-gray-600">
+                診断結果では「あなたの11役割」と「可能性を引き出し合いやすい相手」を表示します。自分の力を知るだけでなく、誰と話し、どんな場で活かしやすいかを見つける入口です。
+              </p>
+            </section>
+          )}
           {eventCode && (
             <div className="mb-6 rounded-lg border border-gray-200 p-5">
               <p className="mb-2 text-xs uppercase tracking-widest text-gray-400">Event</p>

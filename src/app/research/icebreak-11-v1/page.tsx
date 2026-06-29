@@ -3,8 +3,8 @@ import { Suspense } from "react";
 import IcebreakDiagnosisClient from "./_components/IcebreakDiagnosisClient";
 
 export const metadata: Metadata = {
-  title: "アイスブレイク11 | レボリスト診断リサーチ",
-  description: "11問で今の役割と話してみたい相手を見つける先行版です。",
+  title: "Icebreak 33 | レボリスト診断",
+  description: "33問で自分の11役割、持ち寄り方、可能性を引き出し合いやすい相手を見つける診断です。",
 };
 
 export default function IcebreakPage() {
