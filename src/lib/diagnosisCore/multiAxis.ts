@@ -28,10 +28,19 @@ export interface AxisQuestionWeight {
   weight: number;
 }
 
+export interface MultiAxisQuestionChoice {
+  value: RawAnswerValue;
+  label: string;
+  weights: AxisQuestionWeight[];
+  roleWeights?: CenteredRoleQuestionWeight[];
+  forceWeights?: CenteredForceQuestionWeight[];
+}
+
 export interface MultiAxisQuestion {
   id: string;
   text: string;
   weights: AxisQuestionWeight[];
+  choices?: MultiAxisQuestionChoice[];
   reverse?: boolean;
 }
 
@@ -57,6 +66,7 @@ export interface CenteredMultiAxisQuestion {
   id: string;
   text: string;
   weights: CenteredAxisQuestionWeight[];
+  choices?: MultiAxisQuestionChoice[];
   role?: RevoTypeKey;
   force?: ForceKey;
   roleWeights?: CenteredRoleQuestionWeight[];

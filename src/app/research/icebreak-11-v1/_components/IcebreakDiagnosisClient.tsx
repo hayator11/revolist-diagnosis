@@ -25,8 +25,12 @@ const CHOICES = [
   { value: 5, label: "かなり自分らしい" },
 ];
 
-function getAnswerLabel(value: number) {
-  return CHOICES.find((choice) => choice.value === value)?.label ?? "";
+function getQuestionChoices(question: typeof icebreakQuestions[number]) {
+  return question.choices?.length ? question.choices : CHOICES;
+}
+
+function getAnswerLabel(question: typeof icebreakQuestions[number], value: number) {
+  return getQuestionChoices(question).find((choice) => choice.value === value)?.label ?? "";
 }
 
 export default function IcebreakDiagnosisClient() {
@@ -131,7 +135,7 @@ export default function IcebreakDiagnosisClient() {
             order: index + 1,
             questionText: question.text,
             answerValue: nextAnswers[index],
-            answerLabel: getAnswerLabel(nextAnswers[index]),
+            answerLabel: getAnswerLabel(question, nextAnswers[index]),
             forceKey: question.force,
             roleKey: question.role,
           })),
@@ -164,6 +168,47 @@ export default function IcebreakDiagnosisClient() {
           <p className="mb-8 text-sm leading-relaxed text-gray-600">
             33問で、今の入り口になる力・動き方・会場で話してみたい相手を見つけます。
           </p>
+          <section className="mb-6 rounded-2xl border border-gray-200 bg-gray-50 p-5">
+            <p className="mb-3 text-sm font-semibold leading-relaxed text-black">
+              自分の得意なことのはずなのに、なぜかうまく伝わらない。
+            </p>
+            <div className="space-y-2 text-sm leading-relaxed text-gray-600">
+              <p>人のことを考えているのに、自分だけが疲れてしまう。</p>
+              <p>やりたいことはあるのに、誰と組めば形になるのかわからない。</p>
+              <p className="pt-2 text-black">
+                それは、あなたに力がないからではありません。あなたの力が、まだ“役割”として見えていないだけかもしれません。
+              </p>
+            </div>
+          </section>
+
+          <section className="mb-6 rounded-2xl border border-gray-200 p-5">
+            <p className="mb-3 text-xs uppercase tracking-widest text-gray-400">What you find</p>
+            <h2 className="mb-3 text-xl font-bold leading-snug text-black">
+              すべての人は、自分の役割に出逢ったとき天才になる。
+            </h2>
+            <p className="mb-4 text-sm leading-relaxed text-gray-600">
+              まだない未来を生み出す人。それを言葉にする人。動く形にする人。安心と循環をつくる人。
+            </p>
+            <p className="mb-4 text-sm leading-relaxed text-gray-600">
+              レボリスト診断では、あなたの天才がどんな持ち寄り方で現れるのかを、11役割で見ていきます。
+            </p>
+            <ul className="space-y-2 text-sm leading-relaxed text-gray-700">
+              <li>・自分が何を持ち寄る人なのか</li>
+              <li>・なぜ得意が伝わりにくかったのか</li>
+              <li>・どんな場で力を発揮しやすいのか</li>
+              <li>・誰と組むと可能性が広がりやすいのか</li>
+            </ul>
+          </section>
+
+          <section className="mb-8 rounded-2xl border border-gray-200 p-5">
+            <p className="mb-3 text-xs uppercase tracking-widest text-gray-400">For meetup</p>
+            <h2 className="mb-3 text-lg font-bold leading-snug text-black">
+              オフ会では、会話と席順のきっかけになります。
+            </h2>
+            <p className="text-sm leading-relaxed text-gray-600">
+              診断結果は「あなたの11役割」と「可能性を引き出し合いやすい相手」を見つけるために使います。ひとりで背負うものを、みんなで持ち寄れる未来へ変える入口です。
+            </p>
+          </section>
           {eventCode && (
             <div className="mb-6 rounded-lg border border-gray-200 p-5">
               <p className="mb-2 text-xs uppercase tracking-widest text-gray-400">Event</p>
@@ -172,6 +217,9 @@ export default function IcebreakDiagnosisClient() {
               </p>
               <p className="mb-4 text-xs leading-relaxed text-gray-500">
                 この結果は席決めに使われます。イベント後は匿名化して診断改善に活用し、運営用データは削除されます。
+              </p>
+              <p className="mb-4 rounded-lg bg-gray-50 p-3 text-xs leading-relaxed text-gray-600">
+                オフ会では、結果を自己紹介の名札のように使えます。誰が何を持ち寄る人なのかを見ながら、話す相手や席順のきっかけにします。
               </p>
               <label className="mb-2 block text-sm font-medium text-black">
                 ニックネーム
@@ -219,7 +267,7 @@ export default function IcebreakDiagnosisClient() {
         </section>
 
         <div className="grid gap-3">
-          {CHOICES.map((choice) => (
+          {getQuestionChoices(currentQuestion).map((choice, choiceIndex) => (
             <button
               key={choice.value}
               type="button"
@@ -228,7 +276,7 @@ export default function IcebreakDiagnosisClient() {
               className="flex items-center justify-between rounded-lg border border-gray-200 px-5 py-4 text-left text-sm text-gray-700 transition-colors hover:border-black hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
             >
               <span>{choice.label}</span>
-              <span className="text-xs text-gray-400">{choice.value}</span>
+              <span className="text-xs text-gray-400">{String.fromCharCode(65 + choiceIndex)}</span>
             </button>
           ))}
         </div>

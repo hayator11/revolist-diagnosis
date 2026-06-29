@@ -108,6 +108,25 @@ export function calculateMultiAxisRoleResult(
 
   questions.forEach((question, index) => {
     const value = normalizeAnswer(answers[index] ?? 3, question.reverse);
+    const selectedChoice = question.choices?.find((choice) => choice.value === value);
+
+    if (selectedChoice) {
+      for (const axis of MULTI_AXIS_KEYS) {
+        const maxWeight = Math.max(
+          0,
+          ...question.choices!.map((choice) => (
+            choice.weights.find((item) => item.axis === axis)?.weight ?? 0
+          )),
+        );
+        axisMaxScores[axis] += maxWeight;
+      }
+
+      for (const item of selectedChoice.weights) {
+        axisScores[item.axis] += item.weight;
+      }
+      return;
+    }
+
     for (const item of question.weights) {
       axisScores[item.axis] += value * item.weight;
       axisMaxScores[item.axis] += 5 * item.weight;
@@ -199,6 +218,23 @@ export function calculateMultiAxisRoleResultCentered(
 
   questions.forEach((question, index) => {
     const centered = centeredAnswers[index];
+    const selectedChoice = question.choices?.find((choice) => choice.value === rawAnswers[index]);
+
+    if (selectedChoice) {
+      for (const item of selectedChoice.weights) {
+        axisScores[item.axis] += item.weight;
+      }
+
+      for (const item of selectedChoice.roleWeights ?? []) {
+        roleScores[item.role] += item.weight;
+      }
+
+      for (const item of selectedChoice.forceWeights ?? []) {
+        forceScores[item.force] += item.weight;
+      }
+
+      return;
+    }
 
     for (const item of question.weights) {
       axisScores[item.axis] += centered * item.weight;
