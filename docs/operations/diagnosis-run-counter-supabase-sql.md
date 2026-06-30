@@ -133,3 +133,19 @@ The application currently maps completed diagnosis/result events to these counte
 - Browser code never receives Supabase credentials.
 - Counter failure should not block result pages or existing feedback forwarding.
 - Execute this SQL manually in Supabase SQL Editor before relying on production counters.
+
+## Admin dashboard
+
+After deploying the app and executing this SQL, counts can be checked from:
+
+```text
+/admin/diagnosis?key=<ADMIN_DASHBOARD_KEY>
+```
+
+Required server-side environment variable:
+
+```text
+ADMIN_DASHBOARD_KEY
+```
+
+Do not commit the actual key value to Git, docs, chat, or logs.
