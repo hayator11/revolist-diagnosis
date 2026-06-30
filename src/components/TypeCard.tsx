@@ -1,19 +1,41 @@
-import { type RevoType } from "@/data/revotypes";
+import { icebreakRoleResultCopy } from "@/data/icebreakRoleResultCopy";
+import { revo111Roles, type Revo111Role } from "@/data/revo111Roles";
+import type { RevoTypeKey } from "@/data/revotypes";
 
 interface Props {
-  type: RevoType;
+  type: Revo111Role;
   compact?: boolean;
 }
 
+const ROLE_CLUSTERS: Partial<Record<RevoTypeKey, string>> = {
+  crazist: "まだない可能性を見つける役割",
+  revolist: "未来に最初の火を灯す役割",
+  maxdesigner: "可能性を設計する役割",
+  imagemaister: "想いを見える形にする役割",
+  logicalmaister: "感覚を構造へ変える役割",
+  inforader: "情報を判断材料へ変える役割",
+  premiercrafter: "価値を品質へ育てる役割",
+  movmentor: "人の一歩を応援する役割",
+  arranger: "人・情報・役割を配置する役割",
+  communicator: "人と人の入口を作る役割",
+  soulowner: "安心の土台を育てる役割",
+};
+
 export default function TypeCard({ type, compact = false }: Props) {
+  const resultCopy = icebreakRoleResultCopy[type.key];
+  const partnerNames = type.futurePartners
+    .map((key) => revo111Roles[key]?.name)
+    .filter(Boolean)
+    .slice(0, 4);
+
   if (compact) {
     return (
       <div className="border border-gray-200 rounded-2xl p-5 hover:border-black transition-colors">
         <p className="text-xs text-gray-400 mb-1 tracking-wider">{type.name}</p>
         <p className="text-sm font-semibold text-black leading-snug mb-2">
-          {type.catchcopy}
+          {type.catchCopy}
         </p>
-        <p className="text-xs text-gray-500 leading-relaxed">{type.description}</p>
+        <p className="text-xs text-gray-500 leading-relaxed">{resultCopy?.workingCopy ?? type.mission}</p>
       </div>
     );
   }
@@ -26,34 +48,41 @@ export default function TypeCard({ type, compact = false }: Props) {
           Type
         </p>
         <h2 className="text-3xl font-bold text-black mb-1">{type.name}</h2>
-        <p className="text-sm text-gray-500">{type.catchcopy}</p>
+        <p className="text-sm text-gray-500">{type.catchCopy}</p>
       </div>
 
       <div className="p-6 space-y-6">
-        {/* Description */}
-        <p className="text-sm text-gray-700 leading-relaxed">{type.description}</p>
+        <div className="space-y-3">
+          <p className="text-sm font-semibold text-black leading-relaxed">
+            {resultCopy?.workingCopy ?? type.mission}
+          </p>
+          <p className="text-sm text-gray-600 leading-relaxed">
+            {resultCopy?.essence ?? type.mission}
+          </p>
+          <p className="inline-flex rounded-full bg-gray-100 px-3 py-1 text-xs text-gray-600">
+            {ROLE_CLUSTERS[type.key] ?? "可能性を持ち寄る役割"}
+          </p>
+        </div>
 
-        {/* Strengths */}
         <div>
           <p className="text-xs font-medium tracking-widest text-gray-400 uppercase mb-2">
-            強み
+            自然にしやすい動き
           </p>
           <div className="flex flex-wrap gap-2">
-            {type.strengths.map((s) => (
+            {type.naturalActions.map((action) => (
               <span
-                key={s}
+                key={action}
                 className="inline-flex items-center px-3 py-1 rounded-full bg-black text-white text-xs font-medium"
               >
-                {s}
+                {action}
               </span>
             ))}
           </div>
         </div>
 
-        {/* Gives */}
         <div>
           <p className="text-xs font-medium tracking-widest text-gray-400 uppercase mb-2">
-            自然に渡しているもの
+            持ち寄れるもの
           </p>
           <div className="flex flex-wrap gap-2">
             {type.gives.map((g) => (
@@ -67,30 +96,37 @@ export default function TypeCard({ type, compact = false }: Props) {
           </div>
         </div>
 
-        {/* Receives */}
         <div>
           <p className="text-xs font-medium tracking-widest text-gray-400 uppercase mb-2">
-            受け取ると潤うもの
+            可能性を引き出し合いやすい相手
           </p>
           <div className="flex flex-wrap gap-2">
-            {type.receives.map((r) => (
+            {partnerNames.map((name) => (
               <span
-                key={r}
+                key={name}
                 className="inline-flex items-center px-3 py-1 rounded-full bg-gray-50 border border-gray-200 text-gray-600 text-xs"
               >
-                {r}
+                {name}
               </span>
             ))}
           </div>
         </div>
 
-        {/* Activities */}
         <div>
           <p className="text-xs font-medium tracking-widest text-gray-400 uppercase mb-2">
-            向いている活動
+            活きやすい場
+          </p>
+          <p className="text-xs text-gray-600 leading-relaxed">
+            {type.comfortableEnvironment}
+          </p>
+        </div>
+
+        <div>
+          <p className="text-xs font-medium tracking-widest text-gray-400 uppercase mb-2">
+            試しやすい活動
           </p>
           <div className="flex flex-wrap gap-2">
-            {type.activities.map((a) => (
+            {type.recommendedActivities.map((a) => (
               <span
                 key={a}
                 className="text-xs text-gray-600 border-b border-dashed border-gray-300"
