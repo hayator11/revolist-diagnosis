@@ -35,6 +35,19 @@ export const RESEARCH_PROJECTS = {
     shortTitle: "Energy Light",
     description: "21問で5つのエネルギーと11タイプを見つける別構成の研究版です。",
   },
+  onokunSatooya11: {
+    project: "onokun_satooya_11",
+    type: "onokun_beta",
+    slug: "onokun-satooya-11-v1",
+    diagnosisVersion: "onokun-satooya-11-v1",
+    questionVersion: "onokun-satooya-v1-q33-rpg",
+    logicVersion: "onokun-satooya-v1-evidence-map",
+    resultVersion: "onokun-satooya-v1-r1",
+    title: "おのくん里親さん 11ご縁タイプ診断",
+    shortTitle: "Onokun Satooya",
+    description:
+      "33問のRPG型選択式で、おのくんとのご縁の育て方を見つける研究版診断です。",
+  },
   birthRhythm: {
     project: "birth_rhythm",
     type: "beta",
@@ -53,6 +66,7 @@ export const RESEARCH_PROJECTS = {
 export const REVOLIST_11_LIGHT_META = RESEARCH_PROJECTS.revolist11Light;
 export const ENERGY_LIGHT_META = RESEARCH_PROJECTS.energyLight;
 export const ICEBREAK_11_META = RESEARCH_PROJECTS.icebreak11;
+export const ONOKUN_SATOOYA_11_META = RESEARCH_PROJECTS.onokunSatooya11;
 
 export function getResearchVersionFields() {
   return {
@@ -84,5 +98,16 @@ export function getIcebreak11VersionFields() {
     questionVersion: ICEBREAK_11_META.questionVersion,
     logicVersion: ICEBREAK_11_META.logicVersion,
     resultVersion: ICEBREAK_11_META.resultVersion,
+  };
+}
+
+export function getOnokunSatooya11VersionFields() {
+  return {
+    researchProject: ONOKUN_SATOOYA_11_META.project,
+    researchType: ONOKUN_SATOOYA_11_META.type,
+    diagnosisVersion: ONOKUN_SATOOYA_11_META.diagnosisVersion,
+    questionVersion: ONOKUN_SATOOYA_11_META.questionVersion,
+    logicVersion: ONOKUN_SATOOYA_11_META.logicVersion,
+    resultVersion: ONOKUN_SATOOYA_11_META.resultVersion,
   };
 }
