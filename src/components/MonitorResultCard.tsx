@@ -63,6 +63,10 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 
 // ── Role 結果 ───────────────────────────────────────────────────────
 function RoleResultBody({ result, accent }: { result: MonitorRoleResult; accent: string }) {
+  const possibilityPartners = result.possibilityPartners
+    ?.map((partner) => revoTypes[partner.key])
+    .filter(Boolean);
+
   return (
     <div className="space-y-8">
       {/* 役割カード群 */}
@@ -79,6 +83,23 @@ function RoleResultBody({ result, accent }: { result: MonitorRoleResult; accent:
         <SectionLabel>あなたの立ち位置</SectionLabel>
         <p className="text-2xl font-bold text-black">{result.positionLabel}</p>
       </div>
+
+      {possibilityPartners && possibilityPartners.length > 0 && (
+        <div className="rounded-2xl bg-gray-50 p-5">
+          <SectionLabel>可能性を引き出し合いやすい相手</SectionLabel>
+          <div className="space-y-3">
+            {possibilityPartners.slice(0, 2).map((partner) => (
+              <div key={partner.key}>
+                <p className="text-base font-bold text-black">{partner.name}</p>
+                <p className="text-xs text-gray-500 leading-relaxed">{partner.catchcopy}</p>
+              </div>
+            ))}
+          </div>
+          <p className="text-xs text-gray-400 leading-relaxed mt-4">
+            合う・合わないを決めるものではなく、会話やチーム作りのきっかけとして使ってください。
+          </p>
+        </div>
+      )}
 
       {/* 渡しているもの */}
       <div>

@@ -9,7 +9,11 @@ const ANSWER_LABELS = [
 ];
 
 interface Props {
-  question: { id: number; text: string };
+  question: {
+    id: number;
+    text: string;
+    choices?: { value: string; label: string }[];
+  };
   totalQuestions: number;
   onAnswer: (value: number) => void;
   currentAnswer?: number;
@@ -24,6 +28,10 @@ export default function MonitorQuestion({
   accentColor = "#dc2626",
 }: Props) {
   const progress = ((question.id - 1) / totalQuestions) * 100;
+  const answerChoices = question.choices ?? ANSWER_LABELS.map((label, index) => ({
+    value: String(index + 1),
+    label,
+  }));
 
   return (
     <div className="min-h-screen flex flex-col px-6 py-10">
@@ -55,11 +63,12 @@ export default function MonitorQuestion({
 
         {/* Answer buttons */}
         <div className="flex flex-col gap-3">
-          {[1, 2, 3, 4, 5].map((value) => {
+          {answerChoices.map((answer, index) => {
+            const value = index + 1;
             const isSelected = currentAnswer === value;
             return (
               <button
-                key={value}
+                key={answer.value}
                 onClick={() => onAnswer(value)}
                 className={`
                   w-full py-4 px-5 rounded-2xl text-left transition-all duration-200
@@ -77,10 +86,10 @@ export default function MonitorQuestion({
                     ${isSelected ? "border-white text-white" : "border-gray-300 text-gray-400"}
                   `}
                 >
-                  {value}
+                  {question.choices ? answer.value : value}
                 </span>
                 <span className="text-sm font-medium whitespace-pre-line">
-                  {ANSWER_LABELS[value - 1]}
+                  {answer.label}
                 </span>
               </button>
             );

@@ -9,6 +9,11 @@ import { revoTypes } from "@/data/revotypes";
 import type { MonitorDiagnosisKey } from "@/data/monitorQuestions";
 import { monitorQuestionsMap } from "@/data/monitorQuestions";
 import {
+  MONITOR_SCENARIO_VERSION,
+  monitorScenarioQuestions,
+  type MonitorScenarioAxisKey,
+} from "@/data/monitorScenarioQuestions";
+import {
   roleResultText,
   teamResultText,
   matchResultText,
@@ -21,22 +26,24 @@ export interface MonitorTypeScore {
   percentage: number;
 }
 
-// ── 共通スコア計算 ────────────────────────────────────────────────────
-function calcScores(answers: number[], diagKey: MonitorDiagnosisKey): MonitorTypeScore[] {
-  const questions = monitorQuestionsMap[diagKey];
-  const raw: Record<RevoTypeKey, number> = {
-    revolist: 0, maxdesigner: 0, imagemaister: 0, communicator: 0,
-    inforader: 0, movmentor: 0, premiercrafter: 0, logicalmaister: 0,
-    arranger: 0, soulowner: 0, crazist: 0,
-  };
+const emptyRoleScores = (): Record<RevoTypeKey, number> => ({
+  revolist: 0, maxdesigner: 0, imagemaister: 0, communicator: 0,
+  inforader: 0, movmentor: 0, premiercrafter: 0, logicalmaister: 0,
+  arranger: 0, soulowner: 0, crazist: 0,
+});
 
-  questions.forEach((q, i) => {
-    const value = answers[i] ?? 3;
-    for (const [key, weight] of Object.entries(q.scores)) {
-      raw[key as RevoTypeKey] += (weight as number) * value;
-    }
-  });
+const emptyAxisScores = (): Record<MonitorScenarioAxisKey, number> => ({
+  self: 0,
+  other: 0,
+  field: 0,
+  future: 0,
+  structure: 0,
+  expression: 0,
+  care: 0,
+  action: 0,
+});
 
+function toSortedScores(raw: Record<RevoTypeKey, number>): MonitorTypeScore[] {
   const maxScore = Math.max(...Object.values(raw));
   return (Object.keys(raw) as RevoTypeKey[])
     .map((key) => ({
@@ -47,6 +54,57 @@ function calcScores(answers: number[], diagKey: MonitorDiagnosisKey): MonitorTyp
     .sort((a, b) => b.score - a.score);
 }
 
+function addRoleScores(
+  target: Record<RevoTypeKey, number>,
+  source: Partial<Record<RevoTypeKey, number>> | undefined,
+  multiplier = 1
+) {
+  if (!source) return;
+  for (const [key, value] of Object.entries(source)) {
+    target[key as RevoTypeKey] += (value ?? 0) * multiplier;
+  }
+}
+
+// ── 共通スコア計算 ────────────────────────────────────────────────────
+function calcScores(answers: number[], diagKey: MonitorDiagnosisKey): MonitorTypeScore[] {
+  const questions = monitorQuestionsMap[diagKey];
+  const raw = emptyRoleScores();
+
+  questions.forEach((q, i) => {
+    const value = answers[i] ?? 3;
+    for (const [key, weight] of Object.entries(q.scores)) {
+      raw[key as RevoTypeKey] += (weight as number) * value;
+    }
+  });
+
+  return toSortedScores(raw);
+}
+
+function calcScenarioScores(answers: number[]) {
+  const direct = emptyRoleScores();
+  const mirror = emptyRoleScores();
+  const axis = emptyAxisScores();
+
+  monitorScenarioQuestions.forEach((question, index) => {
+    const answerIndex = (answers[index] ?? 3) - 1;
+    const selected = question.choices[answerIndex] ?? question.choices[2];
+
+    addRoleScores(direct, selected.directRoles, 1);
+    addRoleScores(direct, selected.secondaryRoles, 0.65);
+    addRoleScores(mirror, selected.mirrorSignals, 1);
+
+    for (const [key, value] of Object.entries(selected.axisSignals ?? {})) {
+      axis[key as MonitorScenarioAxisKey] += value ?? 0;
+    }
+  });
+
+  return {
+    directScores: toSortedScores(direct),
+    mirrorScores: toSortedScores(mirror),
+    axisScores: axis,
+  };
+}
+
 // ── Revo Role 結果 ────────────────────────────────────────────────────
 export interface MonitorRoleResult {
   type: "role";
@@ -54,6 +112,9 @@ export interface MonitorRoleResult {
   sub: MonitorTypeScore;
   auxiliary: MonitorTypeScore;
   allScores: MonitorTypeScore[];
+  possibilityPartners?: MonitorTypeScore[];
+  axisScores?: Record<MonitorScenarioAxisKey, number>;
+  scenarioVersion?: string;
   // 渡しているもの（givesから）
   gives: string[];
   // 受け取ると潤うもの（receivesから）
@@ -64,12 +125,18 @@ export interface MonitorRoleResult {
 }
 
 export function calculateRoleResult(answers: number[]): MonitorRoleResult {
-  const allScores = calcScores(answers, "role");
+  const scenarioResult = answers.length === monitorScenarioQuestions.length
+    ? calcScenarioScores(answers)
+    : null;
+  const allScores = scenarioResult?.directScores ?? calcScores(answers, "role");
   const [main, sub, auxiliary] = allScores;
   const mainType = revoTypes[main.key];
   return {
     type: "role",
     main, sub, auxiliary, allScores,
+    possibilityPartners: scenarioResult?.mirrorScores.slice(0, 3),
+    axisScores: scenarioResult?.axisScores,
+    scenarioVersion: scenarioResult ? MONITOR_SCENARIO_VERSION : undefined,
     gives: mainType.gives,
     receives: mainType.receives,
     positionLabel: roleResultText[main.key].position,

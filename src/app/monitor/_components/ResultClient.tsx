@@ -12,8 +12,9 @@ import {
   calculateGrowthResult,
 } from "@/lib/calculateMonitorResult";
 import type { MonitorDiagnosisKey } from "@/data/monitorQuestions";
+import { MONITOR_SCENARIO_TOTAL_QUESTIONS } from "@/data/monitorScenarioQuestions";
 
-const TOTAL_QUESTIONS = 18;
+const LEGACY_TOTAL_QUESTIONS = 18;
 
 interface Props {
   diagKey: MonitorDiagnosisKey;
@@ -26,7 +27,13 @@ export default function ResultClient({ diagKey }: Props) {
   const result = useMemo(() => {
     if (!encoded) return null;
     const answers = decodeMonitorAnswers(encoded);
-    if (answers.length !== TOTAL_QUESTIONS || answers.some(isNaN)) return null;
+    const expectedQuestions = diagKey === "role"
+      ? MONITOR_SCENARIO_TOTAL_QUESTIONS
+      : LEGACY_TOTAL_QUESTIONS;
+    if (
+      answers.length !== expectedQuestions ||
+      answers.some((answer) => Number.isNaN(answer) || answer < 1 || answer > 5)
+    ) return null;
 
     switch (diagKey) {
       case "role":   return calculateRoleResult(answers);

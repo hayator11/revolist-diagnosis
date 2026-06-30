@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import MonitorQuestion from "@/components/MonitorQuestion";
 import type { MonitorDiagnosisKey } from "@/data/monitorQuestions";
 import { monitorQuestionsMap } from "@/data/monitorQuestions";
+import { monitorScenarioQuestions } from "@/data/monitorScenarioQuestions";
 import { monitorDiagnosisMeta } from "@/data/monitorResults";
 import { encodeMonitorAnswers } from "@/lib/calculateMonitorResult";
 import Link from "next/link";
@@ -15,7 +16,7 @@ interface Props {
 
 export default function DiagnosisClient({ diagKey }: Props) {
   const router = useRouter();
-  const questions = monitorQuestionsMap[diagKey];
+  const questions = diagKey === "role" ? monitorScenarioQuestions : monitorQuestionsMap[diagKey];
   const meta = monitorDiagnosisMeta[diagKey];
 
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -50,10 +51,10 @@ export default function DiagnosisClient({ diagKey }: Props) {
 
         {/* 説明 */}
         <ul className="text-xs text-gray-500 mb-10 space-y-1 text-left">
-          <li>・ 18問・約2分の診断です</li>
+          <li>・ {questions.length}問・直感で進める診断です</li>
           <li>・ 正解も不正解もありません</li>
-          <li>・ 今の自分に当てはまるかで答えてください</li>
-          <li>・ 直感で答えてください</li>
+          <li>・ 場面を読んで、いちばん近い動きを選んでください</li>
+          <li>・ どの選択肢にも、それぞれの持ち味があります</li>
         </ul>
 
         <button

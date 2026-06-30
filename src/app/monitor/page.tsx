@@ -12,10 +12,11 @@ const diagCards = [
   {
     key: "role",
     title: "Revo Role",
-    desc: "あなたは今、どんな役割を強く使っているのか。\n主役割・サブ役割・補助役割を見つけます。",
+    desc: "場面を選びながら、あなたが何を持ち寄る人なのか。\n11役割と、可能性を引き出し合いやすい相手を見つけます。",
     accent: "#dc2626",
     label: "Role",
     badge: "01",
+    questions: 44,
   },
   {
     key: "team",
@@ -24,6 +25,7 @@ const diagCards = [
     accent: "#2563eb",
     label: "Team",
     badge: "02",
+    questions: 18,
   },
   {
     key: "match",
@@ -32,6 +34,7 @@ const diagCards = [
     accent: "#16a34a",
     label: "Match",
     badge: "03",
+    questions: 18,
   },
   {
     key: "growth",
@@ -40,6 +43,7 @@ const diagCards = [
     accent: "#9333ea",
     label: "Growth",
     badge: "04",
+    questions: 18,
   },
 ];
 
@@ -124,7 +128,7 @@ export default function MonitorPage() {
                     <h2 className="text-xl font-bold text-black mt-1">{card.title}</h2>
                   </div>
                   <span className="text-xs text-gray-300 font-light tracking-widest uppercase">
-                    18 Questions
+                    {card.questions} Questions
                   </span>
                 </div>
                 <p className="text-sm text-gray-600 leading-relaxed mb-6 whitespace-pre-line">
