@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { revoTypes } from "@/data/revotypes";
 import { monitorDiagnosisMeta } from "@/data/monitorResults";
@@ -416,6 +416,29 @@ function ShareSection({ result }: { result: MonitorResult }) {
 export default function MonitorResultCard({ result }: Props) {
   const meta = monitorDiagnosisMeta[result.type];
   const mainType = revoTypes[result.main.key];
+
+  useEffect(() => {
+    const currentUrl = window.location.href;
+    const storageKey = `monitor-run-counter:${result.type}:${currentUrl}`;
+    if (window.sessionStorage.getItem(storageKey)) return;
+
+    fetch("/api/diagnosis-run-counter", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        monitorType: result.type,
+        eventType: "diagnosis_complete",
+        source: "monitor-result-card",
+        diagnosisId: currentUrl,
+      }),
+    })
+      .then(() => {
+        window.sessionStorage.setItem(storageKey, "true");
+      })
+      .catch(() => {
+        // Counter logging should not block result display.
+      });
+  }, [result.type]);
 
   return (
     <div className="max-w-lg mx-auto px-6 py-12">

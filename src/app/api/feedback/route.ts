@@ -1,4 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
+import {
+  getCountableDiagnosisKeyFromFeedback,
+  incrementDiagnosisRunCounterSafely,
+} from "@/lib/diagnosisRunCounter";
 
 const DEFAULT_GOOGLE_SCRIPT_URL =
   "https://script.google.com/macros/s/AKfycbxTRMnBqTzZINQVIzx9RCWrXR5t5n90NJ8sj_0XE-zIgUM2wDTDWDsQlPCVOD-GVN8x/exec";
@@ -37,6 +41,21 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const googleScriptUrl = getGoogleScriptUrl(body?.type, body?.formType);
+    const diagnosisKey = getCountableDiagnosisKeyFromFeedback(body);
+
+    if (diagnosisKey) {
+      await incrementDiagnosisRunCounterSafely({
+        diagnosisKey,
+        eventType: "diagnosis_complete",
+        source: "feedback-api",
+        payload: {
+          type: typeof body?.type === "string" ? body.type : null,
+          formType: typeof body?.formType === "string" ? body.formType : null,
+          diagnosisId: typeof body?.diagnosisId === "string" ? body.diagnosisId : null,
+          diagnosisType: typeof body?.diagnosisType === "string" ? body.diagnosisType : null,
+        },
+      });
+    }
 
     const response = await fetch(googleScriptUrl, {
       method: "POST",
