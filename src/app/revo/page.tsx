@@ -77,13 +77,13 @@ const revoProjects = [
     label: "REVO SERIES",
     title: "レボリンク",
     body: "企業協賛や広告を、地域・防災・アートを支える流れへ変える仕組み。",
-    href: "https://revofunding.onokun.com/project-revolinks.html",
+    href: "https://onokun.com/revolink/",
   },
   {
     label: "REVO SERIES",
     title: "レボハット",
     body: "帽子文化を入口に、ものづくり・表現・防災体験をつなげる活動。",
-    href: "https://revofunding.onokun.com/shop.html",
+    href: "https://onokun.com/revohat/",
   },
   {
     label: "SUPPORT",
@@ -101,7 +101,7 @@ const revoProjects = [
     label: "FOUNDATION",
     title: "防災×帽祭",
     body: "防災を身近に、楽しく、話しやすいものとして届ける活動。",
-    href: "https://revolist.earth/bosai-bosai",
+    href: "https://onokun.com/bosai/",
   },
 ];
 
@@ -225,7 +225,7 @@ export default function RevoPage() {
                 </g>
                 </a>
 
-                <a href="https://revofunding.onokun.com/project-revolinks.html" target="_blank" rel="noreferrer" aria-label="レボリンクのページへ" className="cursor-pointer">
+                <a href="https://onokun.com/revolink/" target="_blank" rel="noreferrer" aria-label="レボリンクのページへ" className="cursor-pointer">
                 <g>
                   <rect x="480" y="154" width="164" height="64" rx="18" fill="#f0fdf4" stroke="#22c55e" strokeWidth="2" />
                   <text x="562" y="180" textAnchor="middle" fontSize="10" fontWeight="800" fill="#64748b">REVO SERIES</text>
@@ -233,7 +233,7 @@ export default function RevoPage() {
                 </g>
                 </a>
 
-                <a href="https://revofunding.onokun.com/shop.html" target="_blank" rel="noreferrer" aria-label="レボハットのページへ" className="cursor-pointer">
+                <a href="https://onokun.com/revohat/" target="_blank" rel="noreferrer" aria-label="レボハットのページへ" className="cursor-pointer">
                 <g>
                   <rect x="40" y="322" width="174" height="64" rx="18" fill="#eff6ff" stroke="#3b82f6" strokeWidth="2" />
                   <text x="127" y="348" textAnchor="middle" fontSize="10" fontWeight="800" fill="#64748b">REVO SERIES</text>
@@ -257,7 +257,7 @@ export default function RevoPage() {
                 </g>
                 </a>
 
-                <a href="https://revolist.earth/bosai-bosai" target="_blank" rel="noreferrer" aria-label="防災×帽祭のページへ" className="cursor-pointer">
+                <a href="https://onokun.com/bosai/" target="_blank" rel="noreferrer" aria-label="防災×帽祭のページへ" className="cursor-pointer">
                 <g>
                   <rect x="394" y="448" width="188" height="54" rx="18" fill="#fffbeb" stroke="#eab308" strokeWidth="2" />
                   <text x="488" y="470" textAnchor="middle" fontSize="10" fontWeight="800" fill="#64748b">FOUNDATION</text>
