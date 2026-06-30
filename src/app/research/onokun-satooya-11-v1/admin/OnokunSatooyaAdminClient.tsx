@@ -28,6 +28,8 @@ interface LatestResult {
 }
 
 interface AdminStats {
+  setupRequired?: boolean;
+  setupReason?: string | null;
   totalDiagnosisCount: number;
   counterUpdatedAt: string | null;
   sampledResultCount: number;
@@ -186,6 +188,25 @@ export default function OnokunSatooyaAdminClient() {
 
         {state === "ready" && stats && (
           <div className="space-y-6">
+            {stats.setupRequired && (
+              <section className="rounded-[8px] border border-[#F6A04D] bg-white p-6 shadow-sm">
+                <p className="mb-2 text-xs font-black text-[#F06F8F]">DATABASE SETUP</p>
+                <h2 className="mb-3 text-xl font-black">Supabaseの初期設定がまだ必要です</h2>
+                <p className="text-sm font-bold leading-relaxed text-[#3A2A1E]/70">
+                  管理画面へのログインはできています。集計を表示するには、
+                  <span className="font-black text-[#164F9E]">
+                    docs/onokun/onokun-satooya-supabase-counter-schema.sql
+                  </span>
+                  をSupabaseで実行してください。
+                </p>
+                {stats.setupReason && (
+                  <p className="mt-4 rounded-[8px] bg-[#FFF8EA] px-4 py-3 text-xs font-black text-[#F06F8F]">
+                    {stats.setupReason}
+                  </p>
+                )}
+              </section>
+            )}
+
             <section className="grid gap-4 sm:grid-cols-3">
               <MetricCard
                 label="総診断回数"

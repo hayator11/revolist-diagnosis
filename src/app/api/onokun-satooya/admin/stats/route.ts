@@ -47,6 +47,22 @@ function aggregateDeviceCounts(rows: OnokunResultRow[]) {
     .sort((a, b) => b.count - a.count);
 }
 
+function createEmptyStats(setupRequired: boolean, setupReason: string | null) {
+  return {
+    result: "success",
+    authenticated: true,
+    project: ONOKUN_SATOOYA_11_META.project,
+    setupRequired,
+    setupReason,
+    totalDiagnosisCount: 0,
+    counterUpdatedAt: null,
+    sampledResultCount: 0,
+    typeCounts: [],
+    deviceCounts: [],
+    latestResults: [],
+  };
+}
+
 export async function GET(req: NextRequest) {
   if (!isOnokunAdminRequest(req)) {
     return NextResponse.json(
@@ -73,10 +89,7 @@ export async function GET(req: NextRequest) {
     .maybeSingle();
 
   if (counterError) {
-    return NextResponse.json(
-      { result: "error", authenticated: true, reason: "counter_fetch_failed" },
-      { status: 500 },
-    );
+    return NextResponse.json(createEmptyStats(true, "counter_fetch_failed"));
   }
 
   const { data: rows, error: rowsError } = await supabase
@@ -101,10 +114,7 @@ export async function GET(req: NextRequest) {
     .limit(500);
 
   if (rowsError) {
-    return NextResponse.json(
-      { result: "error", authenticated: true, reason: "results_fetch_failed" },
-      { status: 500 },
-    );
+    return NextResponse.json(createEmptyStats(true, "results_fetch_failed"));
   }
 
   const resultRows = ((rows ?? []) as unknown) as OnokunResultRow[];
@@ -113,6 +123,8 @@ export async function GET(req: NextRequest) {
     result: "success",
     authenticated: true,
     project: ONOKUN_SATOOYA_11_META.project,
+    setupRequired: false,
+    setupReason: null,
     totalDiagnosisCount: Number(counter?.total_count ?? 0),
     counterUpdatedAt: counter?.updated_at ?? null,
     sampledResultCount: resultRows.length,
