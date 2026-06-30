@@ -11,6 +11,7 @@ import type {
   MonitorMatchResult,
   MonitorGrowthResult,
 } from "@/lib/calculateMonitorResult";
+import type { MonitorScenarioAxisKey } from "@/data/monitorScenarioQuestions";
 
 interface Props {
   result: MonitorResult;
@@ -61,11 +62,55 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
   );
 }
 
+const AXIS_COPY: Record<MonitorScenarioAxisKey, { label: string; text: string }> = {
+  self: {
+    label: "自分の内側",
+    text: "自分の感覚や納得感を大切にしながら、役割を見つけていく傾向があります。",
+  },
+  other: {
+    label: "相手との関係",
+    text: "相手の反応や関係性の中から、自然な動き方を見つけやすい傾向があります。",
+  },
+  field: {
+    label: "場の流れ",
+    text: "人や情報がどう配置されると動きやすいか、場全体を見ながら力を出しやすい傾向があります。",
+  },
+  future: {
+    label: "未来の可能性",
+    text: "まだ形になっていない可能性や、次に開けそうな展開に目が向きやすい傾向があります。",
+  },
+  structure: {
+    label: "構造と整理",
+    text: "考えや流れを整理し、動きやすい形にすることで力が出やすい傾向があります。",
+  },
+  expression: {
+    label: "表現と伝わり方",
+    text: "想いや世界観がどう伝わるかを大切にしながら、場に意味を届けやすい傾向があります。",
+  },
+  care: {
+    label: "安心と余白",
+    text: "人が自然体でいられる空気や、挑戦が続く土台を大切にしやすい傾向があります。",
+  },
+  action: {
+    label: "具体的な一歩",
+    text: "小さく動かしてみることや、次の一歩を置くことで可能性を開きやすい傾向があります。",
+  },
+};
+
+function getTopAxes(axisScores?: Record<MonitorScenarioAxisKey, number>) {
+  if (!axisScores) return [];
+  return (Object.entries(axisScores) as [MonitorScenarioAxisKey, number][])
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 2)
+    .map(([key]) => ({ key, ...AXIS_COPY[key] }));
+}
+
 // ── Role 結果 ───────────────────────────────────────────────────────
 function RoleResultBody({ result, accent }: { result: MonitorRoleResult; accent: string }) {
   const possibilityPartners = result.possibilityPartners
     ?.map((partner) => revoTypes[partner.key])
     .filter(Boolean);
+  const topAxes = getTopAxes(result.axisScores);
 
   return (
     <div className="space-y-8">
@@ -96,8 +141,22 @@ function RoleResultBody({ result, accent }: { result: MonitorRoleResult; accent:
             ))}
           </div>
           <p className="text-xs text-gray-400 leading-relaxed mt-4">
-            合う・合わないを決めるものではなく、会話やチーム作りのきっかけとして使ってください。
+            関係を固定するものではなく、会話やチーム作りのきっかけとして使ってください。
           </p>
+        </div>
+      )}
+
+      {topAxes.length > 0 && (
+        <div className="rounded-2xl border border-gray-200 p-5">
+          <SectionLabel>あなたが場で見ているもの</SectionLabel>
+          <div className="space-y-4">
+            {topAxes.map((axis) => (
+              <div key={axis.key}>
+                <p className="text-sm font-bold text-black mb-1">{axis.label}</p>
+                <p className="text-xs text-gray-500 leading-relaxed">{axis.text}</p>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
