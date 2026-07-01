@@ -274,7 +274,7 @@ function LandingStory({ onStart }: { onStart: () => void }) {
             <QuestCard
               label="第3章"
               title="ご縁を広げる"
-              body="LINE、Discord、防災×帽祭へ。楽しいから集まり、つながりが備えになる流れへ進みます。"
+              body="親バカサロンで話し、希望する人が協力へ。楽しいから集まり、つながりが備えになる流れへ進みます。"
             />
           </div>
         </div>

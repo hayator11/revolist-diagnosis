@@ -449,8 +449,8 @@ export const onokunSatooyaQuestions: OnokunSatooyaQuestion[] = [
     id: "q23",
     chapter: "quest",
     chapterTitle: "第3章 ご縁を広げるクエスト",
-    scene: "Discordで関わるなら",
-    text: "Discordで企画や準備に関わるなら、近い役割は？",
+    scene: "親バカサロンの先で協力するなら",
+    text: "親バカサロンで交流したあと、希望者として企画や準備に関わるなら近い役割は？",
     primaryType: "word-tuner",
     primaryCluster: "tell",
     choices: [

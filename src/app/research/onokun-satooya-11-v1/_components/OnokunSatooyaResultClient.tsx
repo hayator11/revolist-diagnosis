@@ -296,11 +296,14 @@ export default function OnokunSatooyaResultClient() {
           </article>
           <article className="rounded-[8px] bg-white p-6 shadow-sm">
             <p className="mb-2 text-xs font-black tracking-[0.16em] text-[#F06F8F]">
-              NEXT QUEST
+              COOPERATION
             </p>
-            <h2 className="mb-3 text-xl font-black">もう少し関わるなら</h2>
-            <p className="text-sm font-bold leading-relaxed text-[#3A2A1E]/75">
+            <h2 className="mb-3 text-xl font-black">協力してみたくなったら</h2>
+            <p className="mb-3 text-sm font-bold leading-relaxed text-[#3A2A1E]/75">
               {resultState.questBridge}
+            </p>
+            <p className="text-sm font-bold leading-relaxed text-[#3A2A1E]/75">
+              企画や準備にもう少し関わってみたい方は、まず親バカサロン内で声をかけてください。ほかの里親さんとの交流から、希望者向けの協力の場へつないでいきます。
             </p>
           </article>
         </section>
