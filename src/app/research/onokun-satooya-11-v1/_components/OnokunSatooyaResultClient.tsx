@@ -15,6 +15,8 @@ import {
 } from "../_lib/onokunSatooyaTracking";
 
 const DIAGNOSIS_PATH = "/research/onokun-satooya-11-v1";
+const ONOKUN_OPEN_CHAT_URL =
+  "https://line.me/ti/g2/l_r88aCvFnX6D6JqjLQBnIi1zhEatqT-tk2c4Q?utm_source=invitation&utm_medium=link_copy&utm_campaign=default";
 
 export default function OnokunSatooyaResultClient() {
   const searchParams = useSearchParams();
@@ -280,9 +282,17 @@ export default function OnokunSatooyaResultClient() {
               LINE
             </p>
             <h2 className="mb-3 text-xl font-black">気軽に話すなら</h2>
-            <p className="text-sm font-bold leading-relaxed text-[#3A2A1E]/75">
-              うちの子自慢や今日の里親ミッションは、LINEオープンチャットで話しやすい入口です。
+            <p className="mb-5 text-sm font-bold leading-relaxed text-[#3A2A1E]/75">
+              うちの子自慢や今日の里親ミッションは、オープンチャット「おのくん親バカサロン」で話しやすい入口です。
             </p>
+            <a
+              href={ONOKUN_OPEN_CHAT_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex rounded-full bg-[#164F9E] px-5 py-3 text-sm font-black text-white shadow-[0_5px_0_#0d3670] transition-transform hover:-translate-y-0.5 active:translate-y-1 active:shadow-[0_2px_0_#0d3670]"
+            >
+              親バカサロンを開く
+            </a>
           </article>
           <article className="rounded-[8px] bg-white p-6 shadow-sm">
             <p className="mb-2 text-xs font-black tracking-[0.16em] text-[#F06F8F]">

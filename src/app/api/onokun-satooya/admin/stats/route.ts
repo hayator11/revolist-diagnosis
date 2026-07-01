@@ -63,9 +63,15 @@ function createEmptyStats(setupRequired: boolean, setupReason: string | null) {
   };
 }
 
+function createAdminStatsResponse(body: unknown, init?: ResponseInit) {
+  const response = NextResponse.json(body, init);
+  response.headers.set("Cache-Control", "no-store, max-age=0");
+  return response;
+}
+
 export async function GET(req: NextRequest) {
   if (!isOnokunAdminRequest(req)) {
-    return NextResponse.json(
+    return createAdminStatsResponse(
       { result: "error", authenticated: false, reason: "unauthorized" },
       { status: 401 },
     );
@@ -76,7 +82,7 @@ export async function GET(req: NextRequest) {
   try {
     supabase = createSupabaseServerClient();
   } catch {
-    return NextResponse.json(
+    return createAdminStatsResponse(
       { result: "error", authenticated: true, reason: "database_not_configured" },
       { status: 503 },
     );
@@ -89,7 +95,7 @@ export async function GET(req: NextRequest) {
     .maybeSingle();
 
   if (counterError) {
-    return NextResponse.json(createEmptyStats(true, "counter_fetch_failed"));
+    return createAdminStatsResponse(createEmptyStats(true, "counter_fetch_failed"));
   }
 
   const { data: rows, error: rowsError } = await supabase
@@ -114,12 +120,12 @@ export async function GET(req: NextRequest) {
     .limit(500);
 
   if (rowsError) {
-    return NextResponse.json(createEmptyStats(true, "results_fetch_failed"));
+    return createAdminStatsResponse(createEmptyStats(true, "results_fetch_failed"));
   }
 
   const resultRows = ((rows ?? []) as unknown) as OnokunResultRow[];
 
-  return NextResponse.json({
+  return createAdminStatsResponse({
     result: "success",
     authenticated: true,
     project: ONOKUN_SATOOYA_11_META.project,

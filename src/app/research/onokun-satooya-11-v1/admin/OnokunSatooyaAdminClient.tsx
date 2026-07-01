@@ -107,8 +107,12 @@ export default function OnokunSatooyaAdminClient() {
   const handleLogout = async () => {
     await fetch("/api/onokun-satooya/admin/logout", { method: "POST" });
     setStats(null);
+    setMessage("");
+    setPassword("");
     setState("login");
   };
+
+  const isAuthenticatedView = state === "ready" || state === "error";
 
   return (
     <main className="min-h-screen bg-[#FFF8EA] px-5 py-8 text-[#3A2A1E] sm:px-8">
@@ -121,13 +125,18 @@ export default function OnokunSatooyaAdminClient() {
             <h1 className="text-3xl font-black leading-tight sm:text-5xl">運営管理</h1>
           </div>
           <div className="flex flex-wrap gap-3">
+            {isAuthenticatedView && (
+              <span className="rounded-[8px] bg-[#F7D35B] px-4 py-3 text-sm font-black text-[#3A2A1E]">
+                ログイン中
+              </span>
+            )}
             <Link
               href="/research/onokun-satooya-11-v1"
               className="rounded-[8px] bg-white px-4 py-3 text-sm font-black text-[#164F9E] shadow-sm"
             >
               診断ページへ
             </Link>
-            {state === "ready" && (
+            {isAuthenticatedView && (
               <button
                 type="button"
                 onClick={handleLogout}
@@ -173,6 +182,9 @@ export default function OnokunSatooyaAdminClient() {
         {state === "error" && (
           <section className="rounded-[8px] bg-white p-6 shadow-sm">
             <p className="mb-4 text-sm font-bold text-[#F06F8F]">{message}</p>
+            <p className="mb-4 text-sm font-bold leading-relaxed text-[#3A2A1E]/70">
+              管理ログインは有効です。作業を終える場合は右上のログアウトで管理セッションを切ってください。
+            </p>
             <button
               type="button"
               onClick={() => {
