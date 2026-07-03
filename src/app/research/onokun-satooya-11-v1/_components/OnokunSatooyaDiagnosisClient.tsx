@@ -11,9 +11,12 @@ import {
 import { onokunSatooyaTypes } from "../_data/onokunSatooyaTypes";
 import { encodeOnokunSatooyaAnswers } from "../_lib/calculateOnokunSatooyaResult";
 
+const ONOKUN_CHILD_NAME_SESSION_KEY = "onokun-satooya-child-name";
+
 export default function OnokunSatooyaDiagnosisClient() {
   const router = useRouter();
   const [started, setStarted] = useState(false);
+  const [childName, setChildName] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<number[]>([]);
   const [isAdvancing, setIsAdvancing] = useState(false);
@@ -22,6 +25,22 @@ export default function OnokunSatooyaDiagnosisClient() {
   const progress = Math.round(((currentIndex + 1) / ONOKUN_SATOOYA_TOTAL_QUESTIONS) * 100);
 
   useOnokunShell();
+
+  const handleChildNameChange = useCallback((value: string) => {
+    setChildName(value.replace(/\s+/g, " ").slice(0, 24));
+  }, []);
+
+  const handleStart = useCallback(() => {
+    const normalizedName = childName.trim();
+
+    if (normalizedName) {
+      window.sessionStorage.setItem(ONOKUN_CHILD_NAME_SESSION_KEY, normalizedName);
+    } else {
+      window.sessionStorage.removeItem(ONOKUN_CHILD_NAME_SESSION_KEY);
+    }
+
+    setStarted(true);
+  }, [childName]);
 
   const handleAnswer = useCallback(
     (value: OnokunAnswerValue) => {
@@ -49,8 +68,16 @@ export default function OnokunSatooyaDiagnosisClient() {
   if (!started) {
     return (
       <main className="min-h-screen bg-[#FFF8EA] text-[#3A2A1E]">
-        <HeroSection onStart={() => setStarted(true)} />
-        <LandingStory onStart={() => setStarted(true)} />
+        <HeroSection
+          childName={childName}
+          onChildNameChange={handleChildNameChange}
+          onStart={handleStart}
+        />
+        <LandingStory
+          childName={childName}
+          onChildNameChange={handleChildNameChange}
+          onStart={handleStart}
+        />
       </main>
     );
   }
@@ -143,7 +170,15 @@ function useOnokunShell() {
   }, []);
 }
 
-function HeroSection({ onStart }: { onStart: () => void }) {
+function HeroSection({
+  childName,
+  onChildNameChange,
+  onStart,
+}: {
+  childName: string;
+  onChildNameChange: (value: string) => void;
+  onStart: () => void;
+}) {
   return (
     <section className="relative min-h-[92vh] overflow-hidden bg-[#164F9E]">
       <Image
@@ -188,13 +223,29 @@ function HeroSection({ onStart }: { onStart: () => void }) {
         </div>
 
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-          <button
-            type="button"
-            onClick={onStart}
-            className="w-full rounded-[8px] bg-[#F06F8F] px-7 py-4 text-base font-black text-white shadow-[0_8px_0_#B84E68] transition-transform hover:-translate-y-0.5 active:translate-y-1 active:shadow-[0_3px_0_#B84E68] sm:w-auto"
-          >
-            ちょっと診断してみる
-          </button>
+          <div className="w-full rounded-[8px] bg-white/94 p-4 text-[#3A2A1E] shadow-sm sm:max-w-md">
+            <label className="mb-2 block text-xs font-black text-[#164F9E]">
+              うちの子のお名前・ニックネーム 任意
+            </label>
+            <input
+              type="text"
+              value={childName}
+              onChange={(event) => onChildNameChange(event.target.value)}
+              maxLength={24}
+              placeholder="例: まめお / おのちゃん"
+              className="mb-2 w-full rounded-[8px] border border-[#E8DCC4] bg-[#FFF8EA] px-4 py-3 text-sm font-bold outline-none focus:border-[#164F9E]"
+            />
+            <p className="mb-4 text-xs font-bold leading-relaxed text-[#3A2A1E]/65">
+              空欄でも診断できます。ライト診断では保存せず、結果表示とシェア文だけに使います。
+            </p>
+            <button
+              type="button"
+              onClick={onStart}
+              className="w-full rounded-[8px] bg-[#F06F8F] px-7 py-4 text-base font-black text-white shadow-[0_8px_0_#B84E68] transition-transform hover:-translate-y-0.5 active:translate-y-1 active:shadow-[0_3px_0_#B84E68]"
+            >
+              ちょっと診断してみる
+            </button>
+          </div>
           <div className="flex items-center gap-3 rounded-[8px] bg-white/92 p-3 text-[#3A2A1E] shadow-sm sm:max-w-md">
             <div className="h-16 w-16 shrink-0 overflow-hidden rounded-[6px] bg-white">
               <Image
@@ -215,7 +266,15 @@ function HeroSection({ onStart }: { onStart: () => void }) {
   );
 }
 
-function LandingStory({ onStart }: { onStart: () => void }) {
+function LandingStory({
+  childName,
+  onChildNameChange,
+  onStart,
+}: {
+  childName: string;
+  onChildNameChange: (value: string) => void;
+  onStart: () => void;
+}) {
   return (
     <div className="pb-16">
       <section className="border-b border-[#E8DCC4] bg-[#FFF8EA] px-5 py-14 sm:px-8 sm:py-20">
@@ -318,13 +377,26 @@ function LandingStory({ onStart }: { onStart: () => void }) {
               防災は怖がらせるものではなく、顔が見えるご縁から育つものとして扱います。
             </p>
           </div>
-          <button
-            type="button"
-            onClick={onStart}
-            className="rounded-[8px] bg-white px-6 py-4 text-sm font-black text-[#164F9E] shadow-[0_7px_0_#F6A04D] transition-transform hover:-translate-y-0.5 active:translate-y-1 active:shadow-[0_3px_0_#F6A04D]"
-          >
-            ちょっと診断してみる
-          </button>
+          <div className="w-full rounded-[8px] bg-white p-4 text-[#3A2A1E] shadow-sm sm:max-w-sm">
+            <label className="mb-2 block text-xs font-black text-[#164F9E]">
+              うちの子のお名前 任意
+            </label>
+            <input
+              type="text"
+              value={childName}
+              onChange={(event) => onChildNameChange(event.target.value)}
+              maxLength={24}
+              placeholder="空欄でもOK"
+              className="mb-3 w-full rounded-[8px] border border-[#E8DCC4] bg-[#FFF8EA] px-4 py-3 text-sm font-bold outline-none focus:border-[#164F9E]"
+            />
+            <button
+              type="button"
+              onClick={onStart}
+              className="w-full rounded-[8px] bg-[#F06F8F] px-6 py-4 text-sm font-black text-white shadow-[0_7px_0_#B84E68] transition-transform hover:-translate-y-0.5 active:translate-y-1 active:shadow-[0_3px_0_#B84E68]"
+            >
+              ちょっと診断してみる
+            </button>
+          </div>
         </div>
       </section>
     </div>

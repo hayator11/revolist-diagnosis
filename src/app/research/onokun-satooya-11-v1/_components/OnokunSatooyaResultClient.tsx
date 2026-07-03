@@ -15,6 +15,7 @@ import {
 } from "../_lib/onokunSatooyaTracking";
 
 const DIAGNOSIS_PATH = "/research/onokun-satooya-11-v1";
+const ONOKUN_CHILD_NAME_SESSION_KEY = "onokun-satooya-child-name";
 const ONOKUN_OPEN_CHAT_URL =
   "https://line.me/ti/g2/l_r88aCvFnX6D6JqjLQBnIi1zhEatqT-tk2c4Q?utm_source=invitation&utm_medium=link_copy&utm_campaign=default";
 
@@ -22,6 +23,11 @@ export default function OnokunSatooyaResultClient() {
   const searchParams = useSearchParams();
   const encoded = searchParams.get("answers") ?? "";
   const [copied, setCopied] = useState(false);
+  const [childName] = useState(() =>
+    typeof window === "undefined"
+      ? ""
+      : (window.sessionStorage.getItem(ONOKUN_CHILD_NAME_SESSION_KEY)?.trim() ?? ""),
+  );
   const [totalDiagnosisCount, setTotalDiagnosisCount] = useState<number | null>(null);
 
   const answers = useMemo(() => decodeOnokunSatooyaAnswers(encoded), [encoded]);
@@ -38,13 +44,20 @@ export default function OnokunSatooyaResultClient() {
       ? ""
       : `${window.location.origin}${DIAGNOSIS_PATH}/result?answers=${encoded}`;
 
+  const childLabel = childName || "うちの子";
+
   const shareText = resultState
     ? [
-        `私のご縁タイプは「${resultState.mainType.name}」でした。`,
+        `${childLabel}とのご縁タイプは「${resultState.mainType.name}」でした。`,
         resultState.mainType.oneLine,
+        "おのくん里親さん 11ご縁タイプ診断",
         resultUrl,
       ].join("\n")
     : "";
+  const encodedShareText = encodeURIComponent(shareText);
+  const encodedShareUrl = encodeURIComponent(resultUrl);
+  const xShareUrl = `https://twitter.com/intent/tweet?text=${encodedShareText}`;
+  const lineShareUrl = `https://social-plugins.line.me/lineit/share?url=${encodedShareUrl}`;
 
   useEffect(() => {
     if (!resultState || !isValidOnokunSatooyaAnswers(answers)) return;
@@ -107,6 +120,12 @@ export default function OnokunSatooyaResultClient() {
     setTimeout(() => setCopied(false), 1600);
   };
 
+  const handleCopy = async () => {
+    await navigator.clipboard.writeText(shareText);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1600);
+  };
+
   if (!resultState) {
     return (
       <main className="flex min-h-screen flex-col items-center justify-center bg-[#FFF8EA] px-6 text-center text-[#3A2A1E]">
@@ -129,7 +148,7 @@ export default function OnokunSatooyaResultClient() {
         <section className="mb-6 rounded-[8px] border-4 border-white bg-white p-5 shadow-[0_18px_50px_rgba(58,42,30,0.14)] sm:p-8">
           <div className="mb-5 flex flex-wrap items-center gap-3">
             <span className="rounded-[4px] border-2 border-dashed border-white bg-[#164F9E] px-4 py-2 text-xs font-black text-white shadow-sm">
-              あなたのご縁タイプ
+              {childLabel}のご縁タイプ
             </span>
             <span className="rounded-[4px] border-2 border-dashed border-[#F6A04D] px-4 py-2 text-xs font-bold text-[#3A2A1E]/70">
               {cluster.name}
@@ -167,7 +186,7 @@ export default function OnokunSatooyaResultClient() {
 
           <div className="grid gap-4 sm:grid-cols-2">
             <ResultBlock title="ご縁クラスター" body={cluster.description} />
-            <ResultBlock title="うちの子が連れてくるご縁" body={mainType.broughtBond} />
+            <ResultBlock title={`${childLabel}が連れてくるご縁`} body={mainType.broughtBond} />
           </div>
         </section>
 
@@ -261,7 +280,7 @@ export default function OnokunSatooyaResultClient() {
             </p>
             <h2 className="mb-3 text-xl font-black">今日の里親ミッション</h2>
             <p className="text-sm font-bold leading-relaxed text-[#3A2A1E]/75">
-              {mainType.mission}
+              {mainType.mission.replaceAll("うちの子", childLabel)}
             </p>
           </article>
         </section>
@@ -283,7 +302,7 @@ export default function OnokunSatooyaResultClient() {
             </p>
             <h2 className="mb-3 text-xl font-black">気軽に話すなら</h2>
             <p className="mb-5 text-sm font-bold leading-relaxed text-[#3A2A1E]/75">
-              うちの子自慢や今日の里親ミッションは、オープンチャット「おのくん親バカサロン」で話しやすい入口です。
+              {childLabel}自慢や今日の里親ミッションは、オープンチャット「おのくん親バカサロン」で話しやすい入口です。
             </p>
             <a
               href={ONOKUN_OPEN_CHAT_URL}
@@ -326,6 +345,11 @@ export default function OnokunSatooyaResultClient() {
               </div>
               <div>
                 <p className="text-xs font-black text-[#F06F8F]">おのくん里親さん診断</p>
+                {childName && (
+                  <p className="text-sm font-black leading-tight text-[#3A2A1E]">
+                    {childName}
+                  </p>
+                )}
                 <h3 className="text-2xl font-black leading-tight text-[#164F9E]">
                   {mainType.name}
                 </h3>
@@ -369,14 +393,46 @@ export default function OnokunSatooyaResultClient() {
           </div>
         </section>
 
-        <div className="grid gap-3 sm:grid-cols-2">
-          <button
-            type="button"
-            onClick={handleShare}
-            className="rounded-full bg-[#F06F8F] px-6 py-4 text-sm font-black text-white shadow-[0_7px_0_#c95773] transition-transform hover:-translate-y-0.5 active:translate-y-1 active:shadow-[0_3px_0_#c95773]"
-          >
-            {copied ? "コピーしました" : "結果をシェアする"}
-          </button>
+        <section className="mb-8 rounded-[8px] bg-white p-6 shadow-sm">
+          <p className="mb-2 text-xs font-black tracking-[0.16em] text-[#F06F8F]">
+            SHARE
+          </p>
+          <h2 className="mb-4 text-xl font-black">結果をシェアする</h2>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <a
+              href={xShareUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="rounded-full bg-[#111111] px-6 py-4 text-center text-sm font-black text-white shadow-sm"
+            >
+              Xでシェア
+            </a>
+            <a
+              href={lineShareUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="rounded-full bg-[#06C755] px-6 py-4 text-center text-sm font-black text-white shadow-sm"
+            >
+              LINEでシェア
+            </a>
+            <button
+              type="button"
+              onClick={handleShare}
+              className="rounded-full bg-[#F06F8F] px-6 py-4 text-sm font-black text-white shadow-[0_7px_0_#c95773] transition-transform hover:-translate-y-0.5 active:translate-y-1 active:shadow-[0_3px_0_#c95773]"
+            >
+              端末の共有を開く
+            </button>
+            <button
+              type="button"
+              onClick={handleCopy}
+              className="rounded-full bg-[#164F9E] px-6 py-4 text-sm font-black text-white shadow-sm"
+            >
+              {copied ? "コピーしました" : "文面をコピー"}
+            </button>
+          </div>
+        </section>
+
+        <div className="grid gap-3">
           <Link
             href={DIAGNOSIS_PATH}
             className="rounded-full bg-white px-6 py-4 text-center text-sm font-black text-[#164F9E] shadow-sm"
