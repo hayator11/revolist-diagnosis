@@ -13,6 +13,7 @@ import {
   createOnokunSatooyaEventFields,
   getOnokunSatooyaDeviceLabel,
 } from "../_lib/onokunSatooyaTracking";
+import { revo111Roles, matchRules } from "@/data/revo111Roles";
 
 const DIAGNOSIS_PATH = "/research/onokun-satooya-11-v1";
 const ONOKUN_CHILD_NAME_SESSION_KEY = "onokun-satooya-child-name";
@@ -141,6 +142,17 @@ export default function OnokunSatooyaResultClient() {
   }
 
   const { mainType, subType, supportType, partnerType, cluster } = resultState;
+  const mainRevoRole = revo111Roles[mainType.revoTypeKey];
+  const subRevoRole = revo111Roles[subType.revoTypeKey];
+  const supportRevoRole = revo111Roles[supportType.revoTypeKey];
+  const partnerRevoRole = revo111Roles[partnerType.revoTypeKey];
+  const revoMatchRule = matchRules[mainType.revoTypeKey]?.find(
+    (rule) => rule.partner === partnerType.revoTypeKey,
+  );
+  const futurePartnerRoles = mainRevoRole.futurePartners
+    .map((key) => revo111Roles[key])
+    .filter(Boolean)
+    .slice(0, 3);
 
   return (
     <main className="min-h-screen bg-[#FFF8EA] px-5 py-8 text-[#3A2A1E]">
@@ -173,10 +185,18 @@ export default function OnokunSatooyaResultClient() {
               </div>
               <div>
                 <div className={`mb-4 h-3 w-28 rounded-full ${mainType.colorClass}`} />
+                <p className="mb-2 text-xs font-black tracking-[0.14em] text-[#F06F8F]">
+                  おのくん版 {mainRevoRole.name}
+                </p>
                 <h1 className="mb-3 text-3xl font-black leading-tight sm:text-4xl">
                   {mainType.name}
                 </h1>
-                <p className="mb-5 text-lg font-bold text-[#164F9E]">{mainType.oneLine}</p>
+                <p className="mb-3 text-lg font-black text-[#164F9E]">
+                  {mainRevoRole.catchCopy}
+                </p>
+                <p className="mb-5 text-base font-black text-[#3A2A1E]">
+                  {mainType.oneLine}
+                </p>
                 <p className="text-sm font-bold leading-relaxed text-[#3A2A1E]/80">
                   {mainType.shortDescription}
                 </p>
@@ -184,61 +204,83 @@ export default function OnokunSatooyaResultClient() {
             </div>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid gap-4 sm:grid-cols-3">
+            <ResultBlock title="レボリスト11タイプ" body={`${mainRevoRole.name}：${mainRevoRole.mission}`} />
             <ResultBlock title="ご縁クラスター" body={cluster.description} />
             <ResultBlock title={`${childLabel}が連れてくるご縁`} body={mainType.broughtBond} />
           </div>
         </section>
 
+        <section className="mb-6 rounded-[8px] bg-[#164F9E] p-6 text-white shadow-sm">
+          <p className="mb-2 text-xs font-black tracking-[0.16em] text-[#F7D35B]">
+            MATCHING HOOK
+          </p>
+          <h2 className="mb-3 text-2xl font-black leading-tight">
+            {childLabel}の相棒は、{partnerType.name}かも。
+          </h2>
+          <p className="mb-4 text-sm font-bold leading-relaxed text-white/86">
+            レボリスト11タイプでは「{partnerRevoRole.name}」。{partnerType.oneLine}
+            {revoMatchRule ? ` ${revoMatchRule.description}` : ""}
+          </p>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div className="rounded-[8px] bg-white p-4 text-[#3A2A1E]">
+              <p className="mb-1 text-xs font-black text-[#F06F8F]">相棒に聞いてみたいこと</p>
+              <p className="text-sm font-black leading-relaxed">
+                「{partnerType.conversationStarter}」
+              </p>
+            </div>
+            <div className="rounded-[8px] bg-white p-4 text-[#3A2A1E]">
+              <p className="mb-1 text-xs font-black text-[#F06F8F]">親バカサロンで探すなら</p>
+              <p className="text-sm font-black leading-relaxed">
+                同じタイプの里親さん、相棒タイプの里親さん、どちらも見つけたくなる組み合わせです。
+              </p>
+            </div>
+          </div>
+        </section>
+
         <section className="mb-6 rounded-[8px] bg-white p-6 shadow-sm">
           <p className="mb-2 text-xs font-black tracking-[0.16em] text-[#F06F8F]">
-            READING
+            YOUR 3 COLORS
           </p>
-          <h2 className="mb-4 text-xl font-black">回答から見えたご縁の重なり</h2>
+          <h2 className="mb-4 text-xl font-black">あなたの中に見えた3つの色</h2>
+          <div className="grid gap-3 sm:grid-cols-3">
+            <TypeChip label="メイン" typeName={mainType.name} revoName={mainRevoRole.name} />
+            <TypeChip label="サブ" typeName={subType.name} revoName={subRevoRole.name} />
+            <TypeChip
+              label="隠し味"
+              typeName={supportType.name}
+              revoName={supportRevoRole.name}
+            />
+          </div>
+        </section>
+
+        <section className="mb-6 rounded-[8px] bg-white p-6 shadow-sm">
+          <p className="mb-2 text-xs font-black tracking-[0.16em] text-[#F06F8F]">
+            PARTNER MAP
+          </p>
+          <h2 className="mb-4 text-xl font-black">もっと相性が気になる里親さん</h2>
+          <div className="grid gap-3 sm:grid-cols-3">
+            {futurePartnerRoles.map((role) => (
+              <div key={role.key} className="rounded-[8px] bg-[#FFF8EA] p-4">
+                <p className="mb-2 text-base font-black text-[#164F9E]">{role.name}</p>
+                <p className="text-xs font-bold leading-relaxed text-[#3A2A1E]/70">
+                  {role.catchCopy}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="mb-6 rounded-[8px] bg-white p-6 shadow-sm">
+          <p className="mb-2 text-xs font-black tracking-[0.16em] text-[#F06F8F]">
+            WHY
+          </p>
+          <h2 className="mb-3 text-xl font-black">このタイプになった理由</h2>
           <p className="mb-5 text-sm font-bold leading-relaxed text-[#3A2A1E]/75">
             {resultState.evidenceText}
           </p>
-          <div className="mb-5 space-y-3">
-            {resultState.readingPoints.map((point) => (
-              <p
-                key={point}
-                className="rounded-[8px] border-l-4 border-[#F6A04D] bg-[#FFF8EA] px-4 py-3 text-sm font-bold leading-relaxed text-[#3A2A1E]/80"
-              >
-                {point}
-              </p>
-            ))}
-          </div>
-          <div className="grid gap-3 sm:grid-cols-3">
-            <TypeChip label="メイン" typeName={mainType.name} />
-            <TypeChip label="サブ" typeName={subType.name} />
-            <TypeChip label="補助" typeName={supportType.name} />
-          </div>
-        </section>
-
-        <section className="mb-6 rounded-[8px] bg-white p-6 shadow-sm">
-          <p className="mb-2 text-xs font-black tracking-[0.16em] text-[#F06F8F]">
-            BALANCE
-          </p>
-          <h2 className="mb-4 text-xl font-black">ご縁バランス</h2>
-          <div className="space-y-4">
-            {resultState.topTypes.map((type) => (
-              <ScoreBar
-                key={type.key}
-                name={type.name}
-                score={resultState.scores[type.key]}
-                maxScore={resultState.maxScore}
-              />
-            ))}
-          </div>
-        </section>
-
-        <section className="mb-6 rounded-[8px] bg-white p-6 shadow-sm">
-          <p className="mb-2 text-xs font-black tracking-[0.16em] text-[#F06F8F]">
-            EVIDENCE
-          </p>
-          <h2 className="mb-4 text-xl font-black">この結果につながった選択</h2>
           <div className="grid gap-3">
-            {resultState.evidenceHighlights.map((highlight) => (
+            {resultState.evidenceHighlights.slice(0, 3).map((highlight) => (
               <article
                 key={`${highlight.questionId}-${highlight.typeName}`}
                 className="rounded-[8px] border-2 border-[#FFF8EA] p-4"
@@ -265,12 +307,12 @@ export default function OnokunSatooyaResultClient() {
         <section className="mb-6 grid gap-4 sm:grid-cols-2">
           <article className="rounded-[8px] bg-white p-6 shadow-sm">
             <p className="mb-2 text-xs font-black tracking-[0.16em] text-[#F06F8F]">
-              PARTNER
+              MAIN PARTNER
             </p>
             <h2 className="mb-3 text-xl font-black">ご縁が広がりやすい相棒里親さん</h2>
             <p className="mb-4 text-lg font-black text-[#164F9E]">{partnerType.name}</p>
             <p className="text-sm font-bold leading-relaxed text-[#3A2A1E]/75">
-              {partnerType.oneLine}
+              {partnerRevoRole.name}の力を持つ、{partnerType.oneLine}
             </p>
           </article>
 
@@ -300,9 +342,9 @@ export default function OnokunSatooyaResultClient() {
             <p className="mb-2 text-xs font-black tracking-[0.16em] text-[#F06F8F]">
               LINE
             </p>
-            <h2 className="mb-3 text-xl font-black">気軽に話すなら</h2>
+            <h2 className="mb-3 text-xl font-black">同じタイプや相棒を探すなら</h2>
             <p className="mb-5 text-sm font-bold leading-relaxed text-[#3A2A1E]/75">
-              {childLabel}自慢や今日の里親ミッションは、オープンチャット「おのくん親バカサロン」で話しやすい入口です。
+              {childLabel}自慢と一緒に「{mainType.name}でした」と投稿すると、同じタイプや相棒タイプの里親さんと話すきっかけになります。
             </p>
             <a
               href={ONOKUN_OPEN_CHAT_URL}
@@ -471,35 +513,22 @@ function ResultBlock({ title, body }: { title: string; body: string }) {
   );
 }
 
-function TypeChip({ label, typeName }: { label: string; typeName: string }) {
+function TypeChip({
+  label,
+  typeName,
+  revoName,
+}: {
+  label: string;
+  typeName: string;
+  revoName: string;
+}) {
   return (
     <div className="rounded-[8px] bg-[#FFF8EA] p-4">
       <p className="mb-1 text-xs font-black text-[#F06F8F]">{label}</p>
       <p className="text-sm font-black leading-relaxed text-[#164F9E]">{typeName}</p>
-    </div>
-  );
-}
-
-function ScoreBar({
-  name,
-  score,
-  maxScore,
-}: {
-  name: string;
-  score: number;
-  maxScore: number;
-}) {
-  const width = maxScore === 0 ? 0 : Math.max(18, Math.round((score / maxScore) * 100));
-
-  return (
-    <div>
-      <div className="mb-2 flex items-center justify-between gap-3 text-sm font-black">
-        <span>{name}</span>
-        <span className="text-[#164F9E]">{score}</span>
-      </div>
-      <div className="h-3 overflow-hidden rounded-full bg-[#FFF8EA]">
-        <div className="h-full rounded-full bg-[#F06F8F]" style={{ width: `${width}%` }} />
-      </div>
+      <p className="mt-2 text-xs font-black leading-relaxed text-[#3A2A1E]/65">
+        レボリスト11タイプ: {revoName}
+      </p>
     </div>
   );
 }
