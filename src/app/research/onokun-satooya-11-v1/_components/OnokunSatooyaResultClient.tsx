@@ -293,33 +293,17 @@ export default function OnokunSatooyaResultClient() {
 
         <section className="mb-6 rounded-[8px] bg-white p-6 shadow-sm">
           <p className="mb-2 text-xs font-black tracking-[0.16em] text-[#F06F8F]">
-            WHY
+            MAYBE YOU
           </p>
-          <h2 className="mb-3 text-xl font-black">このタイプになった理由</h2>
-          <p className="mb-5 text-sm font-bold leading-relaxed text-[#3A2A1E]/75">
-            {resultState.evidenceText}
-          </p>
+          <h2 className="mb-4 text-xl font-black">ちょっと思い当たりませんか？</h2>
           <div className="grid gap-3">
-            {resultState.evidenceHighlights.slice(0, 3).map((highlight) => (
-              <article
-                key={`${highlight.questionId}-${highlight.typeName}`}
-                className="rounded-[8px] border-2 border-[#FFF8EA] p-4"
+            {mainType.nodLines.map((line) => (
+              <p
+                key={line}
+                className="rounded-[8px] border-l-4 border-[#F06F8F] bg-[#FFF8EA] px-4 py-4 text-sm font-black leading-relaxed text-[#3A2A1E]"
               >
-                <div className="mb-2 flex flex-wrap items-center gap-2">
-                  <span className="rounded-full bg-[#FFF8EA] px-3 py-1 text-xs font-black text-[#164F9E]">
-                    {highlight.chapterTitle}
-                  </span>
-                  <span className="rounded-full bg-[#FFF8EA] px-3 py-1 text-xs font-bold text-[#3A2A1E]/70">
-                    {highlight.scene}
-                  </span>
-                </div>
-                <p className="mb-2 text-sm font-black leading-relaxed text-[#3A2A1E]">
-                  「{highlight.choiceLabel}」
-                </p>
-                <p className="text-xs font-bold leading-relaxed text-[#3A2A1E]/65">
-                  この選択は「{highlight.typeName}」の手がかりとして読まれています。
-                </p>
-              </article>
+                {line}
+              </p>
             ))}
           </div>
         </section>
