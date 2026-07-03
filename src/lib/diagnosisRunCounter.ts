@@ -1,6 +1,7 @@
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 const COUNTABLE_FEEDBACK_TYPES: Record<string, string> = {
+  entry_diagnosis: "entry_diagnosis",
   light_diagnosis: "light_diagnosis",
   research_light_result: "research_revolist_11_light_v1",
   energy_light_result: "research_revolist_energy_light_v1",
@@ -16,6 +17,7 @@ const MONITOR_RESULT_TYPES: Record<string, string> = {
 };
 
 export const DIAGNOSIS_COUNTER_LABELS: Record<string, string> = {
+  entry_diagnosis: "入口: 11問ライト診断",
   light_diagnosis: "レボリスト診断",
   research_revolist_11_light_v1: "リサーチ: レボリスト11",
   research_revolist_energy_light_v1: "リサーチ: エネルギーライト",

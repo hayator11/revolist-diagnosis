@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import OpenChatInvite from "@/components/OpenChatInvite";
 import { getIcebreakRoleResultCopy } from "@/data/icebreakRoleResultCopy";
 import { ICEBREAK_11_META, getIcebreak11VersionFields } from "@/data/researchProjects";
 import { icebreakQuestions } from "@/data/icebreakQuestions";
@@ -301,6 +302,10 @@ export default function IcebreakResultClient({ resultId }: Props) {
             LINE
           </a>
         </div>
+      </section>
+
+      <section className="mx-auto max-w-lg border-t border-gray-100 px-6 py-8">
+        <OpenChatInvite context="icebreak" />
       </section>
 
       <section className="mx-auto max-w-lg border-t border-gray-100 px-6 py-8">

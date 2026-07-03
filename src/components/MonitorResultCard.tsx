@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { revoTypes } from "@/data/revotypes";
 import { monitorDiagnosisMeta } from "@/data/monitorResults";
+import OpenChatInvite from "./OpenChatInvite";
 import type {
   MonitorResult,
   MonitorRoleResult,
@@ -501,6 +502,10 @@ export default function MonitorResultCard({ result }: Props) {
         >
           感想を送る
         </Link>
+      </div>
+
+      <div className="mt-10">
+        <OpenChatInvite context="monitor" />
       </div>
 
       {/* ── モニタートップへ ── */}

@@ -10,6 +10,7 @@ import {
 import ShareButtons from "./ShareButtons";
 import Link from "next/link";
 import OperationLinks from "./OperationLinks";
+import OpenChatInvite from "./OpenChatInvite";
 
 interface Props {
   result: DiagnosisResult;
@@ -468,6 +469,10 @@ export default function ResultCard({ result }: Props) {
       {/* SNSシェア + 画像保存 */}
       <section className="px-6 pt-10 pb-6 border-b border-gray-100">
         <ShareButtons result={result} />
+      </section>
+
+      <section className="px-6 py-12 border-b border-gray-100">
+        <OpenChatInvite context="diagnosis" />
       </section>
 
       {/* ⑮ CTA */}
