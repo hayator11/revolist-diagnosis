@@ -48,6 +48,19 @@ export const RESEARCH_PROJECTS = {
     description:
       "11問のクエスト型選択式で、おのくんとのご縁の育て方を見つける研究版診断です。",
   },
+  onokunSatooyaMatch18: {
+    project: "onokun_satooya_match_18",
+    type: "onokun_matching_beta",
+    slug: "onokun-satooya-match-18-v1",
+    diagnosisVersion: "onokun-satooya-match-18-v1",
+    questionVersion: "onokun-satooya-match-v1-q18",
+    logicVersion: "onokun-satooya-match-v1-bidirectional",
+    resultVersion: "onokun-satooya-match-v1-r1",
+    title: "おのくん里親さん 相棒マッチ診断",
+    shortTitle: "Onokun Match",
+    description:
+      "18問で自分のご縁タイプと、気になる相棒タイプを両方向から見る研究版診断です。",
+  },
   birthRhythm: {
     project: "birth_rhythm",
     type: "beta",
@@ -67,6 +80,7 @@ export const REVOLIST_11_LIGHT_META = RESEARCH_PROJECTS.revolist11Light;
 export const ENERGY_LIGHT_META = RESEARCH_PROJECTS.energyLight;
 export const ICEBREAK_11_META = RESEARCH_PROJECTS.icebreak11;
 export const ONOKUN_SATOOYA_11_META = RESEARCH_PROJECTS.onokunSatooya11;
+export const ONOKUN_SATOOYA_MATCH_18_META = RESEARCH_PROJECTS.onokunSatooyaMatch18;
 
 export function getResearchVersionFields() {
   return {
