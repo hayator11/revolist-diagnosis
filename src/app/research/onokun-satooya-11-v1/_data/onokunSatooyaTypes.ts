@@ -1,3 +1,5 @@
+import type { RevoTypeKey } from "@/data/revotypes";
+
 export type OnokunSatooyaTypeKey =
   | "mendokushe-breakthrough"
   | "tadaima-starter"
@@ -23,6 +25,7 @@ export interface OnokunSatooyaType {
   key: OnokunSatooyaTypeKey;
   name: string;
   originalRole: string;
+  revoTypeKey: RevoTypeKey;
   oneLine: string;
   clusterKey: OnokunSatooyaClusterKey;
   shortDescription: string;
@@ -64,6 +67,7 @@ export const onokunSatooyaTypes: OnokunSatooyaType[] = [
     key: "mendokushe-breakthrough",
     name: "めんどくしぇ突破里親",
     originalRole: "クレイジスト",
+    revoTypeKey: "crazist",
     oneLine: "変わったおの活を思いつく人",
     clusterKey: "create",
     shortDescription:
@@ -78,6 +82,7 @@ export const onokunSatooyaTypes: OnokunSatooyaType[] = [
     key: "tadaima-starter",
     name: "ただいま火つけ里親",
     originalRole: "レボリスト",
+    revoTypeKey: "revolist",
     oneLine: "里帰りや出会いのきっかけをつくる人",
     clusterKey: "create",
     shortDescription:
@@ -92,6 +97,7 @@ export const onokunSatooyaTypes: OnokunSatooyaType[] = [
     key: "wakuwaku-future",
     name: "わくわく未来図里親",
     originalRole: "マックスデザイナー",
+    revoTypeKey: "maxdesigner",
     oneLine: "おのくんとの楽しみ方を広げる人",
     clusterKey: "create",
     shortDescription:
@@ -106,6 +112,7 @@ export const onokunSatooyaTypes: OnokunSatooyaType[] = [
     key: "uchinoko-world",
     name: "うちの子世界観里親",
     originalRole: "イメージマイスター",
+    revoTypeKey: "imagemaister",
     oneLine: "写真や飾り方で魅力を見せる人",
     clusterKey: "create",
     shortDescription:
@@ -120,6 +127,7 @@ export const onokunSatooyaTypes: OnokunSatooyaType[] = [
     key: "goen-talk",
     name: "ご縁おしゃべり里親",
     originalRole: "コミュニケーター",
+    revoTypeKey: "communicator",
     oneLine: "里親さん同士の会話を生む人",
     clusterKey: "grow",
     shortDescription:
@@ -134,6 +142,7 @@ export const onokunSatooyaTypes: OnokunSatooyaType[] = [
     key: "town-finder",
     name: "まちの発見里親",
     originalRole: "インフォレイダー",
+    revoTypeKey: "inforader",
     oneLine: "東松島やおのくん情報を見つける人",
     clusterKey: "tell",
     shortDescription:
@@ -148,6 +157,7 @@ export const onokunSatooyaTypes: OnokunSatooyaType[] = [
     key: "back-pat",
     name: "背中ぽんぽん里親",
     originalRole: "ムーブメンター",
+    revoTypeKey: "movmentor",
     oneLine: "誰かの一歩をやさしく後押しする人",
     clusterKey: "move",
     shortDescription:
@@ -162,6 +172,7 @@ export const onokunSatooyaTypes: OnokunSatooyaType[] = [
     key: "chikuchiku-care",
     name: "ちくちく愛情里親",
     originalRole: "プルミエルクラフター",
+    revoTypeKey: "premiercrafter",
     oneLine: "ものと想いを丁寧に育てる人",
     clusterKey: "move",
     shortDescription:
@@ -176,6 +187,7 @@ export const onokunSatooyaTypes: OnokunSatooyaType[] = [
     key: "word-tuner",
     name: "ことば整え里親",
     originalRole: "ロジカルマイスター",
+    revoTypeKey: "logicalmaister",
     oneLine: "おのくんの想いを伝わる言葉にする人",
     clusterKey: "tell",
     shortDescription:
@@ -190,6 +202,7 @@ export const onokunSatooyaTypes: OnokunSatooyaType[] = [
     key: "outing-arranger",
     name: "おでかけ段取り里親",
     originalRole: "アレンジャー",
+    revoTypeKey: "arranger",
     oneLine: "里帰りや集まりを動きやすく整える人",
     clusterKey: "move",
     shortDescription:
@@ -204,6 +217,7 @@ export const onokunSatooyaTypes: OnokunSatooyaType[] = [
     key: "warm-watch",
     name: "ぬくもり見守り里親",
     originalRole: "ソウルオーナー",
+    revoTypeKey: "soulowner",
     oneLine: "安心と家族感を育てる人",
     clusterKey: "grow",
     shortDescription:
@@ -219,4 +233,3 @@ export const onokunSatooyaTypes: OnokunSatooyaType[] = [
 export function getOnokunSatooyaType(key: OnokunSatooyaTypeKey) {
   return onokunSatooyaTypes.find((type) => type.key === key) ?? onokunSatooyaTypes[0];
 }
-

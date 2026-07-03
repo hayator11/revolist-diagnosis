@@ -163,7 +163,7 @@ function HeroSection({ onStart }: { onStart: () => void }) {
             おのくん里親さん 11ご縁タイプ診断
           </span>
           <span className="rounded-[4px] border border-white/50 px-4 py-2 text-xs font-black text-white">
-            33問 / 選択式
+            11問 / 選択式
           </span>
         </div>
 
@@ -252,29 +252,29 @@ function LandingStory({ onStart }: { onStart: () => void }) {
           <div className="mb-9 flex flex-wrap items-end justify-between gap-4">
             <div>
               <p className="mb-3 text-xs font-black tracking-[0.16em] text-[#F06F8F]">
-                3 CHAPTER QUEST
+                11 QUESTION QUEST
               </p>
               <h2 className="text-3xl font-black leading-tight sm:text-5xl">
-                うちの子と進む、3つの小さな旅。
+                うちの子と進む、11の小さなクエスト。
               </h2>
             </div>
-            <p className="text-sm font-black text-[#3A2A1E]/60">33問 / すべて選択式</p>
+            <p className="text-sm font-black text-[#3A2A1E]/60">11問 / すべて選択式</p>
           </div>
           <div className="grid gap-5 md:grid-cols-3">
             <QuestCard
               label="第1章"
-              title="おのくんを知る"
-              body="背景や手づくりのぬくもりに、敬意を持ってふれる章。知識クイズではなく、感じ方を選びます。"
+              title="うちの子と出発"
+              body="写真、声をかけられた場面、里帰り。うちの子と一緒に動くイメージで選びます。"
             />
             <QuestCard
               label="第2章"
-              title="楽しみ方を見つける"
-              body="写真、会話、里帰り、手しごと。日常の場面から、自然に近いご縁の育て方を見ます。"
+              title="親バカサロンの入口"
+              body="投稿、うちの子カード、ほかの里親さんとの反応から、会話の始まり方を見ます。"
             />
             <QuestCard
               label="第3章"
-              title="ご縁を広げる"
-              body="親バカサロンで話し、希望する人が協力へ。楽しいから集まり、つながりが備えになる流れへ進みます。"
+              title="ご縁クエスト"
+              body="集まり、協力、今日のおの活へ。楽しいから集まり、つながりが備えになる流れへ進みます。"
             />
           </div>
         </div>
@@ -332,14 +332,14 @@ function LandingStory({ onStart }: { onStart: () => void }) {
 }
 
 function ChapterTrail({ currentIndex }: { currentIndex: number }) {
-  const chapterNumber = currentIndex < 11 ? 1 : currentIndex < 22 ? 2 : 3;
+  const chapterNumber = currentIndex < 3 ? 1 : currentIndex < 6 ? 2 : 3;
 
   return (
     <div className="mb-5 grid grid-cols-3 gap-2">
       {[
-        { number: 1, label: "知る" },
-        { number: 2, label: "楽しむ" },
-        { number: 3, label: "広げる" },
+        { number: 1, label: "出発" },
+        { number: 2, label: "サロン" },
+        { number: 3, label: "クエスト" },
       ].map((chapter) => {
         const active = chapter.number === chapterNumber;
 

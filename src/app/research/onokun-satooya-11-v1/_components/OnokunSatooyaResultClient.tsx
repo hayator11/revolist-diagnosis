@@ -339,7 +339,7 @@ export default function OnokunSatooyaResultClient() {
               <span className="rounded-full bg-white px-3 py-2 text-center">
                 相棒: {partnerType.name}
               </span>
-              <span className="rounded-full bg-white px-3 py-2 text-center">33問RPG</span>
+              <span className="rounded-full bg-white px-3 py-2 text-center">11問クエスト</span>
             </div>
           </div>
         </section>

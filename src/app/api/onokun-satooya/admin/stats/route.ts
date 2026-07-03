@@ -9,10 +9,14 @@ interface OnokunResultRow {
   created_at: string;
   main_type_key: string;
   main_type_name: string;
+  main_revo_type_key: string | null;
   sub_type_name: string;
+  sub_revo_type_key: string | null;
   support_type_name: string;
+  support_revo_type_key: string | null;
   cluster_name: string;
   partner_type_name: string;
+  partner_revo_type_key: string | null;
   device: string | null;
   result_url: string | null;
 }
@@ -107,10 +111,14 @@ export async function GET(req: NextRequest) {
         "created_at",
         "main_type_key",
         "main_type_name",
+        "main_revo_type_key",
         "sub_type_name",
+        "sub_revo_type_key",
         "support_type_name",
+        "support_revo_type_key",
         "cluster_name",
         "partner_type_name",
+        "partner_revo_type_key",
         "device",
         "result_url",
       ].join(","),

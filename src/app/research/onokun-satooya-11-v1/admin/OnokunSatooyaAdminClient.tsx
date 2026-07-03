@@ -19,10 +19,14 @@ interface LatestResult {
   diagnosis_id: string;
   created_at: string;
   main_type_name: string;
+  main_revo_type_key: string | null;
   sub_type_name: string;
+  sub_revo_type_key: string | null;
   support_type_name: string;
+  support_revo_type_key: string | null;
   cluster_name: string;
   partner_type_name: string;
+  partner_revo_type_key: string | null;
   device: string | null;
   result_url: string | null;
 }
@@ -287,9 +291,11 @@ export default function OnokunSatooyaAdminClient() {
                       <th className="py-3 pr-4">回</th>
                       <th className="py-3 pr-4">日時</th>
                       <th className="py-3 pr-4">メイン</th>
+                      <th className="py-3 pr-4">Revo</th>
                       <th className="py-3 pr-4">サブ</th>
                       <th className="py-3 pr-4">補助</th>
                       <th className="py-3 pr-4">クラスター</th>
+                      <th className="py-3 pr-4">相棒Revo</th>
                       <th className="py-3 pr-4">端末</th>
                     </tr>
                   </thead>
@@ -301,9 +307,15 @@ export default function OnokunSatooyaAdminClient() {
                         </td>
                         <td className="py-3 pr-4 font-bold">{formatDateTime(item.created_at)}</td>
                         <td className="py-3 pr-4 font-bold">{item.main_type_name}</td>
+                        <td className="py-3 pr-4 font-mono text-xs font-bold">
+                          {item.main_revo_type_key ?? "-"}
+                        </td>
                         <td className="py-3 pr-4">{item.sub_type_name}</td>
                         <td className="py-3 pr-4">{item.support_type_name}</td>
                         <td className="py-3 pr-4">{item.cluster_name}</td>
+                        <td className="py-3 pr-4 font-mono text-xs font-bold">
+                          {item.partner_revo_type_key ?? "-"}
+                        </td>
                         <td className="py-3 pr-4">{item.device ?? "unknown"}</td>
                       </tr>
                     ))}

@@ -39,23 +39,33 @@ create table if not exists public.onokun_satooya_diagnosis_results (
   answer_count integer not null,
   answers jsonb not null,
   scores jsonb not null,
+  revo_scores jsonb,
   top_type_keys jsonb not null,
+  top_revo_type_keys jsonb,
   main_type_key text not null,
   main_type_name text not null,
+  main_revo_type_key text,
+  main_original_role text,
   sub_type_key text not null,
   sub_type_name text not null,
+  sub_revo_type_key text,
+  sub_original_role text,
   support_type_key text not null,
   support_type_name text not null,
+  support_revo_type_key text,
+  support_original_role text,
   cluster_key text not null,
   cluster_name text not null,
   partner_type_key text not null,
   partner_type_name text not null,
+  partner_revo_type_key text,
+  partner_original_role text,
   evidence_highlights jsonb not null,
 
   constraint onokun_satooya_diagnosis_results_run_number_unique
     unique (project_key, diagnosis_run_number),
   constraint onokun_satooya_diagnosis_results_answer_count_check
-    check (answer_count = 33),
+    check (answer_count in (11, 33)),
   constraint onokun_satooya_diagnosis_results_run_number_check
     check (diagnosis_run_number >= 1)
 );
@@ -65,6 +75,31 @@ create index if not exists onokun_satooya_diagnosis_results_created_at_idx
 
 create index if not exists onokun_satooya_diagnosis_results_main_type_idx
   on public.onokun_satooya_diagnosis_results (main_type_key);
+
+alter table public.onokun_satooya_diagnosis_results
+  add column if not exists revo_scores jsonb,
+  add column if not exists top_revo_type_keys jsonb,
+  add column if not exists main_revo_type_key text,
+  add column if not exists main_original_role text,
+  add column if not exists sub_revo_type_key text,
+  add column if not exists sub_original_role text,
+  add column if not exists support_revo_type_key text,
+  add column if not exists support_original_role text,
+  add column if not exists partner_revo_type_key text,
+  add column if not exists partner_original_role text;
+
+alter table public.onokun_satooya_diagnosis_results
+  drop constraint if exists onokun_satooya_diagnosis_results_answer_count_check;
+
+alter table public.onokun_satooya_diagnosis_results
+  add constraint onokun_satooya_diagnosis_results_answer_count_check
+    check (answer_count in (11, 33));
+
+create index if not exists onokun_satooya_diagnosis_results_main_revo_type_idx
+  on public.onokun_satooya_diagnosis_results (main_revo_type_key);
+
+create index if not exists onokun_satooya_diagnosis_results_partner_revo_type_idx
+  on public.onokun_satooya_diagnosis_results (partner_revo_type_key);
 
 create or replace function public.increment_onokun_satooya_diagnosis_counter(
   p_project_key text
@@ -131,17 +166,27 @@ begin
     answer_count,
     answers,
     scores,
+    revo_scores,
     top_type_keys,
+    top_revo_type_keys,
     main_type_key,
     main_type_name,
+    main_revo_type_key,
+    main_original_role,
     sub_type_key,
     sub_type_name,
+    sub_revo_type_key,
+    sub_original_role,
     support_type_key,
     support_type_name,
+    support_revo_type_key,
+    support_original_role,
     cluster_key,
     cluster_name,
     partner_type_key,
     partner_type_name,
+    partner_revo_type_key,
+    partner_original_role,
     evidence_highlights
   )
   values (
@@ -164,17 +209,27 @@ begin
     (p_payload ->> 'answer_count')::integer,
     p_payload -> 'answers',
     p_payload -> 'scores',
+    p_payload -> 'revo_scores',
     p_payload -> 'top_type_keys',
+    p_payload -> 'top_revo_type_keys',
     p_payload ->> 'main_type_key',
     p_payload ->> 'main_type_name',
+    nullif(p_payload ->> 'main_revo_type_key', ''),
+    nullif(p_payload ->> 'main_original_role', ''),
     p_payload ->> 'sub_type_key',
     p_payload ->> 'sub_type_name',
+    nullif(p_payload ->> 'sub_revo_type_key', ''),
+    nullif(p_payload ->> 'sub_original_role', ''),
     p_payload ->> 'support_type_key',
     p_payload ->> 'support_type_name',
+    nullif(p_payload ->> 'support_revo_type_key', ''),
+    nullif(p_payload ->> 'support_original_role', ''),
     p_payload ->> 'cluster_key',
     p_payload ->> 'cluster_name',
     p_payload ->> 'partner_type_key',
     p_payload ->> 'partner_type_name',
+    nullif(p_payload ->> 'partner_revo_type_key', ''),
+    nullif(p_payload ->> 'partner_original_role', ''),
     p_payload -> 'evidence_highlights'
   );
 

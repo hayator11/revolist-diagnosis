@@ -40,13 +40,13 @@ export const RESEARCH_PROJECTS = {
     type: "onokun_beta",
     slug: "onokun-satooya-11-v1",
     diagnosisVersion: "onokun-satooya-11-v1",
-    questionVersion: "onokun-satooya-v1-q33-rpg",
-    logicVersion: "onokun-satooya-v1-evidence-map",
-    resultVersion: "onokun-satooya-v1-r1",
+    questionVersion: "onokun-satooya-v2-q11-quest",
+    logicVersion: "onokun-satooya-v2-revo-linked-evidence-map",
+    resultVersion: "onokun-satooya-v2-r1",
     title: "おのくん里親さん 11ご縁タイプ診断",
     shortTitle: "Onokun Satooya",
     description:
-      "33問のRPG型選択式で、おのくんとのご縁の育て方を見つける研究版診断です。",
+      "11問のクエスト型選択式で、おのくんとのご縁の育て方を見つける研究版診断です。",
   },
   birthRhythm: {
     project: "birth_rhythm",

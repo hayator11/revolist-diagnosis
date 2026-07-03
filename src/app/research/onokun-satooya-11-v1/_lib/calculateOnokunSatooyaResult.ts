@@ -9,6 +9,7 @@ import {
   onokunSatooyaQuestions,
   type OnokunAnswerValue,
 } from "../_data/onokunSatooyaQuestions";
+import type { RevoTypeKey } from "@/data/revotypes";
 
 export interface OnokunSatooyaResult {
   mainType: OnokunSatooyaType;
@@ -17,7 +18,9 @@ export interface OnokunSatooyaResult {
   partnerType: OnokunSatooyaType;
   cluster: (typeof onokunSatooyaClusters)[OnokunSatooyaType["clusterKey"]];
   scores: Record<OnokunSatooyaTypeKey, number>;
+  revoScores: Record<RevoTypeKey, number>;
   topTypes: OnokunSatooyaType[];
+  topRevoTypeKeys: RevoTypeKey[];
   evidenceText: string;
   readingPoints: string[];
   questBridge: string;
@@ -67,6 +70,7 @@ export function calculateOnokunSatooyaResult(answers: number[]): OnokunSatooyaRe
   const mainType = rankedTypes[0];
   const subType = rankedTypes[1];
   const supportType = rankedTypes[2];
+  const revoScores = createRevoScores(scores);
 
   return {
     mainType,
@@ -75,13 +79,21 @@ export function calculateOnokunSatooyaResult(answers: number[]): OnokunSatooyaRe
     partnerType: getOnokunSatooyaType(mainType.partnerTypeKey),
     cluster: onokunSatooyaClusters[mainType.clusterKey],
     scores,
+    revoScores,
     topTypes: rankedTypes.slice(0, 3),
+    topRevoTypeKeys: rankedTypes.slice(0, 3).map((type) => type.revoTypeKey),
     evidenceText: createEvidenceText(mainType, subType, supportType),
     readingPoints: createReadingPoints(mainType, subType, supportType),
     questBridge: createQuestBridge(mainType.clusterKey),
     evidenceHighlights: createEvidenceHighlights(answers, [mainType, subType, supportType]),
     maxScore: scores[mainType.key],
   };
+}
+
+function createRevoScores(scores: Record<OnokunSatooyaTypeKey, number>) {
+  return Object.fromEntries(
+    onokunSatooyaTypes.map((type) => [type.revoTypeKey, scores[type.key] ?? 0]),
+  ) as Record<RevoTypeKey, number>;
 }
 
 function createEvidenceHighlights(answers: number[], targetTypes: OnokunSatooyaType[]) {
