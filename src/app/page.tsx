@@ -171,15 +171,15 @@ export default function HomePage() {
           役割を知るところから。
         </h2>
         <p className="text-sm text-gray-500 mb-10 leading-relaxed">
-          33問・約5分。場面ごとに、あなたに近い選択を直感で選んでください。
+          11問・約2分。場面を想像して、つい自分がやりそうな選択を直感で選んでください。
         </p>
 
         <div className="space-y-3">
           <Link
-            href="/diagnosis"
+            href="/diagnosis/entry"
             className="block w-full bg-black text-white py-4 rounded-full text-sm font-medium hover:bg-gray-800 transition-colors"
           >
-            レボリスト診断をはじめる →
+            11問入口診断をはじめる →
           </Link>
           <Link
             href="/team"

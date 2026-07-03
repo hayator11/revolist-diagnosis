@@ -287,10 +287,10 @@ export default function FullDiagnosisPage() {
               モニター募集を見る
             </Link>
             <Link
-              href="/diagnosis"
+              href="/diagnosis/entry"
               className="block w-full text-center py-4 rounded-2xl border border-gray-200 text-gray-600 text-sm hover:border-black hover:text-black transition-colors"
             >
-              レボリスト診断をする
+              11問入口診断をする
             </Link>
           </div>
         </FadeInSection>

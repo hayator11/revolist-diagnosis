@@ -5,7 +5,7 @@ const baseUrl = "https://revo.onokun.com";
 export default function sitemap(): MetadataRoute.Sitemap {
   const routes = [
     "",
-    "/diagnosis",
+    "/diagnosis/entry",
     "/full-diagnosis",
     "/monitor",
     "/monitor/feedback",

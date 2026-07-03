@@ -43,7 +43,7 @@ export default function Hero() {
       </div>
 
       <Link
-        href="/diagnosis"
+        href="/diagnosis/entry"
         className="inline-flex items-center gap-2 bg-black text-white px-8 py-4 rounded-full text-base font-medium shadow-[0_18px_45px_rgba(0,0,0,0.18)] hover:bg-gray-800 transition-colors mb-4"
       >
         人生の次の関わり方を見つける

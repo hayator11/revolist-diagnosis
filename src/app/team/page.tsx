@@ -253,10 +253,10 @@ export default function TeamPage() {
                 自分のタイプがまだわからない方は
               </p>
               <Link
-                href="/diagnosis"
+                href="/diagnosis/entry"
                 className="block w-full py-4 rounded-2xl bg-black text-white text-sm font-medium hover:bg-gray-800 transition-colors"
               >
-                レボリスト診断でタイプを調べる
+                11問入口診断でタイプを調べる
               </Link>
               <Link
                 href="/monitor"

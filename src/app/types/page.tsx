@@ -51,10 +51,10 @@ export default function TypesPage() {
           診断で確かめてみましょう。
         </p>
         <Link
-          href="/diagnosis"
+          href="/diagnosis/entry"
           className="inline-flex items-center gap-2 bg-black text-white px-8 py-4 rounded-full text-base font-medium hover:bg-gray-800 transition-colors"
         >
-          レボリスト診断をはじめる →
+          11問入口診断をはじめる →
         </Link>
       </div>
     </div>

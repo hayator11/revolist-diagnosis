@@ -48,7 +48,7 @@ export default function RootLayout({
                 Revo
               </Link>
               <Link
-                href="/diagnosis"
+                href="/diagnosis/entry"
                 className="text-xs bg-black text-white px-4 py-2 rounded-full hover:bg-gray-800 transition-colors"
               >
                 診断する

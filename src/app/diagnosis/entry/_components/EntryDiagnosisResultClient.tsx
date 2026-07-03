@@ -180,22 +180,6 @@ export default function EntryDiagnosisResultClient() {
           </div>
         </section>
 
-        <section className="mb-6 rounded-3xl border border-gray-200 bg-gray-50 p-6">
-          <h2 className="mb-3 text-xl font-bold text-black">
-            もっと詳しく知りたくなったら
-          </h2>
-          <p className="mb-5 text-sm leading-relaxed text-gray-600">
-            11問では、あなたの入口が見えました。33問版では、役割の重なり方、
-            動きやすい環境、チームでの組み合わせまで、もう少し深く見ていきます。
-          </p>
-          <Link
-            href="/diagnosis"
-            className="block rounded-full bg-black px-6 py-3 text-center text-sm font-medium text-white"
-          >
-            33問版で詳しく見る
-          </Link>
-        </section>
-
         <div className="mb-6">
           <OpenChatInvite context="diagnosis" />
         </div>
