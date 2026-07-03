@@ -27,6 +27,10 @@ export interface OnokunSatooyaType {
   originalRole: string;
   revoTypeKey: RevoTypeKey;
   oneLine: string;
+  funnyTitle: string;
+  shareCatch: string;
+  parentBakaLine: string;
+  salonPostLine: string;
   clusterKey: OnokunSatooyaClusterKey;
   shortDescription: string;
   broughtBond: string;
@@ -69,6 +73,10 @@ export const onokunSatooyaTypes: OnokunSatooyaType[] = [
     originalRole: "クレイジスト",
     revoTypeKey: "crazist",
     oneLine: "変わったおの活を思いつく人",
+    funnyTitle: "思いついた瞬間、うちの子が先に準備してるタイプ",
+    shareCatch: "普通のおの活では終わらない、めんどくしぇ突破里親でした。",
+    parentBakaLine: "気づいたら「これ、おのくんでやったら面白くない？」が口ぐせになりがち。",
+    salonPostLine: "今日のうちの子、ちょっと変なことしてます。見て。",
     clusterKey: "create",
     shortDescription:
       "思いついたら、まず笑って試してみる。小さな遊び心から、おのくんとの新しいご縁を生み出す里親さんです。",
@@ -84,6 +92,10 @@ export const onokunSatooyaTypes: OnokunSatooyaType[] = [
     originalRole: "レボリスト",
     revoTypeKey: "revolist",
     oneLine: "里帰りや出会いのきっかけをつくる人",
+    funnyTitle: "「行きたいね」がいつの間にか予定になってるタイプ",
+    shareCatch: "里帰り欲に火がつく、ただいま火つけ里親でした。",
+    parentBakaLine: "うちの子を見ていると、なぜか誰かを誘いたくなる。",
+    salonPostLine: "うちの子といつか里帰りしたい。誰か一緒に妄想して。",
     clusterKey: "create",
     shortDescription:
       "会いに行きたい気持ちや、誰かを誘いたい気持ちに火をともす里親さんです。",
@@ -99,6 +111,10 @@ export const onokunSatooyaTypes: OnokunSatooyaType[] = [
     originalRole: "マックスデザイナー",
     revoTypeKey: "maxdesigner",
     oneLine: "おのくんとの楽しみ方を広げる人",
+    funnyTitle: "うちの子の未来予定表だけ、やたら壮大なタイプ",
+    shareCatch: "おの活の未来が勝手に広がる、わくわく未来図里親でした。",
+    parentBakaLine: "まだやってないのに、もう楽しい。予定を考えるだけで親バカが加速します。",
+    salonPostLine: "うちの子とこれやってみたいんだけど、どう思う？",
     clusterKey: "create",
     shortDescription:
       "これからやってみたいことを想像して、うちの子との未来を少しずつ広げる里親さんです。",
@@ -114,6 +130,10 @@ export const onokunSatooyaTypes: OnokunSatooyaType[] = [
     originalRole: "イメージマイスター",
     revoTypeKey: "imagemaister",
     oneLine: "写真や飾り方で魅力を見せる人",
+    funnyTitle: "うちの子の専属カメラマン兼世界観監督タイプ",
+    shareCatch: "写真一枚に愛がにじむ、うちの子世界観里親でした。",
+    parentBakaLine: "背景、角度、光。うちの子が一番かわいく見える場所をつい探してしまう。",
+    salonPostLine: "今日のうちの子、世界観ちょっと仕上がりました。",
     clusterKey: "create",
     shortDescription:
       "写真、飾り方、背景づくりで、うちの子らしさをぱっと伝える里親さんです。",
@@ -129,6 +149,10 @@ export const onokunSatooyaTypes: OnokunSatooyaType[] = [
     originalRole: "コミュニケーター",
     revoTypeKey: "communicator",
     oneLine: "里親さん同士の会話を生む人",
+    funnyTitle: "気づいたらコメント欄をあたためているタイプ",
+    shareCatch: "うちの子から会話が広がる、ご縁おしゃべり里親でした。",
+    parentBakaLine: "かわいいと思ったら黙っていられない。ひとことが誰かの投稿を明るくします。",
+    salonPostLine: "みんなのうちの子エピソード、聞かせてください。",
     clusterKey: "grow",
     shortDescription:
       "何気ないひとことから、里親さん同士の距離をやわらかく近づける里親さんです。",
@@ -144,6 +168,10 @@ export const onokunSatooyaTypes: OnokunSatooyaType[] = [
     originalRole: "インフォレイダー",
     revoTypeKey: "inforader",
     oneLine: "東松島やおのくん情報を見つける人",
+    funnyTitle: "気になると調べ始めて、気づけば案内係タイプ",
+    shareCatch: "おのくん情報を見つけて広げる、まちの発見里親でした。",
+    parentBakaLine: "小さな情報を見つけると、誰かの里帰りスイッチまで押したくなる。",
+    salonPostLine: "おのくん・東松島の気になる話題、見つけました。",
     clusterKey: "tell",
     shortDescription:
       "小さな情報や場所の魅力を見つけて、誰かの行きたい気持ちにつなげる里親さんです。",
@@ -159,6 +187,10 @@ export const onokunSatooyaTypes: OnokunSatooyaType[] = [
     originalRole: "ムーブメンター",
     revoTypeKey: "movmentor",
     oneLine: "誰かの一歩をやさしく後押しする人",
+    funnyTitle: "背中を押す力が、だいたい綿くらいやさしいタイプ",
+    shareCatch: "そっと一歩を応援する、背中ぽんぽん里親でした。",
+    parentBakaLine: "強く誘わない。でも「いいね、やってみよ」が自然に言える。",
+    salonPostLine: "初めてでも大丈夫。うちの子と一緒にゆるく始めよう。",
     clusterKey: "move",
     shortDescription:
       "迷っている人に、そっと一歩を踏み出すきっかけを渡せる里親さんです。",
@@ -174,6 +206,10 @@ export const onokunSatooyaTypes: OnokunSatooyaType[] = [
     originalRole: "プルミエルクラフター",
     revoTypeKey: "premiercrafter",
     oneLine: "ものと想いを丁寧に育てる人",
+    funnyTitle: "うちの子の居場所メンテが愛情表現タイプ",
+    shareCatch: "ちくちく愛情を育てる、ちくちく愛情里親でした。",
+    parentBakaLine: "ちょっと整える、ちょっと直す。その小さな手間に愛が出ます。",
+    salonPostLine: "うちの子のここ、密かにお気に入りです。",
     clusterKey: "move",
     shortDescription:
       "手をかける時間そのものを楽しみながら、うちの子への愛情を育てる里親さんです。",
@@ -189,6 +225,10 @@ export const onokunSatooyaTypes: OnokunSatooyaType[] = [
     originalRole: "ロジカルマイスター",
     revoTypeKey: "logicalmaister",
     oneLine: "おのくんの想いを伝わる言葉にする人",
+    funnyTitle: "うちの子紹介文を、つい名文にしたくなるタイプ",
+    shareCatch: "好きがちゃんと言葉になる、ことば整え里親でした。",
+    parentBakaLine: "かわいいだけじゃ足りない。この良さをどう伝えるか考えてしまう。",
+    salonPostLine: "うちの子を一言で言うと、たぶんこれです。",
     clusterKey: "tell",
     shortDescription:
       "感じていることを言葉に整えて、誰かに届きやすくしてくれる里親さんです。",
@@ -204,6 +244,10 @@ export const onokunSatooyaTypes: OnokunSatooyaType[] = [
     originalRole: "アレンジャー",
     revoTypeKey: "arranger",
     oneLine: "里帰りや集まりを動きやすく整える人",
+    funnyTitle: "集合時間と持ち物を見ると安心するタイプ",
+    shareCatch: "おでかけをご縁に変える、おでかけ段取り里親でした。",
+    parentBakaLine: "楽しい予定ほど、ちょっと整えておきたい。みんなが動きやすいと嬉しい。",
+    salonPostLine: "行くならこの流れがよさそう。誰か一緒にどうですか？",
     clusterKey: "move",
     shortDescription:
       "行き先、時間、持ち物をほどよく整えて、みんなが動きやすい形をつくる里親さんです。",
@@ -219,6 +263,10 @@ export const onokunSatooyaTypes: OnokunSatooyaType[] = [
     originalRole: "ソウルオーナー",
     revoTypeKey: "soulowner",
     oneLine: "安心と家族感を育てる人",
+    funnyTitle: "うちの子がいるだけで、家の空気が丸くなるタイプ",
+    shareCatch: "ぬくもりでご縁を育てる、ぬくもり見守り里親でした。",
+    parentBakaLine: "派手なことはしなくても、そばにいるだけで十分しあわせ。",
+    salonPostLine: "うちの子がいてよかったな、と思う瞬間があります。",
     clusterKey: "grow",
     shortDescription:
       "そばにいるだけで安心できる空気をつくり、うちの子との家族感を育てる里親さんです。",

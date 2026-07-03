@@ -50,7 +50,8 @@ export default function OnokunSatooyaResultClient() {
   const shareText = resultState
     ? [
         `${childLabel}とのご縁タイプは「${resultState.mainType.name}」でした。`,
-        resultState.mainType.oneLine,
+        resultState.mainType.shareCatch,
+        `親バカあるある: ${resultState.mainType.parentBakaLine}`,
         "おのくん里親さん 11ご縁タイプ診断",
         resultUrl,
       ].join("\n")
@@ -191,6 +192,9 @@ export default function OnokunSatooyaResultClient() {
                 <h1 className="mb-3 text-3xl font-black leading-tight sm:text-4xl">
                   {mainType.name}
                 </h1>
+                <p className="mb-3 rounded-[8px] bg-white px-4 py-3 text-base font-black leading-relaxed text-[#F06F8F] shadow-sm">
+                  {mainType.funnyTitle}
+                </p>
                 <p className="mb-3 text-lg font-black text-[#164F9E]">
                   {mainRevoRole.catchCopy}
                 </p>
@@ -208,6 +212,22 @@ export default function OnokunSatooyaResultClient() {
             <ResultBlock title="レボリスト11タイプ" body={`${mainRevoRole.name}：${mainRevoRole.mission}`} />
             <ResultBlock title="ご縁クラスター" body={cluster.description} />
             <ResultBlock title={`${childLabel}が連れてくるご縁`} body={mainType.broughtBond} />
+          </div>
+        </section>
+
+        <section className="mb-6 rounded-[8px] border-2 border-dashed border-[#F06F8F] bg-white p-6 shadow-sm">
+          <p className="mb-2 text-xs font-black tracking-[0.16em] text-[#F06F8F]">
+            OYABAKA ARUARU
+          </p>
+          <h2 className="mb-3 text-2xl font-black leading-tight">親バカあるある</h2>
+          <p className="mb-4 rounded-[8px] bg-[#FFF8EA] p-5 text-lg font-black leading-relaxed text-[#3A2A1E]">
+            {mainType.parentBakaLine}
+          </p>
+          <div className="rounded-[8px] bg-[#164F9E] p-4 text-white">
+            <p className="mb-1 text-xs font-black text-[#F7D35B]">サロンで名乗るなら</p>
+            <p className="text-sm font-black leading-relaxed">
+              「{mainType.salonPostLine}」
+            </p>
           </div>
         </section>
 
@@ -395,10 +415,13 @@ export default function OnokunSatooyaResultClient() {
                 <h3 className="text-2xl font-black leading-tight text-[#164F9E]">
                   {mainType.name}
                 </h3>
+                <p className="mt-1 text-sm font-black leading-tight text-[#F06F8F]">
+                  {mainType.shareCatch}
+                </p>
               </div>
             </div>
             <p className="mb-4 text-sm font-bold leading-relaxed text-[#3A2A1E]/75">
-              {mainType.oneLine}
+              {mainType.parentBakaLine}
             </p>
             <div className="grid gap-2 text-xs font-black text-[#3A2A1E]/70 sm:grid-cols-3">
               <span className="rounded-full bg-white px-3 py-2 text-center">{cluster.name}</span>
