@@ -13,6 +13,7 @@ import {
 import { revo111Roles, matchRules } from "@/data/revo111Roles";
 
 export interface OnokunSatooyaMatchResult {
+  baseType: OnokunSatooyaType | null;
   mainType: OnokunSatooyaType;
   subType: OnokunSatooyaType;
   desiredPartnerType: OnokunSatooyaType;
@@ -24,6 +25,8 @@ export interface OnokunSatooyaMatchResult {
   matchMode: "natural" | "growth" | "discovery";
   matchTitle: string;
   matchDescription: string;
+  baseComparisonTitle: string;
+  baseComparisonDescription: string;
   postPrompt: string;
   talkTopics: string[];
 }
@@ -43,11 +46,24 @@ export function isValidOnokunSatooyaMatchAnswers(answers: number[]) {
   );
 }
 
+export function isValidOnokunSatooyaBaseTypeKey(
+  value: string | null,
+): value is OnokunSatooyaTypeKey {
+  return onokunSatooyaTypes.some((type) => type.key === value);
+}
+
 export function calculateOnokunSatooyaMatchResult(
   answers: number[],
+  baseTypeKey?: OnokunSatooyaTypeKey | null,
 ): OnokunSatooyaMatchResult {
   const selfScores = createEmptyScores();
   const partnerScores = createEmptyScores();
+  const baseType = baseTypeKey ? getOnokunSatooyaType(baseTypeKey) : null;
+
+  if (baseType) {
+    selfScores[baseType.key] += 5;
+    partnerScores[baseType.partnerTypeKey] += 2;
+  }
 
   onokunSatooyaMatchQuestions.forEach((question, index) => {
     const answer = answers[index] as OnokunSatooyaMatchAnswerValue | undefined;
@@ -73,6 +89,7 @@ export function calculateOnokunSatooyaMatchResult(
   const matchMode = getMatchMode(mainType, naturalPartnerType, recommendedPartnerType);
 
   return {
+    baseType,
     mainType,
     subType,
     desiredPartnerType,
@@ -84,6 +101,8 @@ export function calculateOnokunSatooyaMatchResult(
     matchMode,
     matchTitle: createMatchTitle(matchMode),
     matchDescription: createMatchDescription(mainType, recommendedPartnerType, matchMode),
+    baseComparisonTitle: createBaseComparisonTitle(baseType, mainType),
+    baseComparisonDescription: createBaseComparisonDescription(baseType, mainType, subType),
     postPrompt: createPostPrompt(mainType, recommendedPartnerType),
     talkTopics: createTalkTopics(mainType, recommendedPartnerType),
   };
@@ -139,6 +158,35 @@ function createMatchDescription(
   }
 
   return "自分だけでは選ばない視点が入り、ご縁の広がり方が少し変わる組み合わせです。";
+}
+
+function createBaseComparisonTitle(
+  baseType: OnokunSatooyaType | null,
+  mainType: OnokunSatooyaType,
+) {
+  if (!baseType) return "18問だけで見た相棒マッチ";
+  if (baseType.key === mainType.key) return "11問と18問で、中心タイプが一致";
+  return "11問とは違う色も出ています";
+}
+
+function createBaseComparisonDescription(
+  baseType: OnokunSatooyaType | null,
+  mainType: OnokunSatooyaType,
+  subType: OnokunSatooyaType,
+) {
+  if (!baseType) {
+    return "今回は11問ライト診断の結果を使わず、18問の回答だけで自分の動き方と相棒タイプを見ています。";
+  }
+
+  if (baseType.key === mainType.key) {
+    return `11問で出た「${baseType.name}」の気配が、相棒診断でも中心に出ています。自分らしさがわかりやすく出ている状態です。`;
+  }
+
+  if (baseType.key === subType.key) {
+    return `11問で出た「${baseType.name}」は、今回は隠し味として残っています。中心には「${mainType.name}」が出ていて、人とつながる場面では少し違う動き方が出やすいかもしれません。`;
+  }
+
+  return `11問では「${baseType.name}」でしたが、相棒診断では「${mainType.name}」が強く出ています。タイプが外れたのではなく、ひとりで楽しむ時と、誰かと組む時で出てくるご縁の向きが変わっていると見ます。`;
 }
 
 function createPostPrompt(mainType: OnokunSatooyaType, partnerType: OnokunSatooyaType) {

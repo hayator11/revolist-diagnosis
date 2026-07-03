@@ -2,19 +2,29 @@
 
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { getOnokunSatooyaType } from "../../onokun-satooya-11-v1/_data/onokunSatooyaTypes";
 import {
   ONOKUN_SATOOYA_MATCH_TOTAL_QUESTIONS,
   onokunSatooyaMatchQuestions,
   type OnokunSatooyaMatchAnswerValue,
 } from "../_data/onokunSatooyaMatchQuestions";
-import { encodeOnokunSatooyaMatchAnswers } from "../_lib/calculateOnokunSatooyaMatchResult";
+import {
+  encodeOnokunSatooyaMatchAnswers,
+  isValidOnokunSatooyaBaseTypeKey,
+} from "../_lib/calculateOnokunSatooyaMatchResult";
 
 const MATCH_PATH = "/research/onokun-satooya-match-18-v1";
 const MATCH_CHILD_NAME_SESSION_KEY = "onokun-satooya-match-child-name";
 
 export default function OnokunSatooyaMatchDiagnosisClient() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const baseTypeKeyParam = searchParams.get("baseType");
+  const baseTypeKey = isValidOnokunSatooyaBaseTypeKey(baseTypeKeyParam)
+    ? baseTypeKeyParam
+    : null;
+  const baseType = baseTypeKey ? getOnokunSatooyaType(baseTypeKey) : null;
   const [started, setStarted] = useState(false);
   const [childName, setChildName] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -60,9 +70,10 @@ export default function OnokunSatooyaMatchDiagnosisClient() {
       }
 
       const encoded = encodeOnokunSatooyaMatchAnswers(nextAnswers);
-      router.push(`${MATCH_PATH}/result?answers=${encoded}`);
+      const baseTypeQuery = baseTypeKey ? `&baseType=${baseTypeKey}` : "";
+      router.push(`${MATCH_PATH}/result?answers=${encoded}${baseTypeQuery}`);
     },
-    [answers, currentIndex, isAdvancing, router],
+    [answers, baseTypeKey, currentIndex, isAdvancing, router],
   );
 
   if (!started) {
@@ -102,6 +113,17 @@ export default function OnokunSatooyaMatchDiagnosisClient() {
             </div>
 
             <div className="w-full rounded-[8px] bg-white/94 p-4 text-[#3A2A1E] shadow-sm sm:max-w-md">
+              {baseType && (
+                <div className="mb-4 rounded-[8px] border-2 border-dashed border-[#F6A04D] bg-[#FFF8EA] p-4">
+                  <p className="mb-1 text-xs font-black text-[#F06F8F]">
+                    11問結果を引き継ぎ中
+                  </p>
+                  <p className="text-sm font-black leading-relaxed text-[#3A2A1E]">
+                    「{baseType.name}」を少しだけ参考にして、相棒マッチを見ます。
+                  </p>
+                  <LinkLikeReset />
+                </div>
+              )}
               <label className="mb-2 block text-xs font-black text-[#164F9E]">
                 うちの子のお名前・ニックネーム 任意
               </label>
@@ -206,6 +228,17 @@ export default function OnokunSatooyaMatchDiagnosisClient() {
         </section>
       </div>
     </main>
+  );
+}
+
+function LinkLikeReset() {
+  return (
+    <a
+      href={MATCH_PATH}
+      className="mt-3 inline-flex text-xs font-black text-[#164F9E] underline underline-offset-4"
+    >
+      引き継がずに診断する
+    </a>
   );
 }
 

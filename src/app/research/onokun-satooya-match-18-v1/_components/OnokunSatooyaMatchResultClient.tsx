@@ -7,6 +7,7 @@ import { useSearchParams } from "next/navigation";
 import {
   calculateOnokunSatooyaMatchResult,
   decodeOnokunSatooyaMatchAnswers,
+  isValidOnokunSatooyaBaseTypeKey,
   isValidOnokunSatooyaMatchAnswers,
 } from "../_lib/calculateOnokunSatooyaMatchResult";
 import { revo111Roles } from "@/data/revo111Roles";
@@ -19,6 +20,10 @@ const ONOKUN_OPEN_CHAT_URL =
 export default function OnokunSatooyaMatchResultClient() {
   const searchParams = useSearchParams();
   const encoded = searchParams.get("answers") ?? "";
+  const baseTypeKeyParam = searchParams.get("baseType");
+  const baseTypeKey = isValidOnokunSatooyaBaseTypeKey(baseTypeKeyParam)
+    ? baseTypeKeyParam
+    : null;
   const [copied, setCopied] = useState(false);
   const [childName] = useState(() =>
     typeof window === "undefined"
@@ -29,21 +34,26 @@ export default function OnokunSatooyaMatchResultClient() {
   const answers = useMemo(() => decodeOnokunSatooyaMatchAnswers(encoded), [encoded]);
   const resultState = useMemo(() => {
     if (!isValidOnokunSatooyaMatchAnswers(answers)) return null;
-    return calculateOnokunSatooyaMatchResult(answers);
-  }, [answers]);
+    return calculateOnokunSatooyaMatchResult(answers, baseTypeKey);
+  }, [answers, baseTypeKey]);
 
   useOnokunShell();
 
   const resultUrl =
     typeof window === "undefined"
       ? ""
-      : `${window.location.origin}${MATCH_PATH}/result?answers=${encoded}`;
+      : `${window.location.origin}${MATCH_PATH}/result?answers=${encoded}${
+          baseTypeKey ? `&baseType=${baseTypeKey}` : ""
+        }`;
   const childLabel = childName || "うちの子";
 
   const shareText = resultState
     ? [
         `${childLabel}の相棒マッチ診断`,
         `私は「${resultState.mainType.name}」、気になる相棒は「${resultState.recommendedPartnerType.name}」でした。`,
+        resultState.baseType
+          ? `11問の「${resultState.baseType.name}」も引き継いで見ています。`
+          : "18問だけで相棒タイプを見ています。",
         resultState.postPrompt,
         "おのくん里親さん 相棒マッチ診断",
         resultUrl,
@@ -155,6 +165,28 @@ export default function OnokunSatooyaMatchResultClient() {
             <p className="rounded-[8px] bg-white p-4 text-sm font-black leading-relaxed text-[#3A2A1E]">
               「{recommendedPartnerType.salonPostLine}」と言っている里親さんを見つけたら、相棒候補かもしれません。
             </p>
+          </div>
+        </section>
+
+        <section className="mb-6 rounded-[8px] border-2 border-dashed border-[#F6A04D] bg-white p-6 shadow-sm">
+          <p className="mb-2 text-xs font-black tracking-[0.16em] text-[#F06F8F]">
+            LIGHT RESULT
+          </p>
+          <h2 className="mb-3 text-xl font-black">{resultState.baseComparisonTitle}</h2>
+          <p className="mb-4 rounded-[8px] bg-[#FFF8EA] p-4 text-sm font-black leading-relaxed">
+            {resultState.baseComparisonDescription}
+          </p>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <MatchMiniCard
+              title="引き継いだ11問タイプ"
+              body={resultState.baseType?.name ?? "引き継ぎなし"}
+              sub={resultState.baseType ? "入口で見えたご縁タイプ" : "18問単体で診断"}
+            />
+            <MatchMiniCard
+              title="18問で強く出たタイプ"
+              body={mainType.name}
+              sub="相棒探しで出やすいご縁タイプ"
+            />
           </div>
         </section>
 

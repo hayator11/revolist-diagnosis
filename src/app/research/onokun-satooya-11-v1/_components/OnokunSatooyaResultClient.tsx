@@ -16,6 +16,7 @@ import {
 import { revo111Roles, matchRules } from "@/data/revo111Roles";
 
 const DIAGNOSIS_PATH = "/research/onokun-satooya-11-v1";
+const MATCH_PATH = "/research/onokun-satooya-match-18-v1";
 const ONOKUN_CHILD_NAME_SESSION_KEY = "onokun-satooya-child-name";
 const ONOKUN_OPEN_CHAT_URL =
   "https://line.me/ti/g2/l_r88aCvFnX6D6JqjLQBnIi1zhEatqT-tk2c4Q?utm_source=invitation&utm_medium=link_copy&utm_campaign=default";
@@ -482,6 +483,18 @@ export default function OnokunSatooyaResultClient() {
         </section>
 
         <div className="grid gap-3">
+          <Link
+            href={`${MATCH_PATH}?baseType=${mainType.key}`}
+            className="rounded-full bg-[#F06F8F] px-6 py-4 text-center text-sm font-black text-white shadow-[0_7px_0_#c95773] transition-transform hover:-translate-y-0.5 active:translate-y-1 active:shadow-[0_3px_0_#c95773]"
+          >
+            この結果を引き継いで相棒マッチ診断へ
+          </Link>
+          <Link
+            href={MATCH_PATH}
+            className="rounded-full bg-[#FFF8EA] px-6 py-4 text-center text-sm font-black text-[#164F9E] shadow-sm"
+          >
+            引き継がずに相棒マッチ診断へ
+          </Link>
           <Link
             href={DIAGNOSIS_PATH}
             className="rounded-full bg-white px-6 py-4 text-center text-sm font-black text-[#164F9E] shadow-sm"
