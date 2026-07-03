@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import OpenChatInvite from "@/components/OpenChatInvite";
+import { entryDiagnosisResultCopy } from "@/data/entryDiagnosisResultCopy";
 import {
   calculateEntryDiagnosisResult,
   decodeEntryAnswers,
@@ -23,6 +24,7 @@ function percentBar(value: number) {
 export default function EntryDiagnosisResultClient() {
   const searchParams = useSearchParams();
   const encoded = searchParams.get("answers") ?? "";
+  const [copied, setCopied] = useState(false);
 
   const resultState = useMemo(() => {
     const answers = decodeEntryAnswers(encoded);
@@ -90,6 +92,31 @@ export default function EntryDiagnosisResultClient() {
   const subType = revoTypes[result.sub.key];
   const auxiliaryType = revoTypes[result.auxiliary.key];
   const partnerTypes = result.partnerTypes.map((key) => revoTypes[key]);
+  const resultCopy = entryDiagnosisResultCopy[mainType.key];
+  const shareText = [
+    `今の私は「${mainType.name}」タイプでした。`,
+    "",
+    resultCopy.shareHook,
+    "",
+    `可能性を引き出し合いやすい相手は`,
+    partnerTypes.map((type) => type.name).join(" / "),
+    "",
+    "あなたは何タイプ？",
+    "#レボリスト診断",
+  ].join("\n");
+  const shareUrl = `https://revo.onokun.com/diagnosis/entry/result?answers=${encodeURIComponent(encoded)}`;
+  const xShareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
+  const lineShareUrl = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`;
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(`${shareText}\n${shareUrl}`);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1800);
+    } catch {
+      // Sharing should not block result display.
+    }
+  };
 
   return (
     <main className="bg-white px-6 py-12">
@@ -100,13 +127,16 @@ export default function EntryDiagnosisResultClient() {
 
         <section className="mb-6 rounded-[28px] bg-black p-7 text-white">
           <p className="mb-3 text-xs uppercase tracking-widest text-gray-500">
-            あなたの入口タイプ
+            今のあなたは
           </p>
           <h1 className="mb-3 text-4xl font-bold leading-tight">
             {mainType.name}
           </h1>
+          <p className="mb-4 text-xl font-bold leading-snug text-white">
+            {resultCopy.title}
+          </p>
           <p className="mb-5 text-sm leading-relaxed text-gray-300">
-            {mainType.catchcopy}
+            {resultCopy.oneLiner}
           </p>
           <div className="h-px bg-gray-800" />
           <p className="mt-5 text-sm leading-relaxed text-gray-300">
@@ -116,21 +146,49 @@ export default function EntryDiagnosisResultClient() {
 
         <section className="mb-6 rounded-3xl border border-gray-200 p-6">
           <p className="mb-2 text-xs uppercase tracking-widest text-gray-400">
-            What you bring
+            Your scene
           </p>
           <h2 className="mb-3 text-xl font-bold text-black">
-            あなたが自然に持ち寄っているもの
+            こんな場面で出てきやすい役割です
           </h2>
-          <div className="mb-4 flex flex-wrap gap-2">
+          <p className="text-sm leading-relaxed text-gray-600">
+            {resultCopy.scene}
+          </p>
+        </section>
+
+        <section className="mb-6 rounded-3xl border border-gray-200 p-6">
+          <p className="mb-2 text-xs uppercase tracking-widest text-gray-400">
+            Your moves
+          </p>
+          <h2 className="mb-3 text-xl font-bold text-black">
+            ついやりがちなムーブ
+          </h2>
+          <div className="space-y-3">
+            {resultCopy.moves.map((move, index) => (
+              <p key={move} className="rounded-2xl bg-gray-50 p-4 text-sm font-medium leading-relaxed text-black">
+                {index + 1}. {move}
+              </p>
+            ))}
+          </div>
+        </section>
+
+        <section className="mb-6 rounded-3xl border border-gray-200 p-6">
+          <p className="mb-2 text-xs uppercase tracking-widest text-gray-400">
+            From others
+          </p>
+          <h2 className="mb-3 text-xl font-bold text-black">
+            周りから見ると
+          </h2>
+          <p className="mb-4 text-sm leading-relaxed text-gray-600">
+            {resultCopy.seenAs}
+          </p>
+          <div className="flex flex-wrap gap-2">
             {mainType.gives.map((value) => (
               <span key={value} className="rounded-full bg-gray-100 px-3 py-1.5 text-xs text-gray-700">
                 {value}
               </span>
             ))}
           </div>
-          <p className="text-sm leading-relaxed text-gray-600">
-            {mainType.givesDetail}
-          </p>
         </section>
 
         <section className="mb-6 rounded-3xl border border-gray-200 p-6">
@@ -151,6 +209,43 @@ export default function EntryDiagnosisResultClient() {
           <p className="mt-4 text-xs leading-relaxed text-gray-400">
             これは「合う・合わない」を決めるものではなく、会話やチームづくりの入口です。
           </p>
+        </section>
+
+        <section className="mb-6 rounded-3xl border border-gray-200 bg-black p-6 text-white">
+          <p className="mb-2 text-xs uppercase tracking-widest text-gray-500">
+            Share
+          </p>
+          <h2 className="mb-3 text-xl font-bold text-white">
+            この結果、誰かに見せてみる？
+          </h2>
+          <p className="mb-5 whitespace-pre-line rounded-2xl bg-white/10 p-4 text-sm leading-relaxed text-gray-200">
+            {shareText}
+          </p>
+          <div className="grid gap-3 sm:grid-cols-3">
+            <button
+              type="button"
+              onClick={handleCopy}
+              className="rounded-full bg-white px-5 py-3 text-sm font-medium text-black transition-colors hover:bg-gray-100"
+            >
+              {copied ? "コピー済み" : "コピー"}
+            </button>
+            <a
+              href={xShareUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-full border border-white/20 px-5 py-3 text-center text-sm font-medium text-white transition-colors hover:bg-white/10"
+            >
+              Xでシェア
+            </a>
+            <a
+              href={lineShareUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-full border border-white/20 px-5 py-3 text-center text-sm font-medium text-white transition-colors hover:bg-white/10"
+            >
+              LINE
+            </a>
+          </div>
         </section>
 
         <section className="mb-6 rounded-3xl border border-gray-200 p-6">
