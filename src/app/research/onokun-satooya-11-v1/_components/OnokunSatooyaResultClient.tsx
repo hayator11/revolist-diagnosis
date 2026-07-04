@@ -216,6 +216,33 @@ export default function OnokunSatooyaResultClient() {
           </div>
         </section>
 
+        <section className="mb-6 rounded-[8px] border-2 border-dashed border-[#F6A04D] bg-white p-6 shadow-sm">
+          <p className="mb-2 text-xs font-black tracking-[0.16em] text-[#F06F8F]">
+            NEXT QUEST
+          </p>
+          <h2 className="mb-3 text-2xl font-black leading-tight">
+            このタイプを引き継いで、相棒を探す？
+          </h2>
+          <p className="mb-5 text-sm font-bold leading-relaxed text-[#3A2A1E]/75">
+            11問で出た「{mainType.name}」を少しだけ参考にして、18問で相性のよさそうな里親さんタイプを見ます。
+            引き継がずに、18問だけで見ることもできます。
+          </p>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <Link
+              href={`${MATCH_PATH}?baseType=${mainType.key}`}
+              className="rounded-full bg-[#F06F8F] px-6 py-4 text-center text-sm font-black text-white shadow-[0_7px_0_#c95773] transition-transform hover:-translate-y-0.5 active:translate-y-1 active:shadow-[0_3px_0_#c95773]"
+            >
+              結果を引き継いで相棒マッチへ
+            </Link>
+            <Link
+              href={MATCH_PATH}
+              className="rounded-full bg-[#FFF8EA] px-6 py-4 text-center text-sm font-black text-[#164F9E] shadow-sm"
+            >
+              引き継がずに18問だけで見る
+            </Link>
+          </div>
+        </section>
+
         <section className="mb-6 rounded-[8px] border-2 border-dashed border-[#F06F8F] bg-white p-6 shadow-sm">
           <p className="mb-2 text-xs font-black tracking-[0.16em] text-[#F06F8F]">
             OYABAKA ARUARU
