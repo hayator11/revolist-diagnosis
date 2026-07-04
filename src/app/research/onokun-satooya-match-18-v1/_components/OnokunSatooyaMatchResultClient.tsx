@@ -52,7 +52,7 @@ export default function OnokunSatooyaMatchResultClient() {
         `${childLabel}の相棒マッチ診断`,
         `私は「${resultState.mainType.name}」、気になる相棒は「${resultState.recommendedPartnerType.name}」でした。`,
         resultState.baseType
-          ? `11問の「${resultState.baseType.name}」も引き継いで見ています。`
+          ? `入力した11問タイプ「${resultState.baseType.name}」も参考にしています。`
           : "18問だけで相棒タイプを見ています。",
         resultState.postPrompt,
         "おのくん里親さん 相棒マッチ診断",
@@ -178,9 +178,9 @@ export default function OnokunSatooyaMatchResultClient() {
           </p>
           <div className="grid gap-3 sm:grid-cols-2">
             <MatchMiniCard
-              title="引き継いだ11問タイプ"
-              body={resultState.baseType?.name ?? "引き継ぎなし"}
-              sub={resultState.baseType ? "入口で見えたご縁タイプ" : "18問単体で診断"}
+              title="入力した11問タイプ"
+              body={resultState.baseType?.name ?? "入力なし"}
+              sub={resultState.baseType ? "自分で選んだ入口タイプ" : "18問単体で診断"}
             />
             <MatchMiniCard
               title="18問で強く出たタイプ"

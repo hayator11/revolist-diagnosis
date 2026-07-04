@@ -3,7 +3,11 @@
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { getOnokunSatooyaType } from "../../onokun-satooya-11-v1/_data/onokunSatooyaTypes";
+import {
+  getOnokunSatooyaType,
+  onokunSatooyaTypes,
+  type OnokunSatooyaTypeKey,
+} from "../../onokun-satooya-11-v1/_data/onokunSatooyaTypes";
 import {
   ONOKUN_SATOOYA_MATCH_TOTAL_QUESTIONS,
   onokunSatooyaMatchQuestions,
@@ -21,18 +25,21 @@ export default function OnokunSatooyaMatchDiagnosisClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const baseTypeKeyParam = searchParams.get("baseType");
-  const baseTypeKey = isValidOnokunSatooyaBaseTypeKey(baseTypeKeyParam)
+  const initialBaseTypeKey = isValidOnokunSatooyaBaseTypeKey(baseTypeKeyParam)
     ? baseTypeKeyParam
-    : null;
-  const baseType = baseTypeKey ? getOnokunSatooyaType(baseTypeKey) : null;
+    : "";
   const [started, setStarted] = useState(false);
   const [childName, setChildName] = useState("");
+  const [selectedBaseTypeKey, setSelectedBaseTypeKey] = useState<OnokunSatooyaTypeKey | "">(
+    initialBaseTypeKey,
+  );
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<number[]>([]);
   const [isAdvancing, setIsAdvancing] = useState(false);
 
   const currentQuestion = onokunSatooyaMatchQuestions[currentIndex];
   const progress = Math.round(((currentIndex + 1) / ONOKUN_SATOOYA_MATCH_TOTAL_QUESTIONS) * 100);
+  const selectedBaseType = selectedBaseTypeKey ? getOnokunSatooyaType(selectedBaseTypeKey) : null;
 
   useOnokunShell();
 
@@ -70,10 +77,10 @@ export default function OnokunSatooyaMatchDiagnosisClient() {
       }
 
       const encoded = encodeOnokunSatooyaMatchAnswers(nextAnswers);
-      const baseTypeQuery = baseTypeKey ? `&baseType=${baseTypeKey}` : "";
+      const baseTypeQuery = selectedBaseTypeKey ? `&baseType=${selectedBaseTypeKey}` : "";
       router.push(`${MATCH_PATH}/result?answers=${encoded}${baseTypeQuery}`);
     },
-    [answers, baseTypeKey, currentIndex, isAdvancing, router],
+    [answers, currentIndex, isAdvancing, router, selectedBaseTypeKey],
   );
 
   if (!started) {
@@ -113,17 +120,47 @@ export default function OnokunSatooyaMatchDiagnosisClient() {
             </div>
 
             <div className="w-full rounded-[8px] bg-white/94 p-4 text-[#3A2A1E] shadow-sm sm:max-w-md">
-              {baseType && (
-                <div className="mb-4 rounded-[8px] border-2 border-dashed border-[#F6A04D] bg-[#FFF8EA] p-4">
-                  <p className="mb-1 text-xs font-black text-[#F06F8F]">
-                    11問結果を引き継ぎ中
-                  </p>
-                  <p className="text-sm font-black leading-relaxed text-[#3A2A1E]">
-                    「{baseType.name}」を少しだけ参考にして、相棒マッチを見ます。
-                  </p>
-                  <LinkLikeReset />
+              <div className="mb-4 rounded-[8px] border-2 border-dashed border-[#F6A04D] bg-[#FFF8EA] p-4">
+                <p className="mb-1 text-xs font-black text-[#F06F8F]">
+                  11問で出た自分のタイプ 任意
+                </p>
+                <p className="mb-3 text-xs font-bold leading-relaxed text-[#3A2A1E]/70">
+                  親バカサロンで案内を見た方は、11問結果のタイプを選ぶと少しだけ診断に反映されます。
+                  わからない場合は空欄で進めます。
+                </p>
+                <div className="mb-3 grid max-h-52 gap-2 overflow-y-auto pr-1">
+                  <button
+                    type="button"
+                    onClick={() => setSelectedBaseTypeKey("")}
+                    className={`rounded-[8px] border px-3 py-2 text-left text-xs font-black transition ${
+                      selectedBaseTypeKey === ""
+                        ? "border-[#164F9E] bg-[#164F9E] text-white"
+                        : "border-[#E8DCC4] bg-white text-[#3A2A1E]"
+                    }`}
+                  >
+                    選ばずに18問だけで見る
+                  </button>
+                  {onokunSatooyaTypes.map((type) => (
+                    <button
+                      key={type.key}
+                      type="button"
+                      onClick={() => setSelectedBaseTypeKey(type.key)}
+                      className={`rounded-[8px] border px-3 py-2 text-left text-xs font-black transition ${
+                        selectedBaseTypeKey === type.key
+                          ? "border-[#F06F8F] bg-[#F06F8F] text-white"
+                          : "border-[#E8DCC4] bg-white text-[#3A2A1E]"
+                      }`}
+                    >
+                      {type.name}
+                    </button>
+                  ))}
                 </div>
-              )}
+                <p className="text-xs font-black leading-relaxed text-[#164F9E]">
+                  {selectedBaseType
+                    ? `選択中: ${selectedBaseType.name}`
+                    : "未選択: 18問の回答だけで診断します"}
+                </p>
+              </div>
               <label className="mb-2 block text-xs font-black text-[#164F9E]">
                 うちの子のお名前・ニックネーム 任意
               </label>
@@ -228,17 +265,6 @@ export default function OnokunSatooyaMatchDiagnosisClient() {
         </section>
       </div>
     </main>
-  );
-}
-
-function LinkLikeReset() {
-  return (
-    <a
-      href={MATCH_PATH}
-      className="mt-3 inline-flex text-xs font-black text-[#164F9E] underline underline-offset-4"
-    >
-      引き継がずに診断する
-    </a>
   );
 }
 
