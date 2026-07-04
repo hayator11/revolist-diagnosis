@@ -37,44 +37,32 @@ export default function EntryDiagnosisClient() {
             Revolist Entry
           </p>
           <h1 className="mb-4 text-4xl font-bold leading-tight text-black">
-            11問で、
+            あなたの“当たり前”は、
             <br />
-            役割の入口を見つける。
+            誰かの突破口かもしれない。
           </h1>
-          <p className="mb-8 text-sm leading-relaxed text-gray-600">
-            深く考えなくて大丈夫です。
-            <br />
-            場面を想像して、つい自分がやりそうな動きを選んでください。
-          </p>
 
-          <section className="mb-5 rounded-3xl border border-gray-200 bg-gray-50 p-6">
-            <p className="mb-3 text-sm font-bold leading-relaxed text-black">
-              これは、性格を決めつける診断ではありません。
-            </p>
-            <p className="text-sm leading-relaxed text-gray-600">
-              あなたが何を持ち寄る人なのか。誰と組むと可能性が動きやすいのか。
-              その入口を、楽しく軽く見つけるための診断です。
-            </p>
-          </section>
-
-          <section className="mb-8 rounded-3xl border border-gray-200 p-6">
+          <section className="mb-6 rounded-3xl border border-gray-200 bg-gray-50 p-6">
             <p className="mb-4 text-xs uppercase tracking-widest text-gray-400">
-              What you find
+              この診断で見えてくること
             </p>
             <ul className="space-y-3 text-sm leading-relaxed text-gray-700">
-              <li>・今のあなたに出やすい11役割</li>
-              <li>・自然に人へ渡しているもの</li>
+              <li>・自分では普通だと思っていた持ち味</li>
+              <li>・なぜか人から頼られる理由</li>
               <li>・可能性を引き出し合いやすい相手</li>
-              <li>・もっと詳しく知るための次の入口</li>
             </ul>
           </section>
+
+          <p className="mb-8 text-sm leading-relaxed text-gray-600">
+            直感で選べます。
+          </p>
 
           <button
             type="button"
             onClick={() => setStarted(true)}
             className="rounded-full bg-black px-8 py-4 text-base font-medium text-white transition-colors hover:bg-gray-800"
           >
-            11問ではじめる
+            自分の役割を見つける
           </button>
         </div>
       </main>
