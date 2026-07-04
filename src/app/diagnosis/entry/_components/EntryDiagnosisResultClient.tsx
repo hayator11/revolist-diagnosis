@@ -286,12 +286,6 @@ export default function EntryDiagnosisResultClient() {
           >
             もう一度11問で試す
           </Link>
-          <Link
-            href="/monitor"
-            className="block rounded-2xl border border-gray-200 px-6 py-4 text-center text-sm font-medium text-gray-700"
-          >
-            モニター診断を見る
-          </Link>
         </div>
       </div>
     </main>
