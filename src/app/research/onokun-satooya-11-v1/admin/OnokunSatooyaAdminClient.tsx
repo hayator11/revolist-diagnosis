@@ -32,6 +32,9 @@ interface ShareVariantStat {
   callToActionCopy: string;
   specialCopyId: string | null;
   specialCopy: string;
+  previewTypeKey: string;
+  previewTypeName: string;
+  shareTextPreview: string;
   assignedCount: number;
   shareClickCount: number;
   openChatClickCount: number;
@@ -382,13 +385,14 @@ export default function OnokunSatooyaAdminClient() {
 
             <Panel title="シェアコピー別">
               <div className="overflow-x-auto">
-                <table className="w-full min-w-[1200px] border-collapse text-left text-sm">
+                <table className="w-full min-w-[1500px] border-collapse text-left text-sm">
                   <thead>
                     <tr className="border-b border-[#E8DCC4] text-xs font-black text-[#3A2A1E]/60">
                       <th className="py-3 pr-4">種別</th>
                       <th className="py-3 pr-4">冒頭コピー</th>
                       <th className="py-3 pr-4">呼びかけ</th>
                       <th className="py-3 pr-4">特別コピー</th>
+                      <th className="py-3 pr-4">実際の投稿文面</th>
                       <th className="py-3 pr-4">表示</th>
                       <th className="py-3 pr-4">シェア</th>
                       <th className="py-3 pr-4">シェア率</th>
@@ -425,6 +429,14 @@ export default function OnokunSatooyaAdminClient() {
                           <p className="text-xs font-bold leading-relaxed">
                             {item.specialCopy || "-"}
                           </p>
+                        </td>
+                        <td className="max-w-[360px] py-3 pr-4">
+                          <p className="mb-2 text-[11px] font-black text-[#164F9E]">
+                            例: {item.previewTypeName}
+                          </p>
+                          <pre className="whitespace-pre-wrap rounded-[8px] bg-[#FFF8EA] p-3 text-xs font-bold leading-relaxed text-[#3A2A1E]">
+                            {item.shareTextPreview || "-"}
+                          </pre>
                         </td>
                         <td className="py-3 pr-4">{item.assignedCount}</td>
                         <td className="py-3 pr-4">{item.shareClickCount}</td>

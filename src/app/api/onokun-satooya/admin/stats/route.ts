@@ -7,6 +7,7 @@ import {
   getOnokunSatooyaShareOpeningCopy,
   getOnokunSatooyaShareSpecialCopy,
 } from "@/app/research/onokun-satooya-11-v1/_data/onokunSatooyaShareCopy";
+import { getOnokunSatooyaType } from "@/app/research/onokun-satooya-11-v1/_data/onokunSatooyaTypes";
 
 interface OnokunResultRow {
   diagnosis_run_number: number;
@@ -88,6 +89,9 @@ function aggregateShareVariantStats(rows: OnokunShareEventRow[]) {
       callToActionCopy: string;
       specialCopyId: string | null;
       specialCopy: string;
+      previewTypeKey: string;
+      previewTypeName: string;
+      shareTextPreview: string;
       assignedCount: number;
       shareClickCount: number;
       openChatClickCount: number;
@@ -107,6 +111,14 @@ function aggregateShareVariantStats(rows: OnokunShareEventRow[]) {
       callToActionCopy: getOnokunSatooyaShareCallToActionCopy(row.call_to_action_copy_id),
       specialCopyId: row.special_copy_id,
       specialCopy: getOnokunSatooyaShareSpecialCopy(row.special_copy_id),
+      previewTypeKey: row.main_type_key,
+      previewTypeName: row.main_type_name,
+      shareTextPreview: createShareTextPreview({
+        openingCopy: getOnokunSatooyaShareOpeningCopy(row.opening_copy_id),
+        callToActionCopy: getOnokunSatooyaShareCallToActionCopy(row.call_to_action_copy_id),
+        specialCopy: getOnokunSatooyaShareSpecialCopy(row.special_copy_id),
+        typeKey: row.main_type_key,
+      }),
       assignedCount: 0,
       shareClickCount: 0,
       openChatClickCount: 0,
@@ -127,6 +139,36 @@ function aggregateShareVariantStats(rows: OnokunShareEventRow[]) {
       openChatRate: createRate(item.openChatClickCount, item.assignedCount),
     }))
     .sort((a, b) => b.assignedCount - a.assignedCount);
+}
+
+function createShareTextPreview({
+  openingCopy,
+  callToActionCopy,
+  specialCopy,
+  typeKey,
+}: {
+  openingCopy: string;
+  callToActionCopy: string;
+  specialCopy: string;
+  typeKey: string;
+}) {
+  const type = getOnokunSatooyaType(
+    typeKey as Parameters<typeof getOnokunSatooyaType>[0],
+  );
+
+  return [
+    specialCopy || null,
+    openingCopy,
+    `うちの子とのご縁タイプは「${type.name}」でした。`,
+    type.shareCatch,
+    `親バカあるある: ${type.parentBakaLine}`,
+    "",
+    callToActionCopy,
+    "おのくん里親さん 11ご縁タイプ診断",
+    "https://revo.onokun.com/research/onokun-satooya-11-v1",
+  ]
+    .filter((line): line is string => line !== null && line !== "")
+    .join("\n");
 }
 
 function aggregateShareKindStats(rows: OnokunShareEventRow[]) {
