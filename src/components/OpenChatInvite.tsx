@@ -3,6 +3,14 @@ const OPEN_CHAT_URL =
 
 type OpenChatInviteProps = {
   context?: "diagnosis" | "monitor" | "icebreak";
+  copy?: {
+    key?: string;
+    eyebrow?: string;
+    title?: string;
+    body?: string;
+    note?: string;
+    buttonLabel?: string;
+  };
 };
 
 const contextCopy: Record<NonNullable<OpenChatInviteProps["context"]>, string> = {
@@ -14,24 +22,35 @@ const contextCopy: Record<NonNullable<OpenChatInviteProps["context"]>, string> =
     "オフ会用診断の使い方、席順づくり、オリジナル診断づくりの可能性などをお知らせします。",
 };
 
-export default function OpenChatInvite({ context = "diagnosis" }: OpenChatInviteProps) {
+export default function OpenChatInvite({ context = "diagnosis", copy }: OpenChatInviteProps) {
   return (
-    <section className="rounded-3xl border border-gray-200 bg-gray-50 p-6">
+    <section
+      className="rounded-3xl border border-gray-200 bg-gray-50 p-6"
+      data-open-chat-copy={copy?.key}
+    >
       <p className="mb-3 text-xs font-medium uppercase tracking-widest text-gray-400">
-        Open Chat
+        {copy?.eyebrow ?? "Open Chat"}
       </p>
       <h2 className="mb-3 text-lg font-bold leading-snug text-black">
-        オープンチャット
-        <br />
-        「孤独な挑戦者を、減らしたい」
+        {copy?.title ?? (
+          <>
+            オープンチャット
+            <br />
+            「孤独な挑戦者を、減らしたい」
+          </>
+        )}
       </h2>
       <p className="mb-4 text-sm leading-relaxed text-gray-600">
-        ひとりで抱え込まず、役割や可能性を持ち寄るための場所です。
-        {contextCopy[context]}
+        {copy?.body ?? (
+          <>
+            ひとりで抱え込まず、役割や可能性を持ち寄るための場所です。
+            {contextCopy[context]}
+          </>
+        )}
       </p>
       <p className="mb-5 text-xs leading-relaxed text-gray-500">
-        診断結果の共有、モニター企画、オフ会用の活用、オリジナル診断の構築など、
-        次の展開を知りたい方に向けて案内していきます。
+        {copy?.note ??
+          "診断結果の共有、モニター企画、オフ会用の活用、オリジナル診断の構築など、次の展開を知りたい方に向けて案内していきます。"}
       </p>
       <a
         href={OPEN_CHAT_URL}
@@ -39,7 +58,7 @@ export default function OpenChatInvite({ context = "diagnosis" }: OpenChatInvite
         rel="noopener noreferrer"
         className="block w-full rounded-full bg-black px-6 py-3 text-center text-sm font-medium text-white transition-colors hover:bg-gray-800"
       >
-        オープンチャットで次のお知らせを受け取る
+        {copy?.buttonLabel ?? "オープンチャットで次のお知らせを受け取る"}
       </a>
     </section>
   );

@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import OpenChatInvite from "@/components/OpenChatInvite";
+import { selectEntryOpenChatInviteCopy } from "@/data/entryOpenChatInviteCopy";
 import { entryDiagnosisResultCopy } from "@/data/entryDiagnosisResultCopy";
 import { selectEntryShareCopy } from "@/data/entryDiagnosisShareCopy";
 import {
@@ -95,6 +96,7 @@ export default function EntryDiagnosisResultClient() {
   const partnerTypes = result.partnerTypes.map((key) => revoTypes[key]);
   const resultCopy = entryDiagnosisResultCopy[mainType.key];
   const shareCopy = selectEntryShareCopy(encoded, mainType.key);
+  const openChatCopy = selectEntryOpenChatInviteCopy(encoded);
   const partnerNamesText = partnerTypes.map((type) => `「${type.name}」`).join("と");
   const shareText = [
     shareCopy.intro.text,
@@ -281,7 +283,7 @@ export default function EntryDiagnosisResultClient() {
         </section>
 
         <div className="mb-6">
-          <OpenChatInvite context="diagnosis" />
+          <OpenChatInvite context="diagnosis" copy={openChatCopy} />
         </div>
 
         <div className="space-y-3">
