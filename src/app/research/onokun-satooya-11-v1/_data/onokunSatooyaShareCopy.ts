@@ -13,7 +13,7 @@ export interface OnokunSatooyaShareCopyAssignment {
   specialCopy: string | null;
 }
 
-const NORMAL_OPENING_COPIES = [
+export const NORMAL_OPENING_COPIES = [
   "うちの子とのご縁、ちょっと見えました。",
   "おのくんとの楽しみ方、名前がつきました。",
   "私の親バカ、どうやらこのタイプらしいです。",
@@ -27,7 +27,7 @@ const NORMAL_OPENING_COPIES = [
   "みんな違ってみんないい、私のご縁タイプはこれでした。",
 ] as const;
 
-const NORMAL_CALL_TO_ACTION_COPIES = [
+export const NORMAL_CALL_TO_ACTION_COPIES = [
   "あなたはどんなご縁を育てる里親さん？",
   "うちの子タイプ、見てみませんか？",
   "あなたのおの活にも名前をつけてみませんか？",
@@ -41,12 +41,12 @@ const NORMAL_CALL_TO_ACTION_COPIES = [
   "親バカ診断、思ったより当たるかもしれません。",
 ] as const;
 
-const LUCKY_COPY = {
+export const LUCKY_COPY = {
   id: "lucky_001",
   text: "ちょっとレアなご縁カードが出ました。",
 } as const;
 
-const FUNNY_COPY = {
+export const FUNNY_COPY = {
   id: "funny_001",
   text: "うちの子、診断中にちょっとドヤ顔してました。",
 } as const;
@@ -130,4 +130,34 @@ export function createOnokunSatooyaShareText({
   ]
     .filter((line): line is string => line !== null)
     .join("\n");
+}
+
+function getNumberFromCopyId(id: string, prefix: string) {
+  if (!id.startsWith(prefix)) return null;
+
+  const numberValue = Number(id.replace(prefix, ""));
+  if (!Number.isInteger(numberValue) || numberValue < 1) return null;
+
+  return numberValue - 1;
+}
+
+export function getOnokunSatooyaShareOpeningCopy(openingCopyId: string) {
+  const index = getNumberFromCopyId(openingCopyId, "opening_");
+  if (index === null) return "";
+
+  return NORMAL_OPENING_COPIES[index] ?? "";
+}
+
+export function getOnokunSatooyaShareCallToActionCopy(callToActionCopyId: string) {
+  const index = getNumberFromCopyId(callToActionCopyId, "cta_");
+  if (index === null) return "";
+
+  return NORMAL_CALL_TO_ACTION_COPIES[index] ?? "";
+}
+
+export function getOnokunSatooyaShareSpecialCopy(specialCopyId: string | null) {
+  if (specialCopyId === LUCKY_COPY.id) return LUCKY_COPY.text;
+  if (specialCopyId === FUNNY_COPY.id) return FUNNY_COPY.text;
+
+  return "";
 }

@@ -2,6 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { ONOKUN_SATOOYA_11_META } from "@/data/researchProjects";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { isOnokunAdminRequest } from "../../_lib/adminAuth";
+import {
+  getOnokunSatooyaShareCallToActionCopy,
+  getOnokunSatooyaShareOpeningCopy,
+  getOnokunSatooyaShareSpecialCopy,
+} from "@/app/research/onokun-satooya-11-v1/_data/onokunSatooyaShareCopy";
 
 interface OnokunResultRow {
   diagnosis_run_number: number;
@@ -78,8 +83,11 @@ function aggregateShareVariantStats(rows: OnokunShareEventRow[]) {
       shareVariantId: string;
       shareVariantKind: string;
       openingCopyId: string;
+      openingCopy: string;
       callToActionCopyId: string;
+      callToActionCopy: string;
       specialCopyId: string | null;
+      specialCopy: string;
       assignedCount: number;
       shareClickCount: number;
       openChatClickCount: number;
@@ -94,8 +102,11 @@ function aggregateShareVariantStats(rows: OnokunShareEventRow[]) {
       shareVariantId: key,
       shareVariantKind: row.share_variant_kind || "unknown",
       openingCopyId: row.opening_copy_id || "-",
+      openingCopy: getOnokunSatooyaShareOpeningCopy(row.opening_copy_id),
       callToActionCopyId: row.call_to_action_copy_id || "-",
+      callToActionCopy: getOnokunSatooyaShareCallToActionCopy(row.call_to_action_copy_id),
       specialCopyId: row.special_copy_id,
+      specialCopy: getOnokunSatooyaShareSpecialCopy(row.special_copy_id),
       assignedCount: 0,
       shareClickCount: 0,
       openChatClickCount: 0,

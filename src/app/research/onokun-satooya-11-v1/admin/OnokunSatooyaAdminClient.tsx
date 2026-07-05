@@ -27,8 +27,11 @@ interface ShareVariantStat {
   shareVariantId: string;
   shareVariantKind: string;
   openingCopyId: string;
+  openingCopy: string;
   callToActionCopyId: string;
+  callToActionCopy: string;
   specialCopyId: string | null;
+  specialCopy: string;
   assignedCount: number;
   shareClickCount: number;
   openChatClickCount: number;
@@ -379,13 +382,13 @@ export default function OnokunSatooyaAdminClient() {
 
             <Panel title="シェアコピー別">
               <div className="overflow-x-auto">
-                <table className="w-full min-w-[900px] border-collapse text-left text-sm">
+                <table className="w-full min-w-[1200px] border-collapse text-left text-sm">
                   <thead>
                     <tr className="border-b border-[#E8DCC4] text-xs font-black text-[#3A2A1E]/60">
                       <th className="py-3 pr-4">種別</th>
-                      <th className="py-3 pr-4">冒頭</th>
+                      <th className="py-3 pr-4">冒頭コピー</th>
                       <th className="py-3 pr-4">呼びかけ</th>
-                      <th className="py-3 pr-4">特別</th>
+                      <th className="py-3 pr-4">特別コピー</th>
                       <th className="py-3 pr-4">表示</th>
                       <th className="py-3 pr-4">シェア</th>
                       <th className="py-3 pr-4">シェア率</th>
@@ -399,14 +402,29 @@ export default function OnokunSatooyaAdminClient() {
                         <td className="py-3 pr-4 font-black text-[#164F9E]">
                           {item.shareVariantKind}
                         </td>
-                        <td className="py-3 pr-4 font-mono text-xs font-bold">
-                          {item.openingCopyId}
+                        <td className="max-w-[260px] py-3 pr-4">
+                          <p className="mb-1 font-mono text-[11px] font-black text-[#F06F8F]">
+                            {item.openingCopyId}
+                          </p>
+                          <p className="text-xs font-bold leading-relaxed">
+                            {item.openingCopy || "-"}
+                          </p>
                         </td>
-                        <td className="py-3 pr-4 font-mono text-xs font-bold">
-                          {item.callToActionCopyId}
+                        <td className="max-w-[260px] py-3 pr-4">
+                          <p className="mb-1 font-mono text-[11px] font-black text-[#F06F8F]">
+                            {item.callToActionCopyId}
+                          </p>
+                          <p className="text-xs font-bold leading-relaxed">
+                            {item.callToActionCopy || "-"}
+                          </p>
                         </td>
-                        <td className="py-3 pr-4 font-mono text-xs font-bold">
-                          {item.specialCopyId ?? "-"}
+                        <td className="max-w-[240px] py-3 pr-4">
+                          <p className="mb-1 font-mono text-[11px] font-black text-[#F06F8F]">
+                            {item.specialCopyId ?? "-"}
+                          </p>
+                          <p className="text-xs font-bold leading-relaxed">
+                            {item.specialCopy || "-"}
+                          </p>
                         </td>
                         <td className="py-3 pr-4">{item.assignedCount}</td>
                         <td className="py-3 pr-4">{item.shareClickCount}</td>
