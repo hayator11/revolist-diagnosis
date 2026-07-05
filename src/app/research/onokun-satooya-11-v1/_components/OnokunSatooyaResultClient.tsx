@@ -11,8 +11,14 @@ import {
 } from "../_lib/calculateOnokunSatooyaResult";
 import {
   createOnokunSatooyaEventFields,
+  getOnokunSatooyaClientSessionId,
   getOnokunSatooyaDeviceLabel,
 } from "../_lib/onokunSatooyaTracking";
+import {
+  createOnokunSatooyaShareCopyAssignment,
+  createOnokunSatooyaShareText,
+  type OnokunSatooyaShareCopyAssignment,
+} from "../_data/onokunSatooyaShareCopy";
 import { revo111Roles, matchRules } from "@/data/revo111Roles";
 
 const DIAGNOSIS_PATH = "/research/onokun-satooya-11-v1";
@@ -47,15 +53,25 @@ export default function OnokunSatooyaResultClient() {
 
   const childLabel = childName || "うちの子";
 
-  const shareText = resultState
-    ? [
-        `${childLabel}とのご縁タイプは「${resultState.mainType.name}」でした。`,
-        resultState.mainType.shareCatch,
-        `親バカあるある: ${resultState.mainType.parentBakaLine}`,
-        "おのくん里親さん 11ご縁タイプ診断",
-        resultUrl,
-      ].join("\n")
-    : "";
+  const shareCopyAssignment = useMemo(() => {
+    if (!resultState || typeof window === "undefined") return null;
+
+    return createOnokunSatooyaShareCopyAssignment({
+      diagnosisId: encoded,
+      clientSessionId: getOnokunSatooyaClientSessionId(),
+      typeKey: resultState.mainType.key,
+    });
+  }, [encoded, resultState]);
+
+  const shareText =
+    resultState && shareCopyAssignment
+      ? createOnokunSatooyaShareText({
+          childLabel,
+          mainType: resultState.mainType,
+          assignment: shareCopyAssignment,
+          resultUrl,
+        })
+      : "";
   const encodedShareText = encodeURIComponent(shareText);
   const encodedShareUrl = encodeURIComponent(resultUrl);
   const xShareUrl = `https://twitter.com/intent/tweet?text=${encodedShareText}`;
@@ -105,8 +121,40 @@ export default function OnokunSatooyaResultClient() {
       });
   }, [answers, encoded, resultState, resultUrl]);
 
+  useEffect(() => {
+    if (!resultState || !shareCopyAssignment) return;
+
+    const storageKey = `onokun-satooya-share-copy-assigned:${encoded}:${shareCopyAssignment.shareVariantId}`;
+    if (window.sessionStorage.getItem(storageKey)) return;
+
+    void postShareEvent({
+      eventName: "share_copy_assigned",
+      diagnosisId: encoded,
+      resultUrl,
+      resultState,
+      shareCopyAssignment,
+    }).then((saved) => {
+      if (saved) window.sessionStorage.setItem(storageKey, "true");
+    });
+  }, [encoded, resultState, resultUrl, shareCopyAssignment]);
+
+  const trackShareAction = async (shareChannel: "x" | "line" | "native" | "copy" | "open_chat") => {
+    if (!resultState || !shareCopyAssignment) return;
+
+    await postShareEvent({
+      eventName: shareChannel === "open_chat" ? "open_chat_clicked" : "share_button_clicked",
+      diagnosisId: encoded,
+      resultUrl,
+      resultState,
+      shareCopyAssignment,
+      shareChannel,
+    });
+  };
+
   const handleShare = async () => {
-    if (!resultState) return;
+    if (!resultState || !shareCopyAssignment) return;
+
+    await trackShareAction("native");
 
     if (navigator.share) {
       await navigator.share({
@@ -124,6 +172,7 @@ export default function OnokunSatooyaResultClient() {
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(shareText);
+    await trackShareAction("copy");
     setCopied(true);
     setTimeout(() => setCopied(false), 1600);
   };
@@ -355,6 +404,9 @@ export default function OnokunSatooyaResultClient() {
               href={ONOKUN_OPEN_CHAT_URL}
               target="_blank"
               rel="noreferrer"
+              onClick={() => {
+                void trackShareAction("open_chat");
+              }}
               className="inline-flex rounded-full bg-[#164F9E] px-5 py-3 text-sm font-black text-white shadow-[0_5px_0_#0d3670] transition-transform hover:-translate-y-0.5 active:translate-y-1 active:shadow-[0_2px_0_#0d3670]"
             >
               親バカサロンを開く
@@ -453,6 +505,9 @@ export default function OnokunSatooyaResultClient() {
               href={xShareUrl}
               target="_blank"
               rel="noreferrer"
+              onClick={() => {
+                void trackShareAction("x");
+              }}
               className="rounded-full bg-[#111111] px-6 py-4 text-center text-sm font-black text-white shadow-sm"
             >
               Xでシェア
@@ -461,6 +516,9 @@ export default function OnokunSatooyaResultClient() {
               href={lineShareUrl}
               target="_blank"
               rel="noreferrer"
+              onClick={() => {
+                void trackShareAction("line");
+              }}
               className="rounded-full bg-[#06C755] px-6 py-4 text-center text-sm font-black text-white shadow-sm"
             >
               LINEでシェア
@@ -519,6 +577,51 @@ function ResultBlock({ title, body }: { title: string; body: string }) {
       <p className="text-sm font-bold leading-relaxed text-[#3A2A1E]/75">{body}</p>
     </article>
   );
+}
+
+async function postShareEvent({
+  eventName,
+  diagnosisId,
+  resultUrl,
+  resultState,
+  shareCopyAssignment,
+  shareChannel,
+}: {
+  eventName: "share_copy_assigned" | "share_button_clicked" | "open_chat_clicked";
+  diagnosisId: string;
+  resultUrl: string;
+  resultState: NonNullable<ReturnType<typeof calculateOnokunSatooyaResult>>;
+  shareCopyAssignment: OnokunSatooyaShareCopyAssignment;
+  shareChannel?: "x" | "line" | "native" | "copy" | "open_chat";
+}) {
+  try {
+    const response = await fetch("/api/onokun-satooya/share-event", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      keepalive: true,
+      body: JSON.stringify({
+        ...createOnokunSatooyaEventFields(eventName),
+        eventName,
+        diagnosisId,
+        resultUrl,
+        pagePath: window.location.pathname,
+        device: getOnokunSatooyaDeviceLabel(),
+        mainTypeKey: resultState.mainType.key,
+        mainTypeName: resultState.mainType.name,
+        mainRevoTypeKey: resultState.mainType.revoTypeKey,
+        shareVariantId: shareCopyAssignment.shareVariantId,
+        shareVariantKind: shareCopyAssignment.shareVariantKind,
+        openingCopyId: shareCopyAssignment.openingCopyId,
+        callToActionCopyId: shareCopyAssignment.callToActionCopyId,
+        specialCopyId: shareCopyAssignment.specialCopyId,
+        shareChannel,
+      }),
+    });
+
+    return response.ok;
+  } catch {
+    return false;
+  }
 }
 
 function TypeChip({

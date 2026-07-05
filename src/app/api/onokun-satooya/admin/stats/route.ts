@@ -21,6 +21,26 @@ interface OnokunResultRow {
   result_url: string | null;
 }
 
+interface OnokunShareEventRow {
+  event_name: string;
+  diagnosis_id: string;
+  created_at: string;
+  main_type_key: string;
+  main_type_name: string;
+  share_variant_id: string;
+  share_variant_kind: string;
+  opening_copy_id: string;
+  call_to_action_copy_id: string;
+  special_copy_id: string | null;
+  share_channel: string | null;
+  device: string | null;
+}
+
+function createRate(numerator: number, denominator: number) {
+  if (denominator < 1) return 0;
+  return Math.round((numerator / denominator) * 1000) / 10;
+}
+
 function aggregateTypeCounts(rows: OnokunResultRow[]) {
   const counts = new Map<string, { typeKey: string; typeName: string; count: number }>();
 
@@ -51,6 +71,107 @@ function aggregateDeviceCounts(rows: OnokunResultRow[]) {
     .sort((a, b) => b.count - a.count);
 }
 
+function aggregateShareVariantStats(rows: OnokunShareEventRow[]) {
+  const counts = new Map<
+    string,
+    {
+      shareVariantId: string;
+      shareVariantKind: string;
+      openingCopyId: string;
+      callToActionCopyId: string;
+      specialCopyId: string | null;
+      assignedCount: number;
+      shareClickCount: number;
+      openChatClickCount: number;
+      shareRate: number;
+      openChatRate: number;
+    }
+  >();
+
+  rows.forEach((row) => {
+    const key = row.share_variant_id || "unknown";
+    const current = counts.get(key) ?? {
+      shareVariantId: key,
+      shareVariantKind: row.share_variant_kind || "unknown",
+      openingCopyId: row.opening_copy_id || "-",
+      callToActionCopyId: row.call_to_action_copy_id || "-",
+      specialCopyId: row.special_copy_id,
+      assignedCount: 0,
+      shareClickCount: 0,
+      openChatClickCount: 0,
+      shareRate: 0,
+      openChatRate: 0,
+    };
+
+    if (row.event_name === "share_copy_assigned") current.assignedCount += 1;
+    if (row.event_name === "share_button_clicked") current.shareClickCount += 1;
+    if (row.event_name === "open_chat_clicked") current.openChatClickCount += 1;
+    counts.set(key, current);
+  });
+
+  return Array.from(counts.values())
+    .map((item) => ({
+      ...item,
+      shareRate: createRate(item.shareClickCount, item.assignedCount),
+      openChatRate: createRate(item.openChatClickCount, item.assignedCount),
+    }))
+    .sort((a, b) => b.assignedCount - a.assignedCount);
+}
+
+function aggregateShareKindStats(rows: OnokunShareEventRow[]) {
+  const counts = new Map<
+    string,
+    {
+      shareVariantKind: string;
+      assignedCount: number;
+      shareClickCount: number;
+      openChatClickCount: number;
+      shareRate: number;
+      openChatRate: number;
+    }
+  >();
+
+  rows.forEach((row) => {
+    const key = row.share_variant_kind || "unknown";
+    const current = counts.get(key) ?? {
+      shareVariantKind: key,
+      assignedCount: 0,
+      shareClickCount: 0,
+      openChatClickCount: 0,
+      shareRate: 0,
+      openChatRate: 0,
+    };
+
+    if (row.event_name === "share_copy_assigned") current.assignedCount += 1;
+    if (row.event_name === "share_button_clicked") current.shareClickCount += 1;
+    if (row.event_name === "open_chat_clicked") current.openChatClickCount += 1;
+    counts.set(key, current);
+  });
+
+  return Array.from(counts.values())
+    .map((item) => ({
+      ...item,
+      shareRate: createRate(item.shareClickCount, item.assignedCount),
+      openChatRate: createRate(item.openChatClickCount, item.assignedCount),
+    }))
+    .sort((a, b) => b.assignedCount - a.assignedCount);
+}
+
+function aggregateShareChannelStats(rows: OnokunShareEventRow[]) {
+  const counts = new Map<string, number>();
+
+  rows
+    .filter((row) => row.event_name === "share_button_clicked")
+    .forEach((row) => {
+      const key = row.share_channel || "unknown";
+      counts.set(key, (counts.get(key) ?? 0) + 1);
+    });
+
+  return Array.from(counts.entries())
+    .map(([shareChannel, count]) => ({ shareChannel, count }))
+    .sort((a, b) => b.count - a.count);
+}
+
 function createEmptyStats(setupRequired: boolean, setupReason: string | null) {
   return {
     result: "success",
@@ -61,8 +182,17 @@ function createEmptyStats(setupRequired: boolean, setupReason: string | null) {
     totalDiagnosisCount: 0,
     counterUpdatedAt: null,
     sampledResultCount: 0,
+    sampledShareEventCount: 0,
+    shareAssignedCount: 0,
+    shareClickCount: 0,
+    openChatClickCount: 0,
+    shareRate: 0,
+    openChatRate: 0,
     typeCounts: [],
     deviceCounts: [],
+    shareKindStats: [],
+    shareVariantStats: [],
+    shareChannelStats: [],
     latestResults: [],
   };
 }
@@ -132,18 +262,61 @@ export async function GET(req: NextRequest) {
   }
 
   const resultRows = ((rows ?? []) as unknown) as OnokunResultRow[];
+  const { data: shareRows, error: shareRowsError } = await supabase
+    .from("onokun_satooya_share_events")
+    .select(
+      [
+        "event_name",
+        "diagnosis_id",
+        "created_at",
+        "main_type_key",
+        "main_type_name",
+        "share_variant_id",
+        "share_variant_kind",
+        "opening_copy_id",
+        "call_to_action_copy_id",
+        "special_copy_id",
+        "share_channel",
+        "device",
+      ].join(","),
+    )
+    .eq("project_key", ONOKUN_SATOOYA_11_META.project)
+    .order("created_at", { ascending: false })
+    .limit(1000);
+
+  const shareEventRows = shareRowsError
+    ? []
+    : (((shareRows ?? []) as unknown) as OnokunShareEventRow[]);
+  const shareAssignedCount = shareEventRows.filter(
+    (row) => row.event_name === "share_copy_assigned",
+  ).length;
+  const shareClickCount = shareEventRows.filter(
+    (row) => row.event_name === "share_button_clicked",
+  ).length;
+  const openChatClickCount = shareEventRows.filter(
+    (row) => row.event_name === "open_chat_clicked",
+  ).length;
 
   return createAdminStatsResponse({
     result: "success",
     authenticated: true,
     project: ONOKUN_SATOOYA_11_META.project,
-    setupRequired: false,
-    setupReason: null,
+    setupRequired: Boolean(shareRowsError),
+    setupReason: shareRowsError ? "share_events_fetch_failed" : null,
     totalDiagnosisCount: Number(counter?.total_count ?? 0),
     counterUpdatedAt: counter?.updated_at ?? null,
     sampledResultCount: resultRows.length,
+    sampledShareEventCount: shareEventRows.length,
+    shareAssignedCount,
+    shareClickCount,
+    openChatClickCount,
+    shareRate: createRate(shareClickCount, shareAssignedCount),
+    openChatRate: createRate(openChatClickCount, shareAssignedCount),
     typeCounts: aggregateTypeCounts(resultRows),
     deviceCounts: aggregateDeviceCounts(resultRows),
+    shareKindStats: aggregateShareKindStats(shareEventRows),
+    shareVariantStats: aggregateShareVariantStats(shareEventRows),
+    shareChannelStats: aggregateShareChannelStats(shareEventRows),
     latestResults: resultRows.slice(0, 50),
   });
 }

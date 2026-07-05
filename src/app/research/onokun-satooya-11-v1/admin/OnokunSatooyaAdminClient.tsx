@@ -14,6 +14,33 @@ interface DeviceCount {
   count: number;
 }
 
+interface ShareKindStat {
+  shareVariantKind: string;
+  assignedCount: number;
+  shareClickCount: number;
+  openChatClickCount: number;
+  shareRate: number;
+  openChatRate: number;
+}
+
+interface ShareVariantStat {
+  shareVariantId: string;
+  shareVariantKind: string;
+  openingCopyId: string;
+  callToActionCopyId: string;
+  specialCopyId: string | null;
+  assignedCount: number;
+  shareClickCount: number;
+  openChatClickCount: number;
+  shareRate: number;
+  openChatRate: number;
+}
+
+interface ShareChannelStat {
+  shareChannel: string;
+  count: number;
+}
+
 interface LatestResult {
   diagnosis_run_number: number;
   diagnosis_id: string;
@@ -37,8 +64,17 @@ interface AdminStats {
   totalDiagnosisCount: number;
   counterUpdatedAt: string | null;
   sampledResultCount: number;
+  sampledShareEventCount: number;
+  shareAssignedCount: number;
+  shareClickCount: number;
+  openChatClickCount: number;
+  shareRate: number;
+  openChatRate: number;
   typeCounts: TypeCount[];
   deviceCounts: DeviceCount[];
+  shareKindStats: ShareKindStat[];
+  shareVariantStats: ShareVariantStat[];
+  shareChannelStats: ShareChannelStat[];
   latestResults: LatestResult[];
 }
 
@@ -213,7 +249,7 @@ export default function OnokunSatooyaAdminClient() {
                   <span className="font-black text-[#164F9E]">
                     docs/onokun/onokun-satooya-supabase-counter-schema.sql
                   </span>
-                  をSupabaseで実行してください。
+                  をSupabaseで実行してください。シェア集計を使う場合も同じSQLの最新版が必要です。
                 </p>
                 {stats.setupReason && (
                   <p className="mt-4 rounded-[8px] bg-[#FFF8EA] px-4 py-3 text-xs font-black text-[#F06F8F]">
@@ -235,6 +271,22 @@ export default function OnokunSatooyaAdminClient() {
               <MetricCard
                 label="最終更新"
                 value={formatDateTime(stats.counterUpdatedAt)}
+              />
+            </section>
+
+            <section className="grid gap-4 sm:grid-cols-4">
+              <MetricCard
+                label="シェア文言表示"
+                value={`${stats.shareAssignedCount.toLocaleString("ja-JP")} 回`}
+              />
+              <MetricCard
+                label="シェア押下"
+                value={`${stats.shareClickCount.toLocaleString("ja-JP")} 回`}
+              />
+              <MetricCard label="シェア率" value={`${stats.shareRate.toFixed(1)}%`} />
+              <MetricCard
+                label="サロン遷移率"
+                value={`${stats.openChatRate.toFixed(1)}%`}
               />
             </section>
 
@@ -282,6 +334,100 @@ export default function OnokunSatooyaAdminClient() {
                 </div>
               </Panel>
             </section>
+
+            <section className="grid gap-6 lg:grid-cols-[1fr_1fr]">
+              <Panel title="シェア種別">
+                <div className="space-y-3">
+                  {stats.shareKindStats.length === 0 && (
+                    <p className="text-sm font-bold text-[#3A2A1E]/60">
+                      まだシェアイベントがありません。
+                    </p>
+                  )}
+                  {stats.shareKindStats.map((item) => (
+                    <ShareStatRow
+                      key={item.shareVariantKind}
+                      label={item.shareVariantKind}
+                      assignedCount={item.assignedCount}
+                      shareClickCount={item.shareClickCount}
+                      openChatClickCount={item.openChatClickCount}
+                      shareRate={item.shareRate}
+                      openChatRate={item.openChatRate}
+                    />
+                  ))}
+                </div>
+              </Panel>
+
+              <Panel title="シェア経路">
+                <div className="space-y-3">
+                  {stats.shareChannelStats.length === 0 && (
+                    <p className="text-sm font-bold text-[#3A2A1E]/60">
+                      まだシェア押下がありません。
+                    </p>
+                  )}
+                  {stats.shareChannelStats.map((item) => (
+                    <div
+                      key={item.shareChannel}
+                      className="flex items-center justify-between rounded-[8px] bg-[#FFF8EA] px-4 py-3 text-sm font-black"
+                    >
+                      <span>{item.shareChannel}</span>
+                      <span className="text-[#164F9E]">{item.count}</span>
+                    </div>
+                  ))}
+                </div>
+              </Panel>
+            </section>
+
+            <Panel title="シェアコピー別">
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[900px] border-collapse text-left text-sm">
+                  <thead>
+                    <tr className="border-b border-[#E8DCC4] text-xs font-black text-[#3A2A1E]/60">
+                      <th className="py-3 pr-4">種別</th>
+                      <th className="py-3 pr-4">冒頭</th>
+                      <th className="py-3 pr-4">呼びかけ</th>
+                      <th className="py-3 pr-4">特別</th>
+                      <th className="py-3 pr-4">表示</th>
+                      <th className="py-3 pr-4">シェア</th>
+                      <th className="py-3 pr-4">シェア率</th>
+                      <th className="py-3 pr-4">サロン</th>
+                      <th className="py-3 pr-4">サロン率</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {stats.shareVariantStats.map((item) => (
+                      <tr key={item.shareVariantId} className="border-b border-[#F2E8D7]">
+                        <td className="py-3 pr-4 font-black text-[#164F9E]">
+                          {item.shareVariantKind}
+                        </td>
+                        <td className="py-3 pr-4 font-mono text-xs font-bold">
+                          {item.openingCopyId}
+                        </td>
+                        <td className="py-3 pr-4 font-mono text-xs font-bold">
+                          {item.callToActionCopyId}
+                        </td>
+                        <td className="py-3 pr-4 font-mono text-xs font-bold">
+                          {item.specialCopyId ?? "-"}
+                        </td>
+                        <td className="py-3 pr-4">{item.assignedCount}</td>
+                        <td className="py-3 pr-4">{item.shareClickCount}</td>
+                        <td className="py-3 pr-4 font-black text-[#F06F8F]">
+                          {item.shareRate.toFixed(1)}%
+                        </td>
+                        <td className="py-3 pr-4">{item.openChatClickCount}</td>
+                        <td className="py-3 pr-4 font-black text-[#164F9E]">
+                          {item.openChatRate.toFixed(1)}%
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                {stats.shareVariantStats.length === 0 && (
+                  <p className="py-4 text-sm font-bold text-[#3A2A1E]/60">
+                    まだシェアコピーの割り当てログがありません。
+                  </p>
+                )}
+              </div>
+            </Panel>
 
             <Panel title="最新ログ">
               <div className="overflow-x-auto">
@@ -345,6 +491,35 @@ function Panel({ title, children }: { title: string; children: React.ReactNode }
       <h2 className="mb-5 text-xl font-black">{title}</h2>
       {children}
     </section>
+  );
+}
+
+function ShareStatRow({
+  label,
+  assignedCount,
+  shareClickCount,
+  openChatClickCount,
+  shareRate,
+  openChatRate,
+}: {
+  label: string;
+  assignedCount: number;
+  shareClickCount: number;
+  openChatClickCount: number;
+  shareRate: number;
+  openChatRate: number;
+}) {
+  return (
+    <div className="rounded-[8px] bg-[#FFF8EA] px-4 py-3">
+      <div className="mb-2 flex items-center justify-between gap-3 text-sm font-black">
+        <span>{label}</span>
+        <span className="text-[#164F9E]">{assignedCount}表示</span>
+      </div>
+      <p className="text-xs font-bold leading-relaxed text-[#3A2A1E]/70">
+        シェア {shareClickCount}回 / {shareRate.toFixed(1)}% ・ サロン {openChatClickCount}
+        回 / {openChatRate.toFixed(1)}%
+      </p>
+    </div>
   );
 }
 

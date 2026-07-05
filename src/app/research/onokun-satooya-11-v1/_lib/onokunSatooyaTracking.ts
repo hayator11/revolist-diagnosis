@@ -10,7 +10,7 @@ function createId(prefix: string) {
   return `${prefix}_${Date.now().toString(36)}_${randomPart}`;
 }
 
-function getOnokunSatooyaClientSessionId() {
+export function getOnokunSatooyaClientSessionId() {
   if (typeof window === "undefined") return "";
 
   const existing = window.sessionStorage.getItem(ONOKUN_SATOOYA_SESSION_KEY);

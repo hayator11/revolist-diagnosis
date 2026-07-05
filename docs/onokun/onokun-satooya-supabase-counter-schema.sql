@@ -101,6 +101,54 @@ create index if not exists onokun_satooya_diagnosis_results_main_revo_type_idx
 create index if not exists onokun_satooya_diagnosis_results_partner_revo_type_idx
   on public.onokun_satooya_diagnosis_results (partner_revo_type_key);
 
+create table if not exists public.onokun_satooya_share_events (
+  id uuid primary key default gen_random_uuid(),
+  project_key text not null,
+  event_name text not null,
+  diagnosis_id text not null,
+  result_url text,
+  created_at timestamptz not null default now(),
+
+  client_session_id text,
+  event_id text,
+  payload_schema_version text,
+  page_path text,
+  device text,
+
+  main_type_key text not null,
+  main_type_name text not null,
+  main_revo_type_key text,
+
+  share_variant_id text not null,
+  share_variant_kind text not null,
+  opening_copy_id text not null,
+  call_to_action_copy_id text not null,
+  special_copy_id text,
+  share_channel text,
+
+  constraint onokun_satooya_share_events_event_name_check
+    check (event_name in ('share_copy_assigned', 'share_button_clicked', 'open_chat_clicked')),
+  constraint onokun_satooya_share_events_variant_kind_check
+    check (share_variant_kind in ('normal', 'lucky', 'funny')),
+  constraint onokun_satooya_share_events_share_channel_check
+    check (
+      share_channel is null
+      or share_channel in ('x', 'line', 'native', 'copy', 'open_chat')
+    )
+);
+
+create index if not exists onokun_satooya_share_events_created_at_idx
+  on public.onokun_satooya_share_events (created_at desc);
+
+create index if not exists onokun_satooya_share_events_project_event_idx
+  on public.onokun_satooya_share_events (project_key, event_name);
+
+create index if not exists onokun_satooya_share_events_variant_idx
+  on public.onokun_satooya_share_events (project_key, share_variant_id);
+
+create index if not exists onokun_satooya_share_events_main_type_idx
+  on public.onokun_satooya_share_events (project_key, main_type_key);
+
 create or replace function public.increment_onokun_satooya_diagnosis_counter(
   p_project_key text
 )
@@ -239,6 +287,7 @@ $$;
 
 alter table public.onokun_satooya_diagnosis_counters enable row level security;
 alter table public.onokun_satooya_diagnosis_results enable row level security;
+alter table public.onokun_satooya_share_events enable row level security;
 
 -- public insert/select policy は作らない。
 -- Next.js API route から service role key でのみ保存する。
