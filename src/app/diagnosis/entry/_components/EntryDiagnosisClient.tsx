@@ -47,7 +47,7 @@ export default function EntryDiagnosisClient() {
               この診断で見えてくること
             </p>
             <ul className="space-y-3 text-sm leading-relaxed text-gray-700">
-              <li>・自分では普通だと思っていた持ち味</li>
+              <li>・自分では普通だと思っていた力が、誰かの役に立つ瞬間</li>
               <li>・なぜか人から頼られる理由</li>
               <li>・可能性を引き出し合いやすい相手</li>
             </ul>
