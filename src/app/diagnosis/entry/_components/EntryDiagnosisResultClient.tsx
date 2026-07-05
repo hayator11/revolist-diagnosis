@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import OpenChatInvite from "@/components/OpenChatInvite";
 import { entryDiagnosisResultCopy } from "@/data/entryDiagnosisResultCopy";
+import { selectEntryShareCopy } from "@/data/entryDiagnosisShareCopy";
 import {
   calculateEntryDiagnosisResult,
   decodeEntryAnswers,
@@ -93,13 +94,17 @@ export default function EntryDiagnosisResultClient() {
   const auxiliaryType = revoTypes[result.auxiliary.key];
   const partnerTypes = result.partnerTypes.map((key) => revoTypes[key]);
   const resultCopy = entryDiagnosisResultCopy[mainType.key];
+  const shareCopy = selectEntryShareCopy(encoded, mainType.key);
+  const partnerNamesText = partnerTypes.map((type) => `「${type.name}」`).join("と");
   const shareText = [
+    shareCopy.intro.text,
+    "",
     `今の私は「${mainType.name}」タイプでした。`,
     "",
-    resultCopy.shareHook,
+    "可能性が動き出しやすい相手は",
+    `${partnerNamesText}でした。`,
     "",
-    `可能性を引き出し合いやすい相手は`,
-    partnerTypes.map((type) => type.name).join(" / "),
+    shareCopy.callout.text,
     "",
     "あなたは何タイプ？",
     "#レボリスト診断",
