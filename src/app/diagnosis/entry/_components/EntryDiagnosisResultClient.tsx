@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { type FormEvent, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import OpenChatInvite from "@/components/OpenChatInvite";
@@ -27,6 +27,12 @@ export default function EntryDiagnosisResultClient() {
   const searchParams = useSearchParams();
   const encoded = searchParams.get("answers") ?? "";
   const [copied, setCopied] = useState(false);
+  const [feedbackImpression, setFeedbackImpression] = useState("");
+  const [feedbackDiscomfort, setFeedbackDiscomfort] = useState("");
+  const [feedbackRequest, setFeedbackRequest] = useState("");
+  const [feedbackSending, setFeedbackSending] = useState(false);
+  const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
+  const [feedbackError, setFeedbackError] = useState<string | null>(null);
 
   const resultState = useMemo(() => {
     const answers = decodeEntryAnswers(encoded);
@@ -122,6 +128,60 @@ export default function EntryDiagnosisResultClient() {
       setTimeout(() => setCopied(false), 1800);
     } catch {
       // Sharing should not block result display.
+    }
+  };
+
+  const handleSubmitFeedback = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const impression = feedbackImpression.trim();
+    const discomfort = feedbackDiscomfort.trim();
+    const request = feedbackRequest.trim();
+
+    if (!impression && !discomfort && !request) {
+      setFeedbackError("どれか一つだけでも入力してください。");
+      return;
+    }
+
+    setFeedbackSending(true);
+    setFeedbackError(null);
+
+    try {
+      const response = await fetch("/api/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "entry_diagnosis_feedback",
+          formType: "entry_diagnosis_feedback",
+          timestamp: new Date().toISOString(),
+          diagnosisType: "entry_11",
+          diagnosisId: encoded,
+          answers: resultState.answers,
+          mainRoleKey: mainType.key,
+          mainRoleName: mainType.name,
+          subRoleKey: subType.key,
+          subRoleName: subType.name,
+          supportRoleKey: auxiliaryType.key,
+          supportRoleName: auxiliaryType.name,
+          impressionText: impression,
+          discomfortText: discomfort,
+          improvementRequestText: request,
+          freeText: [impression, discomfort, request].filter(Boolean).join("\n\n"),
+          pagePath: window.location.pathname,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("feedback failed");
+      }
+
+      setFeedbackSubmitted(true);
+      setFeedbackImpression("");
+      setFeedbackDiscomfort("");
+      setFeedbackRequest("");
+    } catch {
+      setFeedbackError("送信できませんでした。時間をおいてもう一度お試しください。");
+    } finally {
+      setFeedbackSending(false);
     }
   };
 
@@ -285,6 +345,83 @@ export default function EntryDiagnosisResultClient() {
         <div className="mb-6">
           <OpenChatInvite context="diagnosis" copy={openChatCopy} />
         </div>
+
+        <section className="mb-6 rounded-3xl border border-gray-200 p-6">
+          <p className="mb-2 text-xs uppercase tracking-widest text-gray-400">
+            Feedback
+          </p>
+          <h2 className="mb-3 text-xl font-bold text-black">
+            やってみた感想を教えてください
+          </h2>
+          <p className="mb-5 text-sm leading-relaxed text-gray-600">
+            しっくりきたところ、少し違和感があったところがあれば教えてください。
+            もっと知りたいことも、次の診断づくりに活かします。
+          </p>
+
+          {feedbackSubmitted ? (
+            <div className="rounded-2xl bg-gray-50 p-5 text-center">
+              <p className="mb-2 text-sm font-bold text-black">ありがとうございます。</p>
+              <p className="text-xs leading-relaxed text-gray-500">
+                いただいた感想は、質問や結果文の改善に活かします。
+              </p>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmitFeedback} className="space-y-4">
+              <label className="block">
+                <span className="mb-2 block text-xs font-medium text-gray-500">
+                  しっくりきたこと・面白かったこと
+                </span>
+                <textarea
+                  value={feedbackImpression}
+                  onChange={(event) => setFeedbackImpression(event.target.value)}
+                  rows={4}
+                  className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm leading-relaxed text-black outline-none transition-colors placeholder:text-gray-300 focus:border-black"
+                  placeholder="例: 結果のここが自分っぽかった、誰かと組む視点が面白かった など"
+                />
+              </label>
+
+              <label className="block">
+                <span className="mb-2 block text-xs font-medium text-gray-500">
+                  違和感があったこと・わかりにくかったこと
+                </span>
+                <textarea
+                  value={feedbackDiscomfort}
+                  onChange={(event) => setFeedbackDiscomfort(event.target.value)}
+                  rows={4}
+                  className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm leading-relaxed text-black outline-none transition-colors placeholder:text-gray-300 focus:border-black"
+                  placeholder="例: 質問で迷ったところ、結果文でしっくりこなかったところ など"
+                />
+              </label>
+
+              <label className="block">
+                <span className="mb-2 block text-xs font-medium text-gray-500">
+                  今後、もっと知りたいこと・追加してほしいこと
+                </span>
+                <textarea
+                  value={feedbackRequest}
+                  onChange={(event) => setFeedbackRequest(event.target.value)}
+                  rows={4}
+                  className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm leading-relaxed text-black outline-none transition-colors placeholder:text-gray-300 focus:border-black"
+                  placeholder="例: 自分に合う人の探し方、チームでの活かし方、もっと深い診断 など"
+                />
+              </label>
+
+              {feedbackError && (
+                <p className="rounded-2xl bg-red-50 px-4 py-3 text-xs text-red-600">
+                  {feedbackError}
+                </p>
+              )}
+
+              <button
+                type="submit"
+                disabled={feedbackSending}
+                className="w-full rounded-full bg-black px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {feedbackSending ? "送信中..." : "感想を送る"}
+              </button>
+            </form>
+          )}
+        </section>
 
         <div className="space-y-3">
           <Link
