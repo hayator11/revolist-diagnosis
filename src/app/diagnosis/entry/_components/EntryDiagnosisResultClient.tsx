@@ -23,13 +23,63 @@ function percentBar(value: number) {
   );
 }
 
+const FEEDBACK_FIT_OPTIONS = [
+  "当たってる",
+  "少し違う",
+  "このタイプじゃない気がする",
+];
+
+const FEEDBACK_QUESTION_OPTIONS = [
+  "迷った",
+  "意味がわからなかった",
+  "選択肢が似ていた",
+];
+
+const FEEDBACK_RESULT_COPY_OPTIONS = [
+  "言葉が刺さった",
+  "説明が抽象的",
+  "もっと具体例がほしい",
+];
+
+const FEEDBACK_NEXT_INTEREST_OPTIONS = [
+  "誰と組むといいか",
+  "仕事でどう使うか",
+  "深掘り診断がほしい",
+];
+
+function FeedbackChoiceButton({
+  label,
+  selected,
+  onClick,
+}: {
+  label: string;
+  selected: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`rounded-full border px-4 py-2 text-left text-xs font-medium transition-colors ${
+        selected
+          ? "border-black bg-black text-white"
+          : "border-gray-200 bg-white text-gray-600 hover:border-gray-400"
+      }`}
+    >
+      {label}
+    </button>
+  );
+}
+
 export default function EntryDiagnosisResultClient() {
   const searchParams = useSearchParams();
   const encoded = searchParams.get("answers") ?? "";
   const [copied, setCopied] = useState(false);
-  const [feedbackImpression, setFeedbackImpression] = useState("");
-  const [feedbackDiscomfort, setFeedbackDiscomfort] = useState("");
-  const [feedbackRequest, setFeedbackRequest] = useState("");
+  const [feedbackFit, setFeedbackFit] = useState("");
+  const [feedbackQuestionIssues, setFeedbackQuestionIssues] = useState<string[]>([]);
+  const [feedbackResultCopyIssues, setFeedbackResultCopyIssues] = useState<string[]>([]);
+  const [feedbackNextInterests, setFeedbackNextInterests] = useState<string[]>([]);
+  const [feedbackComment, setFeedbackComment] = useState("");
   const [feedbackSending, setFeedbackSending] = useState(false);
   const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
   const [feedbackError, setFeedbackError] = useState<string | null>(null);
@@ -133,12 +183,16 @@ export default function EntryDiagnosisResultClient() {
 
   const handleSubmitFeedback = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const impression = feedbackImpression.trim();
-    const discomfort = feedbackDiscomfort.trim();
-    const request = feedbackRequest.trim();
+    const comment = feedbackComment.trim();
+    const selectedFeedbackItems = [
+      feedbackFit,
+      ...feedbackQuestionIssues,
+      ...feedbackResultCopyIssues,
+      ...feedbackNextInterests,
+    ].filter(Boolean);
 
-    if (!impression && !discomfort && !request) {
-      setFeedbackError("どれか一つだけでも入力してください。");
+    if (selectedFeedbackItems.length === 0 && !comment) {
+      setFeedbackError("どれか一つだけでも選ぶか、コメントを書いてください。");
       return;
     }
 
@@ -162,10 +216,26 @@ export default function EntryDiagnosisResultClient() {
           subRoleName: subType.name,
           supportRoleKey: auxiliaryType.key,
           supportRoleName: auxiliaryType.name,
-          impressionText: impression,
-          discomfortText: discomfort,
-          improvementRequestText: request,
-          freeText: [impression, discomfort, request].filter(Boolean).join("\n\n"),
+          fitAnswer: feedbackFit,
+          questionIssueAnswers: feedbackQuestionIssues,
+          resultCopyAnswers: feedbackResultCopyIssues,
+          nextInterestAnswers: feedbackNextInterests,
+          freeComment: comment,
+          impressionText: [feedbackFit, ...feedbackResultCopyIssues].filter(Boolean).join(" / "),
+          discomfortText: feedbackQuestionIssues.join(" / "),
+          improvementRequestText: feedbackNextInterests.join(" / "),
+          freeText: [
+            feedbackFit && `結果の納得感: ${feedbackFit}`,
+            feedbackQuestionIssues.length > 0 &&
+              `質問の答えやすさ: ${feedbackQuestionIssues.join(" / ")}`,
+            feedbackResultCopyIssues.length > 0 &&
+              `役割名・結果文: ${feedbackResultCopyIssues.join(" / ")}`,
+            feedbackNextInterests.length > 0 &&
+              `次に知りたいこと: ${feedbackNextInterests.join(" / ")}`,
+            comment && `コメント: ${comment}`,
+          ]
+            .filter(Boolean)
+            .join("\n"),
           pagePath: window.location.pathname,
         }),
       });
@@ -175,14 +245,28 @@ export default function EntryDiagnosisResultClient() {
       }
 
       setFeedbackSubmitted(true);
-      setFeedbackImpression("");
-      setFeedbackDiscomfort("");
-      setFeedbackRequest("");
+      setFeedbackFit("");
+      setFeedbackQuestionIssues([]);
+      setFeedbackResultCopyIssues([]);
+      setFeedbackNextInterests([]);
+      setFeedbackComment("");
     } catch {
       setFeedbackError("送信できませんでした。時間をおいてもう一度お試しください。");
     } finally {
       setFeedbackSending(false);
     }
+  };
+
+  const toggleFeedbackSelection = (
+    value: string,
+    selectedValues: string[],
+    setSelectedValues: (values: string[]) => void,
+  ) => {
+    setSelectedValues(
+      selectedValues.includes(value)
+        ? selectedValues.filter((selectedValue) => selectedValue !== value)
+        : [...selectedValues, value],
+    );
   };
 
   return (
@@ -354,8 +438,8 @@ export default function EntryDiagnosisResultClient() {
             やってみた感想を教えてください
           </h2>
           <p className="mb-5 text-sm leading-relaxed text-gray-600">
-            しっくりきたところ、少し違和感があったところがあれば教えてください。
-            もっと知りたいことも、次の診断づくりに活かします。
+            近いものをタップするだけで大丈夫です。いただいた反応をもとに、
+            質問や結果文をもっとしっくりくる診断へ育てます。
           </p>
 
           {feedbackSubmitted ? (
@@ -367,42 +451,101 @@ export default function EntryDiagnosisResultClient() {
             </div>
           ) : (
             <form onSubmit={handleSubmitFeedback} className="space-y-4">
-              <label className="block">
-                <span className="mb-2 block text-xs font-medium text-gray-500">
-                  しっくりきたこと・面白かったこと
-                </span>
-                <textarea
-                  value={feedbackImpression}
-                  onChange={(event) => setFeedbackImpression(event.target.value)}
-                  rows={4}
-                  className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm leading-relaxed text-black outline-none transition-colors placeholder:text-gray-300 focus:border-black"
-                  placeholder="例: 結果のここが自分っぽかった、誰かと組む視点が面白かった など"
-                />
-              </label>
+              <div className="rounded-2xl bg-gray-50 p-4">
+                <p className="mb-3 text-xs font-bold text-gray-500">
+                  A. 結果の納得感
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {FEEDBACK_FIT_OPTIONS.map((option) => (
+                    <FeedbackChoiceButton
+                      key={option}
+                      label={option}
+                      selected={feedbackFit === option}
+                      onClick={() => setFeedbackFit(feedbackFit === option ? "" : option)}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              <div className="rounded-2xl bg-gray-50 p-4">
+                <p className="mb-1 text-xs font-bold text-gray-500">
+                  B. 質問の答えやすさ
+                </p>
+                <p className="mb-3 text-xs text-gray-400">複数選べます</p>
+                <div className="flex flex-wrap gap-2">
+                  {FEEDBACK_QUESTION_OPTIONS.map((option) => (
+                    <FeedbackChoiceButton
+                      key={option}
+                      label={option}
+                      selected={feedbackQuestionIssues.includes(option)}
+                      onClick={() =>
+                        toggleFeedbackSelection(
+                          option,
+                          feedbackQuestionIssues,
+                          setFeedbackQuestionIssues,
+                        )
+                      }
+                    />
+                  ))}
+                </div>
+              </div>
+
+              <div className="rounded-2xl bg-gray-50 p-4">
+                <p className="mb-1 text-xs font-bold text-gray-500">
+                  C. 役割名・結果文の伝わり方
+                </p>
+                <p className="mb-3 text-xs text-gray-400">複数選べます</p>
+                <div className="flex flex-wrap gap-2">
+                  {FEEDBACK_RESULT_COPY_OPTIONS.map((option) => (
+                    <FeedbackChoiceButton
+                      key={option}
+                      label={option}
+                      selected={feedbackResultCopyIssues.includes(option)}
+                      onClick={() =>
+                        toggleFeedbackSelection(
+                          option,
+                          feedbackResultCopyIssues,
+                          setFeedbackResultCopyIssues,
+                        )
+                      }
+                    />
+                  ))}
+                </div>
+              </div>
+
+              <div className="rounded-2xl bg-gray-50 p-4">
+                <p className="mb-1 text-xs font-bold text-gray-500">
+                  D. 次に知りたいこと
+                </p>
+                <p className="mb-3 text-xs text-gray-400">複数選べます</p>
+                <div className="flex flex-wrap gap-2">
+                  {FEEDBACK_NEXT_INTEREST_OPTIONS.map((option) => (
+                    <FeedbackChoiceButton
+                      key={option}
+                      label={option}
+                      selected={feedbackNextInterests.includes(option)}
+                      onClick={() =>
+                        toggleFeedbackSelection(
+                          option,
+                          feedbackNextInterests,
+                          setFeedbackNextInterests,
+                        )
+                      }
+                    />
+                  ))}
+                </div>
+              </div>
 
               <label className="block">
                 <span className="mb-2 block text-xs font-medium text-gray-500">
-                  違和感があったこと・わかりにくかったこと
+                  ひとことあれば教えてください（任意）
                 </span>
                 <textarea
-                  value={feedbackDiscomfort}
-                  onChange={(event) => setFeedbackDiscomfort(event.target.value)}
-                  rows={4}
+                  value={feedbackComment}
+                  onChange={(event) => setFeedbackComment(event.target.value)}
+                  rows={3}
                   className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm leading-relaxed text-black outline-none transition-colors placeholder:text-gray-300 focus:border-black"
-                  placeholder="例: 質問で迷ったところ、結果文でしっくりこなかったところ など"
-                />
-              </label>
-
-              <label className="block">
-                <span className="mb-2 block text-xs font-medium text-gray-500">
-                  今後、もっと知りたいこと・追加してほしいこと
-                </span>
-                <textarea
-                  value={feedbackRequest}
-                  onChange={(event) => setFeedbackRequest(event.target.value)}
-                  rows={4}
-                  className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm leading-relaxed text-black outline-none transition-colors placeholder:text-gray-300 focus:border-black"
-                  placeholder="例: 自分に合う人の探し方、チームでの活かし方、もっと深い診断 など"
+                  placeholder="例: この質問で迷った、結果のこの言葉がよかった など"
                 />
               </label>
 

@@ -2,6 +2,7 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 const COUNTABLE_FEEDBACK_TYPES: Record<string, string> = {
   entry_diagnosis: "entry_diagnosis",
+  entry_diagnosis_feedback: "entry_diagnosis_feedback",
   light_diagnosis: "light_diagnosis",
   research_light_result: "research_revolist_11_light_v1",
   energy_light_result: "research_revolist_energy_light_v1",
@@ -17,7 +18,9 @@ const MONITOR_RESULT_TYPES: Record<string, string> = {
 };
 
 export const DIAGNOSIS_COUNTER_LABELS: Record<string, string> = {
+  entry_diagnosis_access: "入口: 11問ライト診断 アクセス",
   entry_diagnosis: "入口: 11問ライト診断",
+  entry_diagnosis_feedback: "入口: 11問ライト診断 アンケート",
   light_diagnosis: "レボリスト診断",
   research_revolist_11_light_v1: "リサーチ: レボリスト11",
   research_revolist_energy_light_v1: "リサーチ: エネルギーライト",
@@ -42,12 +45,17 @@ export interface DiagnosisRunCounterEventRow {
   diagnosis_key: string;
   event_type: string;
   source: string | null;
+  payload: Record<string, unknown>;
   counted_at: string;
 }
 
 export interface DiagnosisRunCounterDashboardData {
   counters: DiagnosisRunCounterRow[];
   recentEvents: DiagnosisRunCounterEventRow[];
+  entryFeedbackEvents: DiagnosisRunCounterEventRow[];
+  entryAccessCount: number;
+  entryDiagnosisCount: number;
+  entryFeedbackCount: number;
   totalCount: number;
   todayCount: number;
   last24HoursCount: number;
@@ -130,12 +138,23 @@ export async function getDiagnosisRunCounterDashboardData(): Promise<DiagnosisRu
 
   const { data: recentEvents, error: recentEventsError } = await supabase
     .from("diagnosis_run_counter_events")
-    .select("id,diagnosis_key,event_type,source,counted_at")
+    .select("id,diagnosis_key,event_type,source,payload,counted_at")
     .order("counted_at", { ascending: false })
     .limit(50);
 
   if (recentEventsError) {
     throw new Error(recentEventsError.message);
+  }
+
+  const { data: entryFeedbackEvents, error: entryFeedbackEventsError } = await supabase
+    .from("diagnosis_run_counter_events")
+    .select("id,diagnosis_key,event_type,source,payload,counted_at")
+    .eq("diagnosis_key", "entry_diagnosis_feedback")
+    .order("counted_at", { ascending: false })
+    .limit(30);
+
+  if (entryFeedbackEventsError) {
+    throw new Error(entryFeedbackEventsError.message);
   }
 
   const { count: todayCount, error: todayError } = await supabase
@@ -163,10 +182,36 @@ export async function getDiagnosisRunCounterDashboardData(): Promise<DiagnosisRu
     last_counted_at: String(counter.last_counted_at),
     updated_at: String(counter.updated_at),
   }));
+  const normalizeEvent = (event: {
+    id: unknown;
+    diagnosis_key: unknown;
+    event_type: unknown;
+    source: unknown;
+    payload: unknown;
+    counted_at: unknown;
+  }) => ({
+    id: String(event.id),
+    diagnosis_key: String(event.diagnosis_key),
+    event_type: String(event.event_type),
+    source: typeof event.source === "string" ? event.source : null,
+    payload:
+      event.payload && typeof event.payload === "object"
+        ? (event.payload as Record<string, unknown>)
+        : {},
+    counted_at: String(event.counted_at),
+  });
+  const normalizedEvents = (recentEvents ?? []).map(normalizeEvent);
+  const normalizedEntryFeedbackEvents = (entryFeedbackEvents ?? []).map(normalizeEvent);
+  const getCounterTotal = (key: string) =>
+    normalizedCounters.find((counter) => counter.diagnosis_key === key)?.total_count ?? 0;
 
   return {
     counters: normalizedCounters,
-    recentEvents: (recentEvents ?? []) as DiagnosisRunCounterEventRow[],
+    recentEvents: normalizedEvents,
+    entryFeedbackEvents: normalizedEntryFeedbackEvents,
+    entryAccessCount: getCounterTotal("entry_diagnosis_access"),
+    entryDiagnosisCount: getCounterTotal("entry_diagnosis"),
+    entryFeedbackCount: getCounterTotal("entry_diagnosis_feedback"),
     totalCount: normalizedCounters.reduce((sum, counter) => sum + counter.total_count, 0),
     todayCount: todayCount ?? 0,
     last24HoursCount: last24HoursCount ?? 0,

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import DiagnosisQuestion from "@/components/DiagnosisQuestion";
 import { entryDiagnosisQuestions } from "@/data/entryDiagnosisQuestions";
@@ -11,6 +11,27 @@ export default function EntryDiagnosisClient() {
   const [started, setStarted] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<number[]>([]);
+
+  useEffect(() => {
+    const storageKey = "entry-diagnosis-access-counted";
+    if (window.sessionStorage.getItem(storageKey)) return;
+
+    fetch("/api/diagnosis-run-counter", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        diagnosisKey: "entry_diagnosis_access",
+        eventType: "page_view",
+        source: "entry-diagnosis-page",
+      }),
+    })
+      .then(() => {
+        window.sessionStorage.setItem(storageKey, "true");
+      })
+      .catch(() => {
+        // Access logging should not block the diagnosis.
+      });
+  }, []);
 
   const handleAnswer = useCallback(
     (value: number) => {

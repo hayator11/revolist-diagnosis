@@ -35,6 +35,22 @@ function StatCard({ label, value }: { label: string; value: number }) {
   );
 }
 
+function readPayloadText(payload: Record<string, unknown>, key: string) {
+  const value = payload[key];
+  return typeof value === "string" && value.trim() ? value.trim() : "";
+}
+
+function readPayloadTextArray(payload: Record<string, unknown>, key: string) {
+  const value = payload[key];
+  return Array.isArray(value)
+    ? value.filter((item): item is string => typeof item === "string" && Boolean(item.trim()))
+    : [];
+}
+
+function formatAnswers(values: string[], fallback = "") {
+  return values.length > 0 ? values.join(" / ") : fallback || "-";
+}
+
 function Dashboard({ data }: { data: DiagnosisRunCounterDashboardData }) {
   return (
     <div className="mx-auto max-w-5xl px-6 py-10">
@@ -50,6 +66,112 @@ function Dashboard({ data }: { data: DiagnosisRunCounterDashboardData }) {
         <StatCard label="Total" value={data.totalCount} />
         <StatCard label="Today" value={data.todayCount} />
         <StatCard label="Last 24 Hours" value={data.last24HoursCount} />
+      </section>
+
+      <section className="mb-10 rounded-lg border border-gray-200 bg-white">
+        <div className="border-b border-gray-100 px-5 py-4">
+          <h2 className="text-sm font-bold text-black">11問ライト診断 改善ダッシュボード</h2>
+          <p className="mt-1 text-xs leading-relaxed text-gray-500">
+            入口アクセス、診断完了、診断後アンケートを見ながら、質問と結果文を育てます。
+          </p>
+        </div>
+        <div className="grid gap-4 p-5 sm:grid-cols-3">
+          <StatCard label="Access" value={data.entryAccessCount} />
+          <StatCard label="Completed" value={data.entryDiagnosisCount} />
+          <StatCard label="Feedback" value={data.entryFeedbackCount} />
+        </div>
+      </section>
+
+      <section className="mb-10 rounded-lg border border-gray-200 bg-white">
+        <div className="border-b border-gray-100 px-5 py-4">
+          <h2 className="text-sm font-bold text-black">11問診断 直近アンケート</h2>
+          <p className="mt-1 text-xs leading-relaxed text-gray-500">
+            納得感、質問の答えやすさ、結果文の伝わり方、次に知りたいことを確認できます。
+          </p>
+        </div>
+        <div className="divide-y divide-gray-100">
+          {data.entryFeedbackEvents.map((event) => {
+            const fitAnswer = readPayloadText(event.payload, "fitAnswer");
+            const questionIssueAnswers = readPayloadTextArray(event.payload, "questionIssueAnswers");
+            const resultCopyAnswers = readPayloadTextArray(event.payload, "resultCopyAnswers");
+            const nextInterestAnswers = readPayloadTextArray(event.payload, "nextInterestAnswers");
+            const freeComment = readPayloadText(event.payload, "freeComment");
+            const impression = fitAnswer || readPayloadText(event.payload, "impressionText");
+            const discomfort =
+              questionIssueAnswers.length > 0
+                ? questionIssueAnswers.join(" / ")
+                : readPayloadText(event.payload, "discomfortText");
+            const resultCopy =
+              resultCopyAnswers.length > 0
+                ? resultCopyAnswers.join(" / ")
+                : readPayloadText(event.payload, "impressionText");
+            const request =
+              nextInterestAnswers.length > 0
+                ? nextInterestAnswers.join(" / ")
+                : readPayloadText(event.payload, "improvementRequestText");
+            const mainRoleName = readPayloadText(event.payload, "mainRoleName");
+
+            return (
+              <article key={event.id} className="px-5 py-5">
+                <div className="mb-4 flex flex-wrap items-center gap-2 text-xs text-gray-400">
+                  <span>{formatDate(event.counted_at)}</span>
+                  {mainRoleName && (
+                    <span className="rounded-full bg-gray-100 px-2 py-1 text-gray-600">
+                      {mainRoleName}
+                    </span>
+                  )}
+                </div>
+                <div className="grid gap-4 md:grid-cols-3">
+                  <div>
+                    <p className="mb-2 text-xs font-bold uppercase tracking-widest text-gray-400">
+                      納得感
+                    </p>
+                    <p className="whitespace-pre-wrap text-sm leading-relaxed text-gray-700">
+                      {impression || "-"}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="mb-2 text-xs font-bold uppercase tracking-widest text-gray-400">
+                      質問
+                    </p>
+                    <p className="whitespace-pre-wrap text-sm leading-relaxed text-gray-700">
+                      {discomfort || "-"}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="mb-2 text-xs font-bold uppercase tracking-widest text-gray-400">
+                      結果文
+                    </p>
+                    <p className="whitespace-pre-wrap text-sm leading-relaxed text-gray-700">
+                      {formatAnswers(resultCopy ? [resultCopy] : [])}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="mb-2 text-xs font-bold uppercase tracking-widest text-gray-400">
+                      次に知りたいこと
+                    </p>
+                    <p className="whitespace-pre-wrap text-sm leading-relaxed text-gray-700">
+                      {request || "-"}
+                    </p>
+                  </div>
+                  <div className="md:col-span-2">
+                    <p className="mb-2 text-xs font-bold uppercase tracking-widest text-gray-400">
+                      コメント
+                    </p>
+                    <p className="whitespace-pre-wrap text-sm leading-relaxed text-gray-700">
+                      {freeComment || "-"}
+                    </p>
+                  </div>
+                </div>
+              </article>
+            );
+          })}
+          {data.entryFeedbackEvents.length === 0 && (
+            <p className="px-5 py-8 text-center text-sm text-gray-400">
+              まだアンケート回答はありません。
+            </p>
+          )}
+        </div>
       </section>
 
       <section className="mb-10 rounded-lg border border-gray-200 bg-white">

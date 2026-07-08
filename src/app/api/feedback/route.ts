@@ -29,6 +29,40 @@ const REVO111_TYPES = new Set([
   "community_survey",
 ]);
 
+function readText(value: unknown) {
+  return typeof value === "string" ? value : null;
+}
+
+function readStringArray(value: unknown) {
+  return Array.isArray(value)
+    ? value.filter((item): item is string => typeof item === "string")
+    : [];
+}
+
+function createCounterPayload(body: Record<string, unknown>) {
+  return {
+    type: readText(body.type),
+    formType: readText(body.formType),
+    diagnosisId: readText(body.diagnosisId),
+    diagnosisType: readText(body.diagnosisType),
+    mainRoleKey: readText(body.mainRoleKey),
+    mainRoleName: readText(body.mainRoleName),
+    subRoleKey: readText(body.subRoleKey),
+    subRoleName: readText(body.subRoleName),
+    supportRoleKey: readText(body.supportRoleKey),
+    supportRoleName: readText(body.supportRoleName),
+    fitAnswer: readText(body.fitAnswer),
+    questionIssueAnswers: readStringArray(body.questionIssueAnswers),
+    resultCopyAnswers: readStringArray(body.resultCopyAnswers),
+    nextInterestAnswers: readStringArray(body.nextInterestAnswers),
+    freeComment: readText(body.freeComment),
+    impressionText: readText(body.impressionText),
+    discomfortText: readText(body.discomfortText),
+    improvementRequestText: readText(body.improvementRequestText),
+    pagePath: readText(body.pagePath),
+  };
+}
+
 function getGoogleScriptUrl(type: unknown, formType: unknown) {
   const key = typeof type === "string" ? type : formType;
 
@@ -46,14 +80,10 @@ export async function POST(req: NextRequest) {
     if (diagnosisKey) {
       await incrementDiagnosisRunCounterSafely({
         diagnosisKey,
-        eventType: "diagnosis_complete",
+        eventType:
+          diagnosisKey === "entry_diagnosis_feedback" ? "feedback_submit" : "diagnosis_complete",
         source: "feedback-api",
-        payload: {
-          type: typeof body?.type === "string" ? body.type : null,
-          formType: typeof body?.formType === "string" ? body.formType : null,
-          diagnosisId: typeof body?.diagnosisId === "string" ? body.diagnosisId : null,
-          diagnosisType: typeof body?.diagnosisType === "string" ? body.diagnosisType : null,
-        },
+        payload: createCounterPayload(body),
       });
     }
 
