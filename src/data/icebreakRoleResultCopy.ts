@@ -18,8 +18,8 @@ export const icebreakRoleResultCopy: Record<RevoTypeKey, IcebreakRoleResultCopy>
   revolist: {
     roleKey: "revolist",
     displayName: "レボリスト",
-    workingCopy: "あなたは、まだ動いていない未来に最初の火を灯す人。",
-    catchCopy: "最初の一歩で、場の空気を未来へ向ける人。",
+    workingCopy: "あなたは、まだそこにないものを形にする人。",
+    catchCopy: "まだそこにないものを形にする人。",
     selfCheckItems: [
       "面白そうだと思うと、整う前でも小さく試したくなる",
       "誰かを待つより、自分が先に動く選択肢が浮かぶ",
@@ -29,15 +29,15 @@ export const icebreakRoleResultCopy: Record<RevoTypeKey, IcebreakRoleResultCopy>
     cautionHabit: "先に火を灯す分、まだ準備中の人の速度を見落とすことがあります。",
     meetupUse: "「最近、少し始めてみたいことはありますか？」と聞くと、あなたの良さが出やすいです。",
     goodPartners: ["ロジカルマイスター", "アレンジャー", "コミュニケーター", "ソウルオーナー"],
-    shareCopy: "私は、未来に最初の火を灯す人でした。",
+    shareCopy: "私は、まだそこにないものを形にする人でした。",
     mismatchNote:
       "ふだん自分を行動派だと思っていなくても、今回の回答では「場を前に動かす起点」が強く出ています。大きく動く力ではなく、小さな一歩を置く力として見てみてください。",
   },
   crazist: {
     roleKey: "crazist",
     displayName: "クレイジスト",
-    workingCopy: "あなたは、違和感の中から新しい可能性を見つける人。",
-    catchCopy: "常識の外にある未来の種を拾う人。",
+    workingCopy: "あなたは、違和感から新しい扉を見つける人。",
+    catchCopy: "まだ見えていない扉を見つける人。",
     selfCheckItems: [
       "普通のやり方だけでは届かない時、別の前提を考えたくなる",
       "人と違う見方でも、自分の感覚を確かめたくなる",
@@ -47,15 +47,15 @@ export const icebreakRoleResultCopy: Record<RevoTypeKey, IcebreakRoleResultCopy>
     cautionHabit: "先に可能性が見えすぎて、周りが理解するための順番を飛ばしやすいことがあります。",
     meetupUse: "「これ、別の前提で考えたらどうなると思いますか？」と話すと、発想が広がりやすいです。",
     goodPartners: ["マックスデザイナー", "ロジカルマイスター", "レボリスト"],
-    shareCopy: "私は、常識の外から未来の種を見つける人でした。",
+    shareCopy: "私は、違和感から新しい扉を見つける人でした。",
     mismatchNote:
       "「クレイジスト」という名前が強く感じても、ここで見ているのは奇抜さではありません。今回の回答では、違和感を可能性として扱う力が出ています。",
   },
   arranger: {
     roleKey: "arranger",
     displayName: "アレンジャー",
-    workingCopy: "あなたは、人・情報・役割を配置して流れを生む人。",
-    catchCopy: "バラバラな持ち寄りを、動ける流れへ整える人。",
+    workingCopy: "あなたは、バラバラな力に流れをつくる人。",
+    catchCopy: "バラバラな力に流れをつくる人。",
     selfCheckItems: [
       "人・予定・役割のズレに気づくと、流れを整えたくなる",
       "誰が何を持っているかを見ながら、組み合わせを考える",
@@ -65,15 +65,15 @@ export const icebreakRoleResultCopy: Record<RevoTypeKey, IcebreakRoleResultCopy>
     cautionHabit: "全体が見える分、気づいたことを一人で抱えすぎることがあります。",
     meetupUse: "「この話、誰が加わると動きやすそうですか？」と聞くと、あなたの視点が活きます。",
     goodPartners: ["レボリスト", "ロジカルマイスター", "コミュニケーター", "ソウルオーナー"],
-    shareCopy: "私は、人や役割を配置して流れを生む人でした。",
+    shareCopy: "私は、バラバラな力に流れをつくる人でした。",
     mismatchNote:
       "自分では目立つ役割に感じなくても、今回の回答では「場が動きやすくなる配置を見る力」が出ています。支えるだけでなく、流れを設計する力として見てみてください。",
   },
   communicator: {
     roleKey: "communicator",
     displayName: "コミュニケーター",
-    workingCopy: "あなたは、人と人の間に会話の入口を作る人。",
-    catchCopy: "ご縁が動き出すきっかけを渡す人。",
+    workingCopy: "あなたは、人と人が話すきっかけをつくる人。",
+    catchCopy: "人と人が話すきっかけをつくる人。",
     selfCheckItems: [
       "初対面の場で、誰かが話しやすくなる一言を探している",
       "この人とこの人が話したら面白そう、と思うことがある",
@@ -83,15 +83,15 @@ export const icebreakRoleResultCopy: Record<RevoTypeKey, IcebreakRoleResultCopy>
     cautionHabit: "周りをつなぐことが自然すぎて、自分が場に渡している価値を軽く見やすいことがあります。",
     meetupUse: "「今日、誰かに紹介したくなった人はいましたか？」と聞くと、ご縁が広がりやすいです。",
     goodPartners: ["ソウルオーナー", "ムーブメンター", "インフォレイダー", "アレンジャー"],
-    shareCopy: "私は、人と人の間に会話の入口を作る人でした。",
+    shareCopy: "私は、人と人が話すきっかけをつくる人でした。",
     mismatchNote:
       "話す量が多いかどうかではなく、会話が始まるきっかけを見つける力を見ています。今回の回答では、人と人の間に流れを作る力が出ています。",
   },
   logicalmaister: {
     roleKey: "logicalmaister",
     displayName: "ロジカルマイスター",
-    workingCopy: "あなたは、感覚や発想を理解される構造へ変える人。",
-    catchCopy: "複雑なものを、人が動ける道筋にする人。",
+    workingCopy: "あなたは、散らかった話を形にする人。",
+    catchCopy: "散らかった話を形にする人。",
     selfCheckItems: [
       "散らかった話を、順番や構造にして説明したくなる",
       "感覚的な話でも、伝わる言葉へ置き換えたくなる",
@@ -101,15 +101,15 @@ export const icebreakRoleResultCopy: Record<RevoTypeKey, IcebreakRoleResultCopy>
     cautionHabit: "理解される形に整えようとして、動き出す前に考えすぎることがあります。",
     meetupUse: "「この話を一歩進めるなら、何から整理するとよさそうですか？」と聞くと力が出やすいです。",
     goodPartners: ["レボリスト", "アレンジャー", "コミュニケーター", "インフォレイダー"],
-    shareCopy: "私は、感覚や発想を理解される構造へ変える人でした。",
+    shareCopy: "私は、散らかった話を形にする人でした。",
     mismatchNote:
       "ロジカルは冷たさではありません。今回の回答では、感覚や発想を人が受け取りやすい形にする力が出ています。",
   },
   imagemaister: {
     roleKey: "imagemaister",
     displayName: "イメージマイスター",
-    workingCopy: "あなたは、想いや空気を伝わる形にする人。",
-    catchCopy: "見えない魅力を、受け取れる世界観にする人。",
+    workingCopy: "あなたは、想いや空気を形にする人。",
+    catchCopy: "想いや空気を形にする人。",
     selfCheckItems: [
       "言葉・雰囲気・見た目が整うと、人に伝わる力が増すと思う",
       "話の魅力が伝わるように、たとえ話や表現を工夫する",
@@ -119,15 +119,15 @@ export const icebreakRoleResultCopy: Record<RevoTypeKey, IcebreakRoleResultCopy>
     cautionHabit: "空気や魅力を感じ取れる分、言葉にする前に自分の中で抱えやすいことがあります。",
     meetupUse: "「その話、どんな雰囲気やイメージに近いですか？」と聞くと、会話が豊かになります。",
     goodPartners: ["プルミエルクラフター", "コミュニケーター", "ソウルオーナー", "レボリスト"],
-    shareCopy: "私は、想いや空気を伝わる形にする人でした。",
+    shareCopy: "私は、想いや空気を形にする人でした。",
     mismatchNote:
       "見た目を整える力だけではありません。今回の回答では、空気や魅力を人に届く形へ変える力が出ています。",
   },
   inforader: {
     roleKey: "inforader",
     displayName: "インフォレイダー",
-    workingCopy: "あなたは、情報を判断材料と知恵に変える人。",
-    catchCopy: "小さな情報から、動くための手がかりを見つける人。",
+    workingCopy: "あなたは、情報を知恵に変える人。",
+    catchCopy: "小さな情報を使える知恵に変える人。",
     selfCheckItems: [
       "何かを決める前に、背景や事実を少し確認したくなる",
       "会話の中で、判断材料になりそうな情報を拾う",
@@ -137,15 +137,15 @@ export const icebreakRoleResultCopy: Record<RevoTypeKey, IcebreakRoleResultCopy>
     cautionHabit: "材料を集める力がある分、動く前にもう少し確認したくなることがあります。",
     meetupUse: "「判断するなら、どんな情報があると安心ですか？」と聞くと、会話が深まりやすいです。",
     goodPartners: ["ロジカルマイスター", "コミュニケーター", "アレンジャー"],
-    shareCopy: "私は、情報を判断材料と知恵に変える人でした。",
+    shareCopy: "私は、情報を知恵に変える人でした。",
     mismatchNote:
       "情報を集めるだけの役割ではありません。今回の回答では、小さな材料を拾い、誰かの判断に使える形へ変える力が出ています。",
   },
   premiercrafter: {
     roleKey: "premiercrafter",
     displayName: "プルミエルクラフター",
-    workingCopy: "あなたは、価値を信頼される品質へ育てる人。",
-    catchCopy: "いいものを、ちゃんと残る形まで磨く人。",
+    workingCopy: "あなたは、いいものをより良い形に磨く人。",
+    catchCopy: "いいものをより良い形に磨く人。",
     selfCheckItems: [
       "人に出すものは、最後にもう一段だけ磨きたくなる",
       "続けることで信頼が積み上がるものを大切にしたい",
@@ -155,15 +155,15 @@ export const icebreakRoleResultCopy: Record<RevoTypeKey, IcebreakRoleResultCopy>
     cautionHabit: "もっと良くできる部分が見える分、完成を出すタイミングを迷うことがあります。",
     meetupUse: "「これを長く残る形にするなら、どこを磨くとよさそうですか？」と話すと力が出やすいです。",
     goodPartners: ["イメージマイスター", "ロジカルマイスター", "マックスデザイナー", "アレンジャー"],
-    shareCopy: "私は、価値を信頼される品質へ育てる人でした。",
+    shareCopy: "私は、いいものをより良い形に磨く人でした。",
     mismatchNote:
       "職人気質かどうかではなく、価値を残る形へ育てる力を見ています。今回の回答では、品質と信頼を積み上げる力が出ています。",
   },
   soulowner: {
     roleKey: "soulowner",
     displayName: "ソウルオーナー",
-    workingCopy: "あなたは、本音と挑戦が続く安心の土台を作る人。",
-    catchCopy: "人が自然体でいられる居場所を育てる人。",
+    workingCopy: "あなたは、人が本音を出せる場をつくる人。",
+    catchCopy: "人が本音を出せる場をつくる人。",
     selfCheckItems: [
       "相手が安心して話せるように、まず受け止めることを大切にする",
       "場の中で、まだ言葉になっていない気持ちに気づくことがある",
@@ -173,15 +173,15 @@ export const icebreakRoleResultCopy: Record<RevoTypeKey, IcebreakRoleResultCopy>
     cautionHabit: "相手を受け止める力が強い分、自分の本音を後回しにすることがあります。",
     meetupUse: "「最近、自然体で話せた瞬間はありましたか？」と聞くと、深い会話が生まれやすいです。",
     goodPartners: ["ムーブメンター", "コミュニケーター", "アレンジャー", "レボリスト"],
-    shareCopy: "私は、本音と挑戦が続く安心の土台を作る人でした。",
+    shareCopy: "私は、人が本音を出せる場をつくる人でした。",
     mismatchNote:
       "優しい人かどうかではなく、安心して話せる土台を作る力を見ています。今回の回答では、場の奥にある気持ちを受け止める力が出ています。",
   },
   movmentor: {
     roleKey: "movmentor",
     displayName: "ムーブメンター",
-    workingCopy: "あなたは、人の挑戦を具体的な一歩へ変える人。",
-    catchCopy: "誰かの背中に、次の一歩の言葉を渡す人。",
+    workingCopy: "あなたは、人の挑戦を盛り上げる人。",
+    catchCopy: "人の挑戦を盛り上げる人。",
     selfCheckItems: [
       "挑戦している人を見ると、その人の次の一歩を一緒に探したくなる",
       "誰かの良いところを見つけると、本人に伝えたくなる",
@@ -191,15 +191,15 @@ export const icebreakRoleResultCopy: Record<RevoTypeKey, IcebreakRoleResultCopy>
     cautionHabit: "人の可能性が見える分、自分の一歩を後回しにすることがあります。",
     meetupUse: "「今、次の一歩にするとしたら何がよさそうですか？」と聞くと、前向きな会話が生まれます。",
     goodPartners: ["ソウルオーナー", "コミュニケーター", "レボリスト", "アレンジャー"],
-    shareCopy: "私は、人の挑戦を具体的な一歩へ変える人でした。",
+    shareCopy: "私は、人の挑戦を盛り上げる人でした。",
     mismatchNote:
       "応援係というより、挑戦を行動に変える役割です。今回の回答では、人の一歩を見つけて言葉にする力が出ています。",
   },
   maxdesigner: {
     roleKey: "maxdesigner",
     displayName: "マックスデザイナー",
-    workingCopy: "あなたは、選択肢を広げて未来の可能性を設計する人。",
-    catchCopy: "ひとつの案から、まだ見えていない展開を描く人。",
+    workingCopy: "あなたは、今あるものから未来の可能性を描く人。",
+    catchCopy: "ひとつの案から未来の展開を描く人。",
     selfCheckItems: [
       "ひとつの案を見ると、別の見せ方や展開も思い浮かびやすい",
       "素材がいくつかあると、それを組み合わせて企画にしたくなる",
@@ -209,7 +209,7 @@ export const icebreakRoleResultCopy: Record<RevoTypeKey, IcebreakRoleResultCopy>
     cautionHabit: "可能性が広がる分、どれから形にするかを決める前に案が増え続けることがあります。",
     meetupUse: "「これをもっと面白くするなら、どんな展開がありそうですか？」と話すと発想が動きます。",
     goodPartners: ["クレイジスト", "イメージマイスター", "ロジカルマイスター", "レボリスト"],
-    shareCopy: "私は、選択肢を広げて未来の可能性を設計する人でした。",
+    shareCopy: "私は、今あるものから未来の可能性を描く人でした。",
     mismatchNote:
       "企画が得意かどうかではなく、選択肢を広げる力を見ています。今回の回答では、今あるものを別の可能性へ展開する力が出ています。",
   },

@@ -8,17 +8,17 @@ interface Props {
 }
 
 const ROLE_CLUSTERS: Partial<Record<RevoTypeKey, string>> = {
-  crazist: "まだない可能性を見つける役割",
-  revolist: "未来に最初の火を灯す役割",
-  maxdesigner: "可能性を設計する役割",
-  imagemaister: "想いを見える形にする役割",
-  logicalmaister: "感覚を構造へ変える役割",
-  inforader: "情報を判断材料へ変える役割",
-  premiercrafter: "価値を品質へ育てる役割",
-  movmentor: "人の一歩を応援する役割",
-  arranger: "人・情報・役割を配置する役割",
-  communicator: "人と人の入口を作る役割",
-  soulowner: "安心の土台を育てる役割",
+  crazist: "まだ見えていない扉を見つける役割",
+  revolist: "まだそこにないものを形にする役割",
+  maxdesigner: "未来の展開を描く役割",
+  imagemaister: "想いや空気を形にする役割",
+  logicalmaister: "散らかった話を形にする役割",
+  inforader: "情報を知恵に変える役割",
+  premiercrafter: "いいものをより良い形に磨く役割",
+  movmentor: "人の挑戦を盛り上げる役割",
+  arranger: "バラバラな力に流れをつくる役割",
+  communicator: "人と人が話すきっかけをつくる役割",
+  soulowner: "人が本音を出せる場をつくる役割",
 };
 
 export default function TypeCard({ type, compact = false }: Props) {
