@@ -23,33 +23,41 @@ export default function RootLayout({
     <html lang="ja">
       <body className="min-h-screen bg-white">
         {/* Nav */}
-        <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-sm border-b border-gray-100">
-          <div className="max-w-lg mx-auto px-6 h-14 flex items-center justify-between">
-            <Link href="/" className="text-sm font-bold text-black tracking-tight">
-              REVOLIST
-            </Link>
-            <div className="flex items-center gap-4">
+        <nav className="fixed top-0 left-0 right-0 z-50 border-b border-gray-100 bg-white/90 backdrop-blur-sm">
+          <div className="mx-auto flex max-w-lg flex-col gap-3 px-6 py-3 sm:h-14 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:py-0">
+            <div className="flex items-center justify-between">
+              <Link href="/" className="text-sm font-bold tracking-tight text-black">
+                REVOLIST
+              </Link>
+              <Link
+                href="/diagnosis/entry"
+                className="rounded-full bg-black px-4 py-2 text-xs text-white transition-colors hover:bg-gray-800 sm:hidden"
+              >
+                診断する
+              </Link>
+            </div>
+            <div className="flex items-center justify-between gap-4 sm:justify-end">
               <Link
                 href="/types"
-                className="text-xs text-gray-500 hover:text-black transition-colors hidden sm:block"
+                className="text-xs text-gray-500 transition-colors hover:text-black"
               >
                 11タイプ
               </Link>
               <Link
                 href="/team"
-                className="text-xs text-gray-500 hover:text-black transition-colors hidden sm:block"
+                className="text-xs text-gray-500 transition-colors hover:text-black"
               >
                 チーム設計
               </Link>
               <Link
                 href="/revo"
-                className="text-xs text-gray-500 hover:text-black transition-colors"
+                className="text-xs text-gray-500 transition-colors hover:text-black"
               >
                 Revo
               </Link>
               <Link
                 href="/diagnosis/entry"
-                className="text-xs bg-black text-white px-4 py-2 rounded-full hover:bg-gray-800 transition-colors"
+                className="hidden rounded-full bg-black px-4 py-2 text-xs text-white transition-colors hover:bg-gray-800 sm:block"
               >
                 診断する
               </Link>
@@ -58,7 +66,7 @@ export default function RootLayout({
         </nav>
 
         {/* Content */}
-        <main className="pt-14">{children}</main>
+        <main className="pt-24 sm:pt-14">{children}</main>
       </body>
     </html>
   );
