@@ -50,12 +50,6 @@ export default function RootLayout({
                 チーム設計
               </Link>
               <Link
-                href="/revo"
-                className="text-xs text-gray-500 transition-colors hover:text-black"
-              >
-                Revo
-              </Link>
-              <Link
                 href="/diagnosis/entry"
                 className="hidden rounded-full bg-black px-4 py-2 text-xs text-white transition-colors hover:bg-gray-800 sm:block"
               >
@@ -67,6 +61,20 @@ export default function RootLayout({
 
         {/* Content */}
         <main className="pt-24 sm:pt-14">{children}</main>
+        <footer className="border-t border-gray-100 px-6 py-8 text-center text-xs text-gray-400">
+          <div className="mx-auto flex max-w-lg flex-wrap items-center justify-center gap-x-4 gap-y-2">
+            <span>Site map</span>
+            <Link href="/types" className="transition-colors hover:text-black">
+              11タイプ
+            </Link>
+            <Link href="/team" className="transition-colors hover:text-black">
+              チーム設計
+            </Link>
+            <Link href="/revo" className="transition-colors hover:text-black">
+              Revo
+            </Link>
+          </div>
+        </footer>
       </body>
     </html>
   );

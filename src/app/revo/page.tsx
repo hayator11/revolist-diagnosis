@@ -149,8 +149,8 @@ export default function RevoPage() {
         </FadeInSection>
 
         <FadeInSection delay={80}>
-          <div className="-mx-6 overflow-x-auto px-6 pb-4">
-            <div className="min-w-[680px] rounded-2xl border border-gray-200 bg-gray-50 p-5">
+          <div className="pb-4">
+            <div className="mx-auto max-w-[390px]">
               <svg viewBox="0 0 680 520" role="img" aria-labelledby="revo-map-title revo-map-desc" className="h-auto w-full">
                 <title id="revo-map-title">Revoの活動構成図</title>
                 <desc id="revo-map-desc">
@@ -268,7 +268,7 @@ export default function RevoPage() {
             </div>
           </div>
           <p className="mt-4 text-center text-xs text-gray-400 leading-relaxed">
-            横に動かせます。図のボックスを押すと、各活動ページへ移動できます。
+            図のボックスを押すと、各活動ページへ移動できます。
           </p>
         </FadeInSection>
 
