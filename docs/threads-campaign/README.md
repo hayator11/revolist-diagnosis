@@ -19,6 +19,7 @@ Threads `@____hayator` で、レボリスト診断の11タイプを画像ベー�
 | [`exports/LAUNCH-PACK.md`](./exports/LAUNCH-PACK.md) | **初回投稿パッケージ**（そのまま投稿できる固定/Day1/予備の全文＋画像＋投稿手順＋監査） | 編集長 |
 | [`exports/11TYPES-PACK.md`](./exports/11TYPES-PACK.md) | **11タイプ投稿パック**（#01〜#11の画像＋そのまま貼る全文。毎日1タイプで回す） | ✍️ ライター部／🎨 デザイン部 |
 | `exports/*.png` | **全11タイプ＋表紙＋あるある の実PNG**（1080×1350） | 🎨 デザイン部 |
+| [`exports/CALENDAR-W1-2.md`](./exports/CALENDAR-W1-2.md) | **Week1-2投稿カレンダー**（14日分・柱/形式/時間/画像/文面IDを日割り） | 📣 マーケ部 |
 | [`99-sources.md`](./99-sources.md) | 調査ソース一覧 | 編集長／リサーチ部 |
 
 ## 制作体制（AIカンパニー）
