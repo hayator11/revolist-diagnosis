@@ -27,7 +27,7 @@ export default function IcebreakThanksPage() {
         <div className="rounded-lg border border-gray-200 p-5 text-left">
           <h2 className="mb-2 text-lg font-bold text-black">続きはオープンチャットへ</h2>
           <p className="mb-3 text-sm font-bold text-black">
-            孤独な挑戦者を、減らしたい
+            世界一やさしい贈り物
           </p>
           <p className="mb-5 text-sm leading-relaxed text-gray-600">
             結果を見て感じたこと、話してみたいタイプ、イベントで試したい使い方をそのまま持ち寄れます。

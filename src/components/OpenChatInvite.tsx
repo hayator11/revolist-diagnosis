@@ -36,7 +36,7 @@ export default function OpenChatInvite({ context = "diagnosis", copy }: OpenChat
           <>
             オープンチャット
             <br />
-            「孤独な挑戦者を、減らしたい」
+            「世界一やさしい贈り物」
           </>
         )}
       </h2>
