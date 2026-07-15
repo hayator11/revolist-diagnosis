@@ -24,9 +24,11 @@
 |---|---|---|
 | レボリスト診断 | 11タイプで特性・相性・チーム設計まで示す「組み合わせ設計OS」 | revolist-diagnosis |
 | revosong | AI Music Charts（応援ソング／キャンペーン） | revosong |
-| okurimono | （詳細は今後追記） | okurimono |
+| okurimono | 「世界一やさしい贈り物」を掲げる **onokun.com ファミリーの原点＆ハブLP**。おのくん（里親制人形）の物語＋各サービスへのカード導線。レボリスト診断もこのページに「入口・診断」カードとして既に掲載済み | okurimono |
 | revofunding | （詳細は今後追記） | revofunding |
-- ドメイン：onokun.com 系（例：revosong.onokun.com）。相互リンクを重視。
+- ドメイン：onokun.com 系（例：revosong.onokun.com／診断＝revo.onokun.com/diagnosis/entry）。相互リンクを重視。
+- **ブランド世界観（onokunファミリー）**：creed「受け取って、贈る人になる」「やさしさは、使っても減らない」。トーン＝和のやさしさ（生成り#F5EFE3／墨紺#2B3A55／茜#E8865A）。まるごと肯定。詳細と接続方針は `docs/brand/okurimono-connection.md`。
+- **3層の線引き（混線防止）**：①旗＝各サービス固有（診断＝「一人の特性を、みんなの力に変える」）／②creed＝家族共有（受け取って贈る）／③看板＝okurimono固有（「世界一やさしい贈り物」＝トーンとして借りるだけ、診断の看板にしない）。
 
 ## 4. 現案件：Threads発信（@____hayator）で学習済みの事実
 - 発信目的：レボリスト診断の11タイプを発信し、診断への導線をつくる。
