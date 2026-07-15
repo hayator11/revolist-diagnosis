@@ -27,6 +27,32 @@ const TARGETS = [
   },
 ];
 
+// The 10 remaining type cards (#02-#11). Picked by the .num text so the
+// order in card-templates.html doesn't matter.
+const TYPE_FILES = {
+  '#02': '02-maxdesigner.png',
+  '#03': '03-imagemaister.png',
+  '#04': '04-communicator.png',
+  '#05': '05-inforader.png',
+  '#06': '06-movmentor.png',
+  '#07': '07-premiercrafter.png',
+  '#08': '08-logicalmaister.png',
+  '#09': '09-arranger.png',
+  '#10': '10-soulowner.png',
+  '#11': '11-crazist.png',
+};
+for (const [num, file] of Object.entries(TYPE_FILES)) {
+  // pick is a *source string* (its own .toString()) so the number literal is
+  // baked in and survives the toString()->eval hop into the browser.
+  TARGETS.push({
+    file,
+    pick: `() => [...document.querySelectorAll('.card')].find(c => {` +
+          `  const n = c.querySelector('.num');` +
+          `  return n && n.textContent.trim() === ${JSON.stringify(num)};` +
+          `})`,
+  });
+}
+
 (async () => {
   const browser = await chromium.launch();
   const page = await browser.newPage({ viewport: { width: W, height: H } });
