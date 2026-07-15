@@ -1,0 +1,36 @@
+{
+  "brand": {
+    "revoInk": "#0E1330",
+    "revoInk2": "#171C3D",
+    "revoIndigo": "#4F46E5",
+    "revoCoral": "#FF4D6D",
+    "revoPaper": "#F6F4FF",
+    "inkText": "#F5F5FA",
+    "paperText": "#1A1A2E",
+    "muted": "#8A90B8"
+  },
+  "spectrum": [
+    "#DC2626", "#FF6B3D", "#D97706", "#059669", "#0891B2",
+    "#1D4ED8", "#4F46E5", "#7C3AED", "#6D5BD0", "#DB2777", "#BE185D"
+  ],
+  "forces": {
+    "start":     { "label": "はじめる力", "family": "warm-red" },
+    "draw":      { "label": "描く力",     "family": "violet-pink" },
+    "connect":   { "label": "つなぐ力",   "family": "cyan" },
+    "structure": { "label": "整える力",   "family": "green-blue" },
+    "support":   { "label": "支える力",   "family": "amber-violet" }
+  },
+  "types": {
+    "revolist":       { "name": "レボリスト",           "force": "start",     "key": "#DC2626", "grad": "#FF6B3D", "concept": "着火の赤" },
+    "crazist":        { "name": "クレイジスト",         "force": "start",     "key": "#BE185D", "grad": "#FF2D78", "concept": "革命のマゼンタ" },
+    "maxdesigner":    { "name": "マックスデザイナー",   "force": "draw",      "key": "#7C3AED", "grad": "#A855F7", "concept": "拡張の紫" },
+    "imagemaister":   { "name": "イメージマイスター",   "force": "draw",      "key": "#DB2777", "grad": "#FF7AB6", "concept": "魅せる桃" },
+    "communicator":   { "name": "コミュニケーター",     "force": "connect",   "key": "#0891B2", "grad": "#22D3EE", "concept": "架け橋のシアン" },
+    "inforader":      { "name": "インフォレイダー",     "force": "structure", "key": "#059669", "grad": "#34D399", "concept": "洞察のグリーン" },
+    "logicalmaister": { "name": "ロジカルマイスター",   "force": "structure", "key": "#1D4ED8", "grad": "#3B82F6", "concept": "設計図のブルー" },
+    "arranger":       { "name": "アレンジャー",         "force": "structure", "key": "#4F46E5", "grad": "#6366F1", "concept": "循環の藍" },
+    "movmentor":      { "name": "ムーブメンター",       "force": "support",   "key": "#D97706", "grad": "#FBBF24", "concept": "応援の琥珀" },
+    "premiercrafter": { "name": "プルミエルクラフター", "force": "support",   "key": "#92400E", "grad": "#C2721A", "concept": "職人のブロンズ" },
+    "soulowner":      { "name": "ソウルオーナー",       "force": "support",   "key": "#6D5BD0", "grad": "#9B8CFF", "concept": "癒しの菫", "appNote": "アプリ現行値は #7C3AED。Instagram区別のため #6D5BD0 を推奨" }
+  }
+}
