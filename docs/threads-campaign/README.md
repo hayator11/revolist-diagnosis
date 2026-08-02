@@ -18,7 +18,9 @@ Threads `@____hayator` で、レボリスト診断の11タイプを画像ベー�
 | [`card-templates.html`](./card-templates.html) | **4:5カルーセル画像テンプレート**（ブラウザで開いて 1080×1350 で書き出し） | 🎨 デザイン部 |
 | [`exports/LAUNCH-PACK.md`](./exports/LAUNCH-PACK.md) | **初回投稿パッケージ**（そのまま投稿できる固定/Day1/予備の全文＋画像＋投稿手順＋監査） | 編集長 |
 | [`exports/11TYPES-PACK.md`](./exports/11TYPES-PACK.md) | **11タイプ投稿パック**（#01〜#11の画像＋そのまま貼る全文。毎日1タイプで回す） | ✍️ ライター部／🎨 デザイン部 |
+| [`exports/WEEK3-PACK.md`](./exports/WEEK3-PACK.md) | **Week3投稿パック**（W3-01〜07・柱C/B/参加/A＝そのまま貼る全文＋予約日時7/30〜8/5＋初速60分リマインド） | 編集長／✍️ ライター部 |
 | `exports/*.png` | **全11タイプ＋表紙＋あるある の実PNG**（1080×1350） | 🎨 デザイン部 |
+| `exports/w3-*.png` | **Week3 相性/チームcomboカード**（`w3-01_revolist-x-movmentor`／`w3-03_maxdesigner-x-premiercrafter`／`w3-05_team-inforader`） | 🎨 デザイン部 |
 | [`exports/CALENDAR-W1-2.md`](./exports/CALENDAR-W1-2.md) | **Week1-2投稿カレンダー**（14日分・柱/形式/時間/画像/文面IDを日割り） | 📣 マーケ部 |
 | [`99-sources.md`](./99-sources.md) | 調査ソース一覧 | 編集長／リサーチ部 |
 

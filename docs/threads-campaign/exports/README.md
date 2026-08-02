@@ -40,6 +40,9 @@ node export.js
 ```
 Playwright 1.56.1（global）＋ Chromium（`/opt/pw-browsers`）を使用。追加インストール不要。
 
+## Week3 柱C：組み合わせ／チームカード（量産版）
+`combo-templates.html` の `COMBOS` 配列に1件足すだけで任意ペア／トリオを量産できる。書き出し：`cd docs/threads-campaign/exports && NODE_PATH=/opt/node22/lib/node_modules PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers node export-combos.js`（各カードの `data-file` 属性を自動で拾って出力。生成物：`w3-01_revolist-x-movmentor.png`／`w3-03_maxdesigner-x-premiercrafter.png`／`w3-05_team-inforader.png`、各1080×1350）。
+
 ## 仕組み（export.js）
 - `card-templates.html` を `file://` で開く。
 - 対象カードを1枚ずつ、`transform:none` にして `document.body` 直下に固定配置（他カードは非表示）。
