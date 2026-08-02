@@ -51,6 +51,8 @@
 - **仕組み優先**：目先の成果物（投稿など）より、まず「自走する仕組み」を固めることを優先する。
   - 2026-07：Threadsローンチより先に「AIカンパニーがスキルで起動し、決まった場所を読んで動く」設計を作れと指示。→ `revo-company` スキルと `company/playbooks/` を整備。
 - **スキルとナレッジの永続化**：作業のやり方は「読みに行く場所」（playbooks / roles / preferences）に貯め、スキルで呼び出す形にする。
+- **「できない」は実機検証してから言う**（強い要望）：何も確認せず不可と即答しない。到達性・可否を実際に試し、事実を根拠に答え、結果をHQに記録する。手順は `company/playbooks/external-integration-check.md`。
+  - 2026-08-02 検証：**Buffer はこの環境のネットワークポリシーで遮断**（curl=000／proxy=403 CONNECT／Playwright=ERR_TUNNEL_CONNECTION_FAILED）。今はブラウザもAPIも不可。解除には環境のネットワークポリシー許可が必要。→ playbook参照。
 
 ## 7. 確定事項ログ（社長の回答）
 - 2026-07：Instagram連携アカウント＝**なし／これから**（当面Threads単体で設計）。
